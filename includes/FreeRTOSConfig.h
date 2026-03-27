@@ -46,7 +46,7 @@
  * RP2350 has an FPU, enable it. MPU is not used in this project.
  * ─────────────────────────────────────────────────────────────────────────── */
 #define configENABLE_FPU                        1
-#define configRUN_FREERTOS_SECURE_ONLY          1
+#define configRUN_FREERTOS_SECURE_ONLY          1 // added this to build on the secure vers of FreeRTOS
 #define configENABLE_MPU                        0
 #define configENABLE_TRUSTZONE                  0
  
