@@ -1,4 +1,4 @@
-# FreeRTOS SMP RP2350 Project
+# FreeRTOS SMP RP2350 - SQUIDSAT FSW 
 
 ## Clone
 
