@@ -1,7 +1,0 @@
-/Users/iceblaster/FCR/build/_deps/picotool/picotool
-/Users/iceblaster/FCR/build/_deps/picotool/picotoolTargets.cmake
-/Users/iceblaster/FCR/build/_deps/picotool/picotoolTargets-release.cmake
-/Users/iceblaster/FCR/build/_deps/picotool/picotoolConfig.cmake
-/Users/iceblaster/FCR/build/_deps/picotool/picotoolConfigVersion.cmake
-/Users/iceblaster/FCR/build/_deps/picotool/enc_bootloader.elf
-/Users/iceblaster/FCR/build/_deps/picotool/enc_bootloader_mbedtls.elf
