@@ -1,1 +1,0 @@
-# squidsat-fsw
