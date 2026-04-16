@@ -5,5 +5,5 @@ by ChaN, sourced from https://elm-chan.org/fsw/ff/
 
 ## Additions and Config Log 
 
-4/15/2026 - Adding CMakeLists.txt from Coconut
+4/15/2026 - Adding CMakeLists.txt, based on Coconut's
 
