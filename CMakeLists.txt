@@ -25,11 +25,22 @@ pico_sdk_init()
 
 # ── Application ───────────────────────────────────────────────────────────────
 add_executable(freertos_rp2350
-    src/main.c
+    main/main.c
+
+    # drivers 
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
+
+    # tasks 
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
 )
 
 target_include_directories(freertos_rp2350 PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/includes
+    ${CMAKE_CURRENT_LIST_DIR}/config
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/include 
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/include 
+
+    # tasks
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse
 )
 
 target_link_libraries(freertos_rp2350
