@@ -5,7 +5,6 @@
 
 #include "FreeRTOS.h"
 #include "semphr.h"
-#include "semaphore.h"
 #include "gse.h"
 #include "task.h"
 #include "pico/error.h"
@@ -82,5 +81,13 @@ void vDebugTask(void* pm){
             }
         }
         vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS));
+    }
+}
+
+void logging_in_debug(volatile bool debug_mode){
+    if(debug_mode){
+
+    }else{
+        return;
     }
 }

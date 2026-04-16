@@ -1,5 +1,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "gse.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -52,4 +53,28 @@ void vApplicationMallocFailedHook(void)
 {
     // Trap here for debugging — replace with your own error handling
     configASSERT(0);
+}
+
+
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+                                    StackType_t **ppxIdleTaskStackBuffer,
+                                    configSTACK_DEPTH_TYPE *puxIdleTaskStackSize) {
+}
+
+/* RP2350 passive idle task memory (second core idle) */
+static StaticTask_t xPassiveIdleTaskTCB;
+static StackType_t uxPassiveIdleTaskStack[configMINIMAL_STACK_SIZE];
+
+void vApplicationGetPassiveIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+                                           StackType_t **ppxIdleTaskStackBuffer,
+                                           configSTACK_DEPTH_TYPE *puxIdleTaskStackSize,
+                                           BaseType_t xPassiveIdleTaskIndex) {
+}
+
+/* Timer task memory */
+static StaticTask_t xTimerTaskTCB;
+static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, configSTACK_DEPTH_TYPE *puxTimerTaskStackSize) {
+                                
 }
