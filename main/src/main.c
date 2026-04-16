@@ -11,16 +11,17 @@ void led_task(void *pvParameters)
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     while (true) {
+        // Talk to Tyler N abou why this is bricking the FreeRTOS config
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        // if(debug_mode == true){
-        //     log_info("The LED is %d", gpio_get(LED_PIN));
-        // }
+        if(debug_mode == true){
+            log_info("The LED is %d", gpio_get(LED_PIN));
+        }
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        // if(debug_mode == true){
-        //     log_info("The LED is %d", gpio_get(LED_PIN));
-        // }        
+        if(debug_mode == true){
+            log_info("The LED is %d", gpio_get(LED_PIN));
+        }        
     }
 }
 
@@ -29,11 +30,10 @@ int main()
 {
     tud_task();
     stdio_init_all();
-    const uint LED_PIN = 25;
 
     // Create the blink task and verify creation succeeded.
-    xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2, NULL);
+    xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
+    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
     vTaskStartScheduler();
 
     while (1) {}

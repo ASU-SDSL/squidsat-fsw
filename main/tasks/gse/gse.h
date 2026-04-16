@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "atomic.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -20,6 +21,7 @@
 
 // ---- Debug Mode Flag ----
 extern volatile bool debug_mode;
+
 // ---- GSE Task ----
 #define GSE_TASK_STACK_SIZE 1024
 #define GSE_TASK_PRIORITY   1

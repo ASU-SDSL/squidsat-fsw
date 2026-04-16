@@ -3,6 +3,7 @@ build_path="./build"
 timeout=15
 count=0
 BUILD_DIR=build
+
 # ------ Reboot Pico ------
 picotool reboot -f -u
 

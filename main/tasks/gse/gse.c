@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "FreeRTOS.h"
+#include "semphr.h"
+#include "semaphore.h"
 #include "gse.h"
 #include "task.h"
 #include "pico/error.h"
@@ -12,13 +14,10 @@
 /*
 This function allows for basic debug handling. Will need to call a subfunction that actually runs the debug mode
 Ideas:
-    1. Step through code
-    2. Log error messages into a log file
-    3. Allow for unique hooks (Look into this)
-    4. (Talk to Tyler N)
+    1. Talk to Tyler N on how to make debug hooks that we can call once debug mode
+       is enabled. 
+    2. Want to maybe make a log command to see all the errors (might be part of debug mode tho) 
 */
-
-
 
 /*
     List of known commands
@@ -31,9 +30,15 @@ typedef enum {
     CMD_UNKNOWN
 } Command;
 
+
+SemaphoreHandle_t debug_handeling;
 volatile bool debug_mode = false;
 
-// function to parse the input and return if it is a known or unknown command
+/*
+    How we parse commands through USB. This is what you type into serial monitor.
+    CMD_UNKNOWN is a base case, should never get there if you typed everything in right.
+*/
+
 Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
@@ -43,6 +48,7 @@ Command parse_command(const char* str) {
 
 
 void vDebugTask(void* pm){
+    debug_handeling = xSemaphoreCreateMutex();
     char buffer[256];
     int buffer_index = 0;
 
@@ -66,13 +72,13 @@ void vDebugTask(void* pm){
                         log_info("The log are:");
                         break;
                     default:
-                        log_info("Unknown command: %s", buffer);
+                        log_error("Unknown command: %s", buffer);
                         break;
                 }
                 
                 buffer_index = 0;
             } else {
-                if(buffer[buffer_index] < 255) buffer[buffer_index++] = c;
+                if(buffer_index < 255) {buffer[buffer_index++] = c;}
             }
         }
         vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS));
