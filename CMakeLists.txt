@@ -25,12 +25,15 @@ pico_sdk_init()
 
 # ── Application ───────────────────────────────────────────────────────────────
 add_executable(freertos_rp2350
-    src/main.c
+    main/src/main.c
 )
 
 target_include_directories(freertos_rp2350 PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/includes
 )
+
+# add FatFs library 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/ff16 build)
 
 target_link_libraries(freertos_rp2350
     FreeRTOS-Kernel
@@ -38,7 +41,9 @@ target_link_libraries(freertos_rp2350
     pico_stdlib
     pico_multicore
     hardware_gpio
+    FatFs
 )
+
 
 pico_enable_stdio_usb(freertos_rp2350  1)
 pico_enable_stdio_uart(freertos_rp2350 0)
