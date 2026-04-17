@@ -23,6 +23,65 @@
 #define RTC_TEMP_REG_UPPER 0x11
 #define RTC_TEMP_REG_LOWER 0x12 // decimal part of the temp
 
+
+time_t rtc_tm_to_epoch(struct tm* timestamp){
+    return pico_mktime(timestamp); 
+}
+
+uint8_t rtc_get_tm(i2c_inst_t *i2c, struct tm* now){
+    uint8_t buf[7]; // from 00h to 06h
+
+    int res = i2c_read_from_register(i2c, RTC_ADDR, RTC_BASE_REG, buf, sizeof(buf));
+
+    if(res != 0) return res; 
+
+    now->tm_sec = (buf[0] & 0b00001111) + (10 * (buf[0] >> 4));
+
+    now->tm_min = (buf[1] & 0b00001111) + (10 * (buf[1] >> 4));
+    
+    if(buf[2] & (0b1 << 6)){ // if bit 6 is high then read as 12h hour 
+                //   ones place             add ten if ten bit              add 12 if am/pm bit is pm (1 is am)
+        now->tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000))) + (12 * (1 && ((buf[2]) & 0b00100000)))) % 24;
+    }
+    else {
+            //      ones place              add ten if ten bit          add 20 if 20 bit
+        now->tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000)) + (20 * (1 && (buf[2] & 0b00100000))))) % 24;
+    }
+    
+    now->tm_mday = (buf[4] & 0b00001111) + (10 * (buf[4] >> 4));
+    
+    buf[5] &= 0b01111111; // remove century bit 
+    now->tm_mon = (buf[5] & 0b00001111) + (10 * (1 && (buf[5] & 0b00010000))) - 1;
+    
+    now->tm_year = (buf[6] & 0b00001111) + (10 * (buf[6] >> 4)) + 100;
+
+    return 0; 
+}
+
+void rtc_test(){
+
+    i2c_inst_t *i2c = i2c0;
+
+    // Setup i2c
+    i2c_util_init();
+
+    // set time
+    rtc_set_time(i2c, 26, 4, 16, 5, 7, 2);
+    sleep_ms(100);
+
+    for(int i = 0; i < 100; i++){
+        struct tm now; 
+        if(rtc_get_tm(i2c, &now)){
+            printf("epoch time failed\n"); 
+        }
+        printf("Epoch time: %lld\n", rtc_tm_to_epoch(&now)); 
+        sleep_ms(1000); 
+    }
+
+}
+
+// -------------------------------------------------- unpreferred functions -------------------------------------------------------
+
 // give in 24h time
 // returns 0 on success
 uint8_t rtc_set_time(i2c_inst_t *i2c, uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second){
@@ -59,40 +118,6 @@ uint8_t rtc_set_time(i2c_inst_t *i2c, uint8_t year, uint8_t month, uint8_t day, 
     }
 
     return 0;
-}
-
-uint8_t rtc_get_time(i2c_inst_t *i2c, time_t* epoch_time){
-    uint8_t buf[7]; // from 00h to 06h
-
-    int res = i2c_read_from_register(i2c, RTC_ADDR, RTC_BASE_REG, buf, sizeof(buf));
-
-    if(res != 0) return res; 
-
-    struct tm now = {0}; 
-
-    now.tm_sec = (buf[0] & 0b00001111) + (10 * (buf[0] >> 4));
-
-    now.tm_min = (buf[1] & 0b00001111) + (10 * (buf[1] >> 4));
-    
-    if(buf[2] & (0b1 << 6)){ // if bit 6 is high then read as 12h hour 
-                //   ones place             add ten if ten bit              add 12 if am/pm bit is pm (1 is am)
-        now.tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000))) + (12 * (1 && ((buf[2]) & 0b00100000)))) % 24;
-    }
-    else {
-            //      ones place              add ten if ten bit          add 20 if 20 bit
-        now.tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000)) + (20 * (1 && (buf[2] & 0b00100000))))) % 24;
-    }
-    
-    now.tm_mday = (buf[4] & 0b00001111) + (10 * (buf[4] >> 4));
-    
-    buf[5] &= 0b01111111; // remove century bit 
-    now.tm_mon = (buf[5] & 0b00001111) + (10 * (1 && (buf[5] & 0b00010000))) - 1;
-    
-    now.tm_year = (buf[6] & 0b00001111) + (10 * (buf[6] >> 4)) + 100;
-
-    *epoch_time = pico_mktime(&now); 
-
-    return 0; 
 }
 
 // returns 0 on success 
@@ -206,7 +231,7 @@ uint8_t rtc_get_year(i2c_inst_t *i2c, uint8_t* output){
     return 0;
 }
 
-void rtc_test() {
+void rtc_test_unpreferred() {
    
     i2c_inst_t *i2c = i2c0;
 
@@ -249,12 +274,6 @@ void rtc_test() {
         }
 
         printf("RTC TimeStamp: \n%d:%d:%d %d/%d/%d \n", hour, minute, second, month, day, year);  
-
-        time_t now; 
-        if(rtc_get_time(i2c, &now)){
-            printf("epoch time failed\n"); 
-        }
-        printf("Epoch time: %lld\n", now); 
 
         sleep_ms(1000);
 

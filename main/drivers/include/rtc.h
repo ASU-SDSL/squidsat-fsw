@@ -12,6 +12,12 @@
 
 // Module: DS3231 - datasheet: https://www.elecrow.com/download/DS3231.pdf?srsltid=AfmBOoqeXQdxPk0yC-QR_5l1YSoJ2DDCTgk_9zDA_0T4oqLn5cb0tx7o
 
+time_t rtc_tm_to_epoch(struct tm* timestamp);
+
+uint8_t rtc_get_tm(i2c_inst_t *i2c, struct tm* now);
+
+// -------------------------------------------------- unpreferred functions -------------------------------------------------------
+
 /**
  * @brief Set the RTC's date and time, assumes 24h input. 
  * 
@@ -25,8 +31,6 @@
  * @return uint8_t Status (0 = success)
  */
 uint8_t rtc_set_time(i2c_inst_t *i2c, uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
-
-uint8_t rtc_get_time(i2c_inst_t *i2c, time_t* epoch_time);
 
 /**
  * ALL GET FUNCTIONS 
