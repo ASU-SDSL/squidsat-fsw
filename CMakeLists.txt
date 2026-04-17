@@ -1,49 +1,59 @@
 cmake_minimum_required(VERSION 3.15)
 
-# ── Must be set FIRST — before any include() ──────────────────────────────────
-# Tells the SDK and the FreeRTOS import script which chip/core we're targeting.
-set(PICO_PLATFORM "rp2350-arm-s" CACHE STRING "Pico platform")
-set(PICO_BOARD    "pico2"        CACHE STRING "Board type")
+# ── Platform Selection ────────────────────────────────────────────────────────
+# Set defaults if not passed in from bash via -DPICO_BOARD and -DPICO_PLATFORM
+if(NOT DEFINED PICO_BOARD)
+    set(PICO_BOARD "pico2" CACHE STRING "Board type")
+endif()
+
+if(PICO_BOARD STREQUAL "pico")
+    set(PICO_PLATFORM "rp2040" CACHE STRING "Pico platform")
+else()
+    set(PICO_PLATFORM "rp2350-arm-s" CACHE STRING "Pico platform")
+endif()
+
+
+message(STATUS "Building for board: ${PICO_BOARD}, platform: ${PICO_PLATFORM}")
 
 # ── Pico SDK bootstrap ────────────────────────────────────────────────────────
 set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/lib/pico-sdk" CACHE PATH "Path to pico-sdk")
 include(${PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
-# ── FreeRTOS kernel — include the import script directly from the submodule ───
-# No need to copy anything — the file already exists inside FreeRTOS-Kernel.
+# ── FreeRTOS kernel ───────────────────────────────────────────────────────────
 set(FREERTOS_KERNEL_PATH "${CMAKE_CURRENT_LIST_DIR}/lib/FreeRTOS-Kernel" CACHE PATH "Path to FreeRTOS-Kernel")
-include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
+
+if(PICO_PLATFORM STREQUAL "rp2040")
+    include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+else()
+    include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
+endif()
 
 # ── Project ───────────────────────────────────────────────────────────────────
-project(freertos_rp2350 C CXX ASM)
+# Name the project based on the target so .uf2 filenames are predictable
+if(PICO_PLATFORM STREQUAL "rp2040")
+    project(freertos_rp2040 C CXX ASM)
+else()
+    project(freertos_rp2350 C CXX ASM)
+endif()
 
 set(CMAKE_C_STANDARD   11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Initialise the Pico SDK (must come after project())
 pico_sdk_init()
 
 # ── Application ───────────────────────────────────────────────────────────────
-add_executable(freertos_rp2350
+add_executable(${PROJECT_NAME}
     main/main.c
-
-    # drivers 
-    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
-
-    # tasks 
-    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
+    main/tasks/gse/gse.c
 )
 
-target_include_directories(freertos_rp2350 PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/config
-    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/include 
-    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/include 
-
-    # tasks
-    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
 )
 
-target_link_libraries(freertos_rp2350
+target_link_libraries(${PROJECT_NAME}
     FreeRTOS-Kernel
     FreeRTOS-Kernel-Heap4
     pico_stdlib
@@ -51,7 +61,7 @@ target_link_libraries(freertos_rp2350
     hardware_gpio
 )
 
-pico_enable_stdio_usb(freertos_rp2350  1)
-pico_enable_stdio_uart(freertos_rp2350 0)
+pico_enable_stdio_usb(${PROJECT_NAME}  1)
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
 
-pico_add_extra_outputs(freertos_rp2350)
+pico_add_extra_outputs(${PROJECT_NAME})
