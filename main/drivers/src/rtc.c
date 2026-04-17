@@ -4,6 +4,8 @@
 #include "i2c_util.h"
 #include <stdio.h>
 
+#include "gse.h"
+
 // RTC I2C address
 #define RTC_ADDR 0x68  // Replace with the correct RTC address
 
@@ -72,9 +74,9 @@ void rtc_test(){
     for(int i = 0; i < 100; i++){
         struct tm now; 
         if(rtc_get_tm(i2c, &now)){
-            printf("epoch time failed\n"); 
+            log_info("epoch time failed"); 
         }
-        printf("Epoch time: %lld\n", rtc_tm_to_epoch(&now)); 
+        log_info("Epoch time: %lld", rtc_tm_to_epoch(&now)); 
         sleep_ms(1000); 
     }
 
