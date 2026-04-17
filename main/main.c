@@ -1,11 +1,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
-#include "gse.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "rtc.h"
+#include "gse.h"
+#include "i2c_util.h"
+
+#include "timing.h"
 
 void led_task(void *pvParameters)
 {   
@@ -23,9 +25,14 @@ void led_task(void *pvParameters)
 int main()
 {
     gse_init();
+    i2c_util_init(); 
 
-    while(1){
-        rtc_test(); 
+    uint8_t ts_res = timing_init(); 
+    
+    while(ts_res){ // retry bc this is critical
+        log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
+        sleep_ms(1000); 
+        ts_res = timing_init();
     }
 
     // Create the blink task and verify creation succeeded.

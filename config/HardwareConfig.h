@@ -1,5 +1,7 @@
 #pragma once 
 
+#include "hardware/i2c.h"
+
 /// SPI 0 Pins 
 #define SPI0_MISO 4
 #define SPI0_SCLK 6
@@ -8,3 +10,5 @@
 #define I2C0_SDA_PIN 8
 #define I2C0_SCL_PIN 9
 
+/// Bus definitions 
+#define RTC_I2C_BUS i2c0

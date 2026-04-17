@@ -49,6 +49,9 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
 
+    # utilities 
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
+
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
 )
@@ -70,6 +73,7 @@ target_link_libraries(${PROJECT_NAME}
     FreeRTOS-Kernel-Heap4
     pico_stdlib
     pico_multicore
+    pico_aon_timer
     hardware_gpio
     hardware_i2c
 
