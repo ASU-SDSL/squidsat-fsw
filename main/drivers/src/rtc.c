@@ -1,0 +1,263 @@
+#include "rtc.h"
+#include "hardware/i2c.h"
+#include "pico/stdlib.h"
+#include "i2c_util.h"
+#include <stdio.h>
+
+// RTC I2C address
+#define RTC_ADDR 0x68  // Replace with the correct RTC address
+
+#define RTC_CONTROL_REG 0x0E
+#define RTC_STATUS_REG 0x0F
+
+// Register addresses for time data
+#define RTC_BASE_REG 0x00
+#define RTC_SECONDS_REG 0x00
+#define RTC_MINUTES_REG 0x01
+#define RTC_HOURS_REG 0x02
+#define RTC_DAY_REG 0x03
+#define RTC_DATE_REG 0x04
+#define RTC_MONTH_CENTURY_REG 0x05
+#define RTC_YEAR_REG 0x06
+
+#define RTC_TEMP_REG_UPPER 0x11
+#define RTC_TEMP_REG_LOWER 0x12 // decimal part of the temp
+
+// give in 24h time
+// returns 0 on success
+uint8_t rtc_set_time(i2c_inst_t *i2c, uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second){
+    uint8_t buf; 
+
+    buf = (second / 10 << 4) | (second % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_SECONDS_REG, &buf, 1)){
+        return 1;
+    }
+
+    buf = (minute / 10 << 4) | (minute % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_MINUTES_REG, &buf, 1)){
+        return 2;
+    }
+    //       tens place      ones place
+    buf = (hour / 10 << 4) | (hour % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_HOURS_REG, &buf, 1)){
+        return 3;
+    }
+
+    buf = (day / 10 << 4) | (day % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_DATE_REG, &buf, 1)){
+        return 4;
+    }
+
+    buf = (month / 10 << 4) | (month % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_MONTH_CENTURY_REG, &buf, 1)){
+        return 5;
+    }
+
+    buf = (year / 10 << 4) | (year % 10);
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_YEAR_REG, &buf, 1)){
+        return 6;
+    }
+
+    return 0;
+}
+
+uint8_t rtc_get_time(i2c_inst_t *i2c, time_t* epoch_time){
+    uint8_t buf[7]; // from 00h to 06h
+
+    int res = i2c_read_from_register(i2c, RTC_ADDR, RTC_BASE_REG, buf, sizeof(buf));
+
+    if(res != 0) return res; 
+
+    struct tm now = {0}; 
+
+    now.tm_sec = (buf[0] & 0b00001111) + (10 * (buf[0] >> 4));
+
+    now.tm_min = (buf[1] & 0b00001111) + (10 * (buf[1] >> 4));
+    
+    if(buf[2] & (0b1 << 6)){ // if bit 6 is high then read as 12h hour 
+                //   ones place             add ten if ten bit              add 12 if am/pm bit is pm (1 is am)
+        now.tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000))) + (12 * (1 && ((buf[2]) & 0b00100000)))) % 24;
+    }
+    else {
+            //      ones place              add ten if ten bit          add 20 if 20 bit
+        now.tm_hour = ((buf[2] & 0b00001111) + (10 * (1 && (buf[2] & 0b00010000)) + (20 * (1 && (buf[2] & 0b00100000))))) % 24;
+    }
+    
+    now.tm_mday = (buf[4] & 0b00001111) + (10 * (buf[4] >> 4));
+    
+    buf[5] &= 0b01111111; // remove century bit 
+    now.tm_mon = (buf[5] & 0b00001111) + (10 * (1 && (buf[5] & 0b00010000))) - 1;
+    
+    now.tm_year = (buf[6] & 0b00001111) + (10 * (buf[6] >> 4)) + 100;
+
+    *epoch_time = pico_mktime(&now); 
+
+    return 0; 
+}
+
+// returns 0 on success 
+uint8_t rtc_update_temp(i2c_inst_t *i2c){
+    uint8_t buf; 
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_CONTROL_REG, &buf, 1)){
+        return 1;
+    }
+    buf = buf | (1 << 5); // set control bit 5 - manually remeasure temperature (auto measures every 64 seconds)
+
+    if(i2c_write_to_register(i2c, RTC_ADDR, RTC_CONTROL_REG, &buf, 1)){
+        return 1;
+    }
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_temp(i2c_inst_t *i2c, float* output) {
+
+    uint8_t tempUpper;
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_TEMP_REG_UPPER, &tempUpper, 1)){
+        return 1;
+    }
+    uint8_t tempLower;
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_TEMP_REG_LOWER, &tempLower, 1)){
+        return 1;
+    }
+
+    // printf("Upper: 0x%x Lower 0x%x\n", tempUpper, tempLower);
+    // printf("Upper: %d Lower %f\n", ((int)tempUpper), ((0.5) * (1 && (tempLower & 0b10000000)) + (0.25 * (1 && (tempLower & 0b010000000)))));
+
+    // Upper byte includes whole number, lower includes decimal
+    // source - https://github.com/NorthernWidget/DS3231/blob/095b6f760192c3e2359d8b6d14f03e096e584155/DS3231.cpp#L436
+    int formatted_temp = (int)(tempUpper << 8) | (tempLower & 0xC);
+    *output = (float) formatted_temp / 256.0;
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_second(i2c_inst_t *i2c, uint8_t* output){
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_SECONDS_REG, output, 1)){
+        return 1;
+    }
+    //           ones place                     tens place
+    *output = (*output & 0b00001111) + (10 * (*output >> 4));
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_minute(i2c_inst_t *i2c, uint8_t* output){
+
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_MINUTES_REG, output, 1)){
+        return 1;
+    }
+
+    *output = (*output & 0b00001111) + (10 * (*output >> 4));
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_hour(i2c_inst_t *i2c, uint8_t* output){
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_HOURS_REG, output, 1)){ return 1; }
+    if(*output & (0b1 << 6)){ // if bit 6 is high then read as 12h hour 
+                //   ones place             add ten if ten bit              add 12 if am/pm bit is pm (1 is am)
+        *output = ((*output & 0b00001111) + (10 * (1 && (*output & 0b00010000))) + (12 * (1 && ((*output) & 0b00100000)))) % 24;
+    }
+    else {
+            //      ones place              add ten if ten bit          add 20 if 20 bit
+        *output = ((*output & 0b00001111) + (10 * (1 && (*output & 0b00010000)) + (20 * (1 && (*output & 0b00100000))))) % 24;
+    }
+
+    return 0; 
+}
+
+// returns 0 on success
+uint8_t rtc_get_date(i2c_inst_t *i2c, uint8_t* output){
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_DATE_REG, output, 1)){
+        return 1;
+    }
+
+    *output = (*output & 0b00001111) + (10 * (*output >> 4));
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_month(i2c_inst_t *i2c, uint8_t* output){
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_MONTH_CENTURY_REG, output, 1)){
+        return 1;
+    }
+
+    *output &= 0b01111111; // remove century bit 
+    //      ones place              add ten if ten bit
+    *output = (*output & 0b00001111) + (10 * (1 && (*output & 0b00010000)));
+
+    return 0;
+}
+
+// returns 0 on success
+uint8_t rtc_get_year(i2c_inst_t *i2c, uint8_t* output){
+    if(i2c_read_from_register(i2c, RTC_ADDR, RTC_YEAR_REG, output, 1)){
+        return 1;
+    }
+
+    *output = (*output & 0b00001111) + (10 * (*output >> 4)); 
+
+    return 0;
+}
+
+void rtc_test() {
+   
+    i2c_inst_t *i2c = i2c0;
+
+    // Setup i2c
+    i2c_util_init();
+
+    // set time
+    rtc_set_time(i2c, 26, 4, 16, 5, 7, 2);
+    sleep_ms(100);
+
+    for(int i = 0; i < 150; i++){
+        float temp;
+        rtc_update_temp(i2c);
+        rtc_get_temp(i2c, &temp);
+        printf("RTC Temp: %f\n", temp);
+
+        uint8_t hour;
+        uint8_t minute;
+        uint8_t second;
+        uint8_t month; 
+        uint8_t day;
+        uint8_t year;
+        if(rtc_get_hour(i2c, &hour)){
+            printf("Hour failed\n");
+        }
+        if(rtc_get_minute(i2c, &minute)){
+            printf("Minute failed\n");
+        }
+        if(rtc_get_second(i2c, &second)){
+            printf("Second failed\n");
+        }
+        if(rtc_get_month(i2c, &month)){
+            printf("Month failed\n");
+        }
+        if(rtc_get_date(i2c, &day)){
+            printf("Date failed\n");
+        }
+        if(rtc_get_year(i2c, &year)){
+            printf("Date failed\n");
+        }
+
+        printf("RTC TimeStamp: \n%d:%d:%d %d/%d/%d \n", hour, minute, second, month, day, year);  
+
+        time_t now; 
+        if(rtc_get_time(i2c, &now)){
+            printf("epoch time failed\n"); 
+        }
+        printf("Epoch time: %lld\n", now); 
+
+        sleep_ms(1000);
+
+    }
+
+}

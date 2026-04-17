@@ -28,6 +28,7 @@ add_executable(freertos_rp2350
     main/main.c
 
     # drivers 
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
 
     # tasks 
@@ -52,6 +53,8 @@ target_link_libraries(freertos_rp2350
     pico_stdlib
     pico_multicore
     hardware_gpio
+    hardware_i2c
+
     FatFs
 )
 

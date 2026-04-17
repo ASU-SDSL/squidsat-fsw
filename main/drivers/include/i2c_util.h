@@ -7,7 +7,7 @@
 /**
 * @brief Initialize i2c speed and pins
 */
-void i2c_init();
+void i2c_util_init();
 
 /**
  * @brief Write [reg] and [buf] to i2c device, [reg] is just inserted before [buf]
@@ -30,7 +30,7 @@ int i2c_write_to_register(	i2c_inst_t *i2c,
  * 
  * @param i2c I2C instance to use 
  * @param addr Device address 
- * @param reg Register to write to 
+ * @param reg Register to read from 
  * @param buf Data Buffer
  * @param nbytes Length of Data Buffer
  * @return int Status of operation (0 = good)

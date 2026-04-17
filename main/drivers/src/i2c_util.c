@@ -1,11 +1,13 @@
 #include "i2c_util.h"
 
+#include "hardware/gpio.h"
+
 #include "HardwareConfig.h"
 
 #define I2CSpeed 100000 			/// Default of 100k
 #define I2CTimeout_us 1000000 		/// Timeout for read and writes in micro-seconds
 
-void config_i2c1() {
+void i2c_util_init() {
    
     // i2c1 initialize 
     i2c_init(i2c0, I2CSpeed);

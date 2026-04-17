@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+#include "rtc.h"
 
 void led_task(void *pvParameters)
 {   
@@ -22,6 +23,12 @@ int main()
     const uint LED_PIN = 25;
 
     stdio_init_all();
+
+    sleep_ms(1000);
+    
+    while(1){
+        rtc_test(); 
+    }
 
     // Create the blink task and verify creation succeeded.
     xTaskCreate(led_task, "LED", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
