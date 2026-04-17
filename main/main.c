@@ -29,7 +29,7 @@ int main()
 
     uint8_t ts_res = timing_init(); 
     
-    while(ts_res){ // retry bc this is critical
+    while(ts_res){ // retry bc this is critical - get a better solution to failure later 
         log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
         sleep_ms(1000); 
         ts_res = timing_init();
