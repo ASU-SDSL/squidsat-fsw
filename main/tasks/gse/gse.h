@@ -28,6 +28,7 @@ extern volatile bool debug_mode;
 #define GSE_BUFFER_SIZE     256
 #define GSE_TASK_DELAY_MS   10
 
+void gse_init();
 void vDebugTask(void *pvParameters);
 
 #endif // GSE_TASK_H

@@ -45,6 +45,10 @@ Command parse_command(const char* str) {
     return CMD_UNKNOWN;
 }
 
+void gse_init(){
+    tud_task();
+    stdio_init_all();
+}
 
 void vDebugTask(void* pm){
     debug_handeling = xSemaphoreCreateMutex();

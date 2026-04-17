@@ -43,12 +43,12 @@ pico_sdk_init()
 
 # ── Application ───────────────────────────────────────────────────────────────
 add_executable(${PROJECT_NAME}
-    main/src/main.c
+    main/main.c
     main/tasks/gse/gse.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/includes
+    ${CMAKE_CURRENT_LIST_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
 )
