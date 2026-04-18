@@ -1,32 +1,32 @@
 #include <semphr.h>
 
-#define MAX_STEVE_JOBS 16 // Maximum number of jobs 
-#define MAX_STEVE_NAME 16 // Maximum length of job name
-#define SCHEDULER_CHECK_DELAY_MS 500// Delay between scheduler checks in milliseconds
+#define MAX_JOBS 16 // Maximum number of jobs 
+#define MAX_JOBS_NAME 16 // Maximum length of job name
+#define CHECK_DELAY_MS 500// Delay between scheduler 
 
 
-typedef struct steve_job {
-    char name[MAX_STEVE_NAME]; 
-    // TODO: set proper tick delay later
+typedef void (*job_function)(void);
+
+//one single job function
+typedef struct jobs {
+    char name[MAX_JOBS_NAME]; 
     uint32_t execute_job; //how many ticks until the job should be executed
     uint32_t recuring_job; //how many ticks until the job should be executed again 
     job_function function;
-} steve_job_t;
+} jobs_t;
 
+//scheduler struct for multiple jobs
 typedef struct steve_scheduler {
-    steve_job_t jobs[MAX_STEVE_JOBS]; //numbers of jobs
+    jobs_t jobs[MAX_JOBS]; //numbers of jobs
     size_t job_count; // Number of active jobs
-} steve_scheduler_t;
+} scheduler_t;
 
-//Scheduler global instance 
-steve_scheduler_t g_steve_scheduler;
+scheduler_t scheduler; // Global scheduler instance
 
-//Steve functions
-void initialize_scheduler_job();
-void create_scheduler_job(const char* job_name, uint8_t execute_time, uint8_t recur_time, job_function job_funct);
-void run_cheduler_job(steve_job_t* job);
-void delete_scheduler_job(steve_job_t* job);
+//Scheduler functions
+void initialize_job();
+void create_job(const char* job_name, uint8_t execute_time, uint8_t recur_time, job_function job_funct);
+void run_job(jobs_t* job);
+void delete_job(jobs_t* job);
 
-
-//Main task
 void steve_task(void* unused_args);
