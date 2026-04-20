@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "FreeRTOS.h"
-#include "semphr.h"
 #include "gse.h"
-#include "task.h"
-#include "pico/error.h"
-#include "pico/stdlib.h"
 
 /*
 This function allows for basic debug handling. Will need to call a subfunction that actually runs the debug mode
@@ -30,7 +20,6 @@ typedef enum {
 } Command;
 
 
-SemaphoreHandle_t debug_handeling;
 volatile bool debug_mode = false;
 
 /*
@@ -50,9 +39,30 @@ void gse_init(){
     stdio_init_all();
 }
 
+void debug_mode_init(){
+    debug_mode_mutex = xSemaphoreCreateMutex();
+}
+
+void debug_mode_set(bool value){
+    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
+    debug_mode = value;
+    xSemaphoreGive(debug_mode_mutex);
+}
+
+void get_debug_mode(){
+    bool value;
+    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
+    value = debug_mode;
+    xSemaphoreGive(debug_mode_mutex);
+    log_info("Debug mode (0 = false, 1 = true) %d", value);
+}
+
+void close_debug(SemaphoreHandle_t debug_mode_mutex){
+    vSemaphoreDelete(debug_mode_mutex);
+}
+
 void vDebugTask(void* pm){
-    debug_handeling = xSemaphoreCreateMutex();
-    char buffer[256];
+    char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
     for(;;){
@@ -64,15 +74,17 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        debug_mode = true;
-                        log_info("Debug mode ON");
+                        debug_mode_init();
+                        debug_mode_set(true);
+                        get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                        debug_mode = false;
-                        log_info("Debug mode OFF");
+                        debug_mode_set(false);
+                        get_debug_mode();
+                        close_debug(debug_mode_mutex);
                         break;
                     case CMD_PULLLOG:
-                        log_info("The log are:");
+                        log_info("The logs are: ");
                         break;
                     default:
                         log_error("Unknown command: %s", buffer);

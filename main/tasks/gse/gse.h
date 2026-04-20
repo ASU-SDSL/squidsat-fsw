@@ -5,11 +5,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "atomic.h"
 
 #include "FreeRTOS.h"
+#include "semphr.h"
 #include "task.h"
 #include "tusb.h"
+#include "pico/error.h"
 
 // ---- Logging ----
 #define log_info(fmt, ...) \
@@ -20,6 +21,7 @@
         printf("[ERROR] " fmt "\n", ##__VA_ARGS__);
 
 // ---- Debug Mode Flag ----
+extern SemaphoreHandle_t debug_mode_mutex;
 extern volatile bool debug_mode;
 
 // ---- GSE Task ----
@@ -28,7 +30,14 @@ extern volatile bool debug_mode;
 #define GSE_BUFFER_SIZE     256
 #define GSE_TASK_DELAY_MS   10
 
-void gse_init();
+void gse_init(); // init stdio & tud_task (USB in tinyUSB)
 void vDebugTask(void *pvParameters);
+
+// ---- Internal GSE Task ----
+
+void debug_mode_init(); // Init Semaphore
+void debug_mode_set(bool value); // Sets True or False
+void get_debug_mode(); // Returns value Debug_MOde currently is
+void close_debug(SemaphoreHandle_t debug_mode_mutex); // Deletes Semaphore (Conserve Stack Space)
 
 #endif // GSE_TASK_H
