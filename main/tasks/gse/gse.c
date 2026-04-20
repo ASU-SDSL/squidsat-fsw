@@ -1,14 +1,6 @@
 #include "gse.h"
 
 /*
-This function allows for basic debug handling. Will need to call a subfunction that actually runs the debug mode
-Ideas:
-    1. Talk to Tyler N on how to make debug hooks that we can call once debug mode
-       is enabled. 
-    2. Want to maybe make a log command to see all the errors (might be part of debug mode tho) 
-*/
-
-/*
     List of known commands
     Make sure that if you make a new command you want to use over usb, that is is added here 
 */
@@ -21,10 +13,11 @@ typedef enum {
 
 
 volatile bool debug_mode = false;
+SemaphoreHandle_t debug_mode_mutex;
 
 /*
     How we parse commands through USB. This is what you type into serial monitor.
-    CMD_UNKNOWN is a base case, should never get there if you typed everything in right.
+    CMD_UNKNOWN is a base case, should never get there if you typed everything in correctly.
 */
 
 Command parse_command(const char* str) {
@@ -40,28 +33,29 @@ void gse_init(){
 }
 
 void debug_mode_init(){
-    debug_mode_mutex = xSemaphoreCreateMutex();
+    if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
 }
 
 void debug_mode_set(bool value){
+    debug_mode_init();
     xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
     debug_mode = value;
     xSemaphoreGive(debug_mode_mutex);
 }
 
-void get_debug_mode(){
+bool get_debug_mode(){
+    debug_mode_init();
     bool value;
     xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
     value = debug_mode;
     xSemaphoreGive(debug_mode_mutex);
-    log_info("Debug mode (0 = false, 1 = true) %d", value);
+    log_info("Debug mode (0 = OFF, 1 = ON) %d", value);
+    return value;
 }
 
-void close_debug(SemaphoreHandle_t debug_mode_mutex){
-    vSemaphoreDelete(debug_mode_mutex);
-}
 
 void vDebugTask(void* pm){
+    debug_mode_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
@@ -74,14 +68,12 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        debug_mode_init();
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
                         debug_mode_set(false);
                         get_debug_mode();
-                        close_debug(debug_mode_mutex);
                         break;
                     case CMD_PULLLOG:
                         log_info("The logs are: ");
@@ -97,13 +89,5 @@ void vDebugTask(void* pm){
             }
         }
         vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS));
-    }
-}
-
-void logging_in_debug(volatile bool debug_mode){
-    if(debug_mode){
-
-    }else{
-        return;
     }
 }

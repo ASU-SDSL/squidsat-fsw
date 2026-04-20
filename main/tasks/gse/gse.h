@@ -35,9 +35,8 @@ void vDebugTask(void *pvParameters);
 
 // ---- Internal GSE Task ----
 
-void debug_mode_init(); // Init Semaphore
+void debug_mode_init(); // Init the Mutex
 void debug_mode_set(bool value); // Sets True or False
-void get_debug_mode(); // Returns value Debug_MOde currently is
-void close_debug(SemaphoreHandle_t debug_mode_mutex); // Deletes Semaphore (Conserve Stack Space)
+bool get_debug_mode(); // Returns value Debug_Mode currently is
 
 #endif // GSE_TASK_H
