@@ -18,7 +18,6 @@ while getopts "p:d" opt; do
 done
 
 
-
 # ------ Reboot Pico ------
 picotool reboot -f -u
 
