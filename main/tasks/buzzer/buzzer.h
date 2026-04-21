@@ -18,6 +18,6 @@ void buzzer_init(void);
 void buzzer_on(void);
 void buzzer_off(void);
 
-void buzzer_task(void* pvParameters);
+void vBuzzerTask(void* pvParameters);
 
 #endif

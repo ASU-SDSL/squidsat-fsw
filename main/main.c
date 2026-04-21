@@ -2,6 +2,7 @@
 #include "task.h"
 #include "timers.h"
 #include "gse.h"
+#include "buzzer.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 
@@ -25,6 +26,7 @@ int main()
     // Create the blink task and verify creation succeeded.
     xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
     xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
+    xTaskCreate(vBuzzerTask, "BUZZER", 1024, NULL, tskIDLE_PRIORITY + 3UL, NULL);
     vTaskStartScheduler();
 
     while (1) {}
