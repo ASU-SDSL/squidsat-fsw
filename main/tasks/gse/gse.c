@@ -1,4 +1,7 @@
+#include <FreeRTOS.h>
+
 #include "gse.h"
+#include "log.h"
 
 /*
     List of known commands
@@ -27,7 +30,7 @@ Command parse_command(const char* str) {
     return CMD_UNKNOWN;
 }
 
-void gse_init(){
+void gse_init(void){
     tud_task();
     stdio_init_all();
 }
@@ -68,21 +71,22 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
+                        log_debug("Debug Mode ON");
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
+                        log_debug("Debug MODE OFF");
                         debug_mode_set(false);
                         get_debug_mode();
                         break;
                     case CMD_PULLLOG:
-                        log_info("The logs are: ");
+                        print_log();
                         break;
                     default:
                         log_error("Unknown command: %s", buffer);
                         break;
                 }
-                
                 buffer_index = 0;
             } else {
                 if(buffer_index < 255) {buffer[buffer_index++] = c;}

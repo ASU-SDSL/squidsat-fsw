@@ -2,6 +2,7 @@
 #include "task.h"
 #include "timers.h"
 #include "gse.h"
+#include "log.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 

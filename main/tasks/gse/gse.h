@@ -6,19 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
 #include "tusb.h"
 #include "pico/error.h"
 
-// ---- Logging ----
-#define log_info(fmt, ...) \
-        printf("[LOG] " fmt "\n", ##__VA_ARGS__);
-        
-
-#define log_error(fmt, ...) \
-        printf("[ERROR] " fmt "\n", ##__VA_ARGS__);
+// ---- Logging (Strictly for Debug Mode) ----
 
 // ---- Debug Mode Flag ----
 extern SemaphoreHandle_t debug_mode_mutex;
@@ -35,7 +28,7 @@ void vDebugTask(void *pvParameters);
 
 // ---- Internal GSE Task ----
 
-void debug_mode_init(); // Init the Mutex
+void debug_mode_init(void); // Init the Mutex
 void debug_mode_set(bool value); // Sets True or False
 bool get_debug_mode(); // Returns value Debug_Mode currently is
 

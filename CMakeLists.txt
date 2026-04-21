@@ -8,7 +8,7 @@ endif()
 
 if(PICO_BOARD STREQUAL "pico")
     set(PICO_PLATFORM "rp2040" CACHE STRING "Pico platform")
-    
+
 else()
     set(PICO_PLATFORM "rp2350-arm-s" CACHE STRING "Pico platform")
 endif()
@@ -46,12 +46,14 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main/main.c
     main/tasks/gse/gse.c
+    main/tasks/log/log.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/log
 )
 
 target_link_libraries(${PROJECT_NAME}
