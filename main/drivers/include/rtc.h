@@ -1,9 +1,5 @@
-/**
- * @file rtc_ds3231.h
- * @brief DS3231 Real Time Clock Driver
- *
- */
-#pragma once
+#ifndef RTC_H
+#define RTC_H
 
 #include <stdint.h>
 
@@ -89,3 +85,5 @@ uint8_t rtc_update_temp(i2c_inst_t* i2c);
  * @brief Test RTC functions
  */
 void rtc_test();
+
+#endif // RTC_H
