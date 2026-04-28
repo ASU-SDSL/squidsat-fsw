@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <FreeRTOS.h>
 
 #include "semphr.h"
 #include "task.h"

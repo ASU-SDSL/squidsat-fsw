@@ -1,7 +1,5 @@
-#include <FreeRTOS.h>
-
 #include "gse.h"
-#include "log.h"
+#include "utilities/log/log.h"
 
 /*
     List of known commands
@@ -11,6 +9,7 @@ typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
     CMD_PULLLOG,
+    CMD_REALTIMELOG,
     CMD_UNKNOWN
 } Command;
 
@@ -27,6 +26,7 @@ Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
+    if (strcmp(str, "rt_log") == 0) return CMD_REALTIMELOG;
     return CMD_UNKNOWN;
 }
 
@@ -63,7 +63,7 @@ void vDebugTask(void* pm){
     int buffer_index = 0;
 
     for(;;){
-        int c = getchar_timeout_us(0); 
+        int c = getchar_timeout_us(0);
 
         if (c != PICO_ERROR_TIMEOUT) {
             if (c == '\n' || c == '\r') {
@@ -71,17 +71,19 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        log_debug("Debug Mode ON");
+                        log_debug("Debug mode ON");
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                        log_debug("Debug MODE OFF");
+                        log_debug("Debug mode OFF");
                         debug_mode_set(false);
                         get_debug_mode();
                         break;
                     case CMD_PULLLOG:
                         print_log();
+                        break;
+                    case CMD_REALTIMELOG:
                         break;
                     default:
                         log_error("Unknown command: %s", buffer);
