@@ -9,7 +9,7 @@
 
 void led_task(void *pvParameters)
 {   
-    int LED_PIN = 2; // this is for testing OBC hardware
+    int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     while (true) {

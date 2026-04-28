@@ -19,6 +19,7 @@
 
 // ---- Packet Definitions ----
 typedef enum {
+    LOG_INFO,
     LOG_ERROR,
     LOG_WARNING,
     LOG_MISSION_CRIT
@@ -32,26 +33,33 @@ typedef struct {
 
 // ---- Logging Functions ----
 void log_init(void);
-void log_data(LogLevel priority, const char* fmt, ...);
+void log_to_queue(LogLevel priority, const char* fmt, ...);
 void print_log(void);
 
 // ---- Logging Macros ----
 
 // TASK - need to change the Log_info and log_warning to actually just print when debug mode is on, not that hard
 // TASK - need to add mission critical that will add to log error will also add to log 
-#define log_info(fmt, ...) printf("[INFO] " fmt, ##__VA_ARGS__)
+#define log_data(fmt, ...) printf("[DATA] " fmt "\n", ##__VA_ARGS__);
 
-#define log_error(fmt, ...)\
-        printf("[ERROR] " fmt, ##__VA_ARGS__)\
-        log_data(LOG_ERROR,   fmt, ##__VA_ARGS__)
+#define log_info(fmt, ...) do { \
+        printf("[INFO]" fmt "\n", ##__VA_ARGS__);\
+        log_to_queue(LOG_INFO, fmt, ##__VA_ARGS__);\
+}while(0)
 
-#define log_warning(fmt, ...)\
-        printf("[WARNING] " fmt, ##__VA_ARGS__)\
-        log_data(LOG_WARNING, fmt, ##__VA_ARGS__)
-#define log_mission_crit(fmt, ...)\
-        printf("[MISSION CRITICAL] " fmt, ##__VA_ARGS__)\
-        log_data(LOG_MISSION_CRIT, fmt, ##__VA_ARGS__)
+#define log_error(fmt, ...) do { \
+    printf("[ERROR] " fmt "\n", ##__VA_ARGS__); \
+    log_to_queue(LOG_ERROR, fmt, ##__VA_ARGS__); \
+} while(0)
 
-#define log_debug(fmt, ...)  printf("[GSE DEBUG LOG] " fmt, ##__VA_ARGS__)
+#define log_warning(fmt, ...) do { \
+    printf("[WARNING] " fmt "\n", ##__VA_ARGS__); \
+    log_to_queue(LOG_WARNING, fmt, ##__VA_ARGS__); \
+} while(0)
+
+#define log_mission_crit(fmt, ...) do { \
+    printf("[MISSION CRITICAL] " fmt "\n", ##__VA_ARGS__); \
+    log_to_queue(LOG_MISSION_CRIT, fmt, ##__VA_ARGS__); \
+} while(0)
 
 #endif // LOG_H

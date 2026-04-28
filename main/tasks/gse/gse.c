@@ -1,5 +1,5 @@
 #include "gse.h"
-#include "utilities/log/log.h"
+#include "log.h"
 
 /*
     List of known commands
@@ -59,6 +59,7 @@ bool get_debug_mode(){
 
 void vDebugTask(void* pm){
     debug_mode_init();
+    log_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
@@ -71,12 +72,12 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        log_debug("Debug mode ON");
+                        log_data("Debug mode ON");
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                        log_debug("Debug mode OFF");
+                        log_data("Debug mode OFF");
                         debug_mode_set(false);
                         get_debug_mode();
                         break;
@@ -86,7 +87,7 @@ void vDebugTask(void* pm){
                     case CMD_REALTIMELOG:
                         break;
                     default:
-                        log_error("Unknown command: %s", buffer);
+                        log_warning("Unknown command: %s", buffer);
                         break;
                 }
                 buffer_index = 0;
