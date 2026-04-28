@@ -37,29 +37,22 @@ void log_to_queue(LogLevel priority, const char* fmt, ...);
 void print_log(void);
 
 // ---- Logging Macros ----
-
-// TASK - need to change the Log_info and log_warning to actually just print when debug mode is on, not that hard
-// TASK - need to add mission critical that will add to log error will also add to log 
 #define log_data(fmt, ...) printf("[DATA] " fmt "\n", ##__VA_ARGS__);
 
-#define log_info(fmt, ...) do { \
+#define log_info(fmt, ...)\
         printf("[INFO]" fmt "\n", ##__VA_ARGS__);\
-        log_to_queue(LOG_INFO, fmt, ##__VA_ARGS__);\
-}while(0)
+        log_to_queue(LOG_INFO, fmt, ##__VA_ARGS__);
 
-#define log_error(fmt, ...) do { \
-    printf("[ERROR] " fmt "\n", ##__VA_ARGS__); \
-    log_to_queue(LOG_ERROR, fmt, ##__VA_ARGS__); \
-} while(0)
+#define log_error(fmt, ...)\
+        printf("[ERROR] " fmt "\n", ##__VA_ARGS__);\
+        log_to_queue(LOG_ERROR, fmt, ##__VA_ARGS__);
 
-#define log_warning(fmt, ...) do { \
-    printf("[WARNING] " fmt "\n", ##__VA_ARGS__); \
-    log_to_queue(LOG_WARNING, fmt, ##__VA_ARGS__); \
-} while(0)
+#define log_warning(fmt, ...)\
+        printf("[WARNING] " fmt "\n", ##__VA_ARGS__);\
+        log_to_queue(LOG_WARNING, fmt, ##__VA_ARGS__);
 
-#define log_mission_crit(fmt, ...) do { \
-    printf("[MISSION CRITICAL] " fmt "\n", ##__VA_ARGS__); \
-    log_to_queue(LOG_MISSION_CRIT, fmt, ##__VA_ARGS__); \
-} while(0)
+#define log_mission_crit(fmt, ...)\
+        printf("[MISSION CRITICAL] " fmt "\n", ##__VA_ARGS__);\
+        log_to_queue(LOG_MISSION_CRIT, fmt, ##__VA_ARGS__);
 
 #endif // LOG_H

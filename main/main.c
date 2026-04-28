@@ -52,6 +52,7 @@ void vApplicationMallocFailedHook(void)
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 
+
 void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
                                     StackType_t **ppxIdleTaskStackBuffer,
                                     configSTACK_DEPTH_TYPE *puxIdleTaskStackSize) {
@@ -63,6 +64,7 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 /* RP2350 passive idle task memory (second core idle) */
 static StaticTask_t xPassiveIdleTaskTCB;
 static StackType_t uxPassiveIdleTaskStack[configMINIMAL_STACK_SIZE];
+
 
 void vApplicationGetPassiveIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
                                            StackType_t **ppxIdleTaskStackBuffer,
@@ -76,6 +78,7 @@ void vApplicationGetPassiveIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 /* Timer task memory */
 static StaticTask_t xTimerTaskTCB;
 static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+
 
 void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
                                      StackType_t **ppxTimerTaskStackBuffer,

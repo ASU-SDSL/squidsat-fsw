@@ -24,6 +24,8 @@ void log_init(void){
         log_mutex = xSemaphoreCreateMutex();
 }
 
+
+// Use heap 4 to allocate pointers to this
 void log_to_queue(LogLevel priority, const char* fmt, ...){
     log_init();
     if(log_buffer == NULL || log_mutex == NULL) return;
