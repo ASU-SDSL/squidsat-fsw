@@ -44,24 +44,42 @@ pico_sdk_init()
 
 # ── Application ───────────────────────────────────────────────────────────────
 add_executable(${PROJECT_NAME}
-    main/main.c
-    main/tasks/gse/gse.c
-    main/utilities/log/log.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/main.c
+
+    # drivers 
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
+
+    # utilities 
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
+
+    # tasks 
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/config
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/include
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/include
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
     ${CMAKE_CURRENT_SOURCE_DIR}/main/utilities/log
 )
+
+# add FatFs library 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/ff16 build)
 
 target_link_libraries(${PROJECT_NAME}
     FreeRTOS-Kernel
     FreeRTOS-Kernel-Heap4
     pico_stdlib
     pico_multicore
+    pico_aon_timer
     hardware_gpio
+    hardware_i2c
+
+    FatFs
 )
 #pico_set_binary_type(my_target no_flash) # for testing the hardware of the OBC
 
