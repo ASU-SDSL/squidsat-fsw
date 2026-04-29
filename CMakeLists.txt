@@ -52,6 +52,8 @@ add_executable(${PROJECT_NAME}
 
     # utilities 
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/log/log.c
+
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c

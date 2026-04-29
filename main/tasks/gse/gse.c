@@ -14,15 +14,15 @@ typedef enum {
 } Command;
 
 
-volatile bool debug_mode = false;
-SemaphoreHandle_t debug_mode_mutex;
+static volatile bool debug_mode = false;
+static SemaphoreHandle_t debug_mode_mutex;
 
 /*
     How we parse commands through USB. This is what you type into serial monitor.
     CMD_UNKNOWN is a base case, should never get there if you typed everything in correctly.
 */
 
-Command parse_command(const char* str) {
+static Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
@@ -33,20 +33,22 @@ Command parse_command(const char* str) {
 void gse_init(void){
     tud_task();
     stdio_init_all();
+    debug_mode_init();
+    log_init();
 }
 
-void debug_mode_init(){
+void debug_mode_init(void){
     if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
 }
 
-void debug_mode_set(bool value){
+static void debug_mode_set(bool value){
     debug_mode_init();
     xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
     debug_mode = value;
     xSemaphoreGive(debug_mode_mutex);
 }
 
-bool get_debug_mode(){
+static bool get_debug_mode(){
     debug_mode_init();
     bool value;
     xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);

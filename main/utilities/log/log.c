@@ -8,13 +8,11 @@
 #include <string.h>
 
 
-static uint8_t log_head = 0;
-static uint8_t log_count = 0;
 
 static QueueHandle_t log_buffer;
 static SemaphoreHandle_t log_mutex;
 
-const char* level_str[] = {"INFO", "ERROR", "WARNING", "MISSION CRITICAL"};
+static const char* level_str[] = {"INFO", "ERROR", "WARNING", "MISSION CRITICAL"};
 
 
 void log_init(void){

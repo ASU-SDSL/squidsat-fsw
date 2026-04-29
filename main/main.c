@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+#include "hardware/gpio.h"
+#include "hardware/irq.h"
+
 #include "gse.h"
 #include "i2c_util.h"
 
@@ -28,15 +31,15 @@ void led_task(void *pvParameters)
 int main()
 {
     gse_init();
-    i2c_util_init(); 
+    // i2c_util_init(); 
 
-    uint8_t ts_res = timing_init(); 
+    // uint8_t ts_res = timing_init(); 
     
-    while(ts_res){ // retry bc this is critical - get a better solution to failure later 
-        log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
-        sleep_ms(1000); 
-        ts_res = timing_init();
-    }
+    // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
+    //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
+    //     sleep_ms(1000); 
+    //     ts_res = timing_init();
+    // }
 
     // Create the blink task and verify creation succeeded.
     xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
