@@ -1,21 +1,30 @@
 #!/bin/bash
 
-PICO_FILE="build/freertos_rp2040.uf2" ;
-PICO2_FILE="build/freertos_rp2350.uf2" ;
+PICO_FILE="build/freertos_rp2040.uf2"
+PICO2_FILE="build/freertos_rp2350.uf2"
 
-# ------ Reboot Pico ------
+# ------ Reboot Pico into BOOTSEL ------
 picotool reboot -f -u
-sleep 2 # this is just to make sure it doesn't miss the build
 
 # ------ Deploying ------
 
 if [ -f "$PICO_FILE" ]; then
-    picotool load -x "$PICO_FILE" -f
+    if picotool load -x "$PICO_FILE" -f --verify; then
+        echo "Deployment successful and verified for RP2040!"
+    else
+        echo "Deployment failed or verification mismatch!"
+        exit 1
+    fi
+
 elif [ -f "$PICO2_FILE" ]; then
-    picotool load -x "$PICO2_FILE" -f
+    if picotool load -x "$PICO2_FILE" -f --verify; then
+        echo "Deployment successful and verified for RP2350!"
+    else
+        echo "Deployment failed or verification mismatch!"
+        exit 1
+    fi
+
 else
     echo "No .uf2 file found in build/"
     exit 1
 fi
-
-echo "Deployment Complete!"
