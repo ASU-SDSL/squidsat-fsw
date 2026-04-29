@@ -10,11 +10,34 @@ git submodule update --init --recursive
 
 ## Build
 
-Create a build directory, configure with CMake, and build:
+Use `build.sh` to create/configure the `build/` directory and compile the
+firmware for the Pico version you want:
 
 ```bash
-mkdir build
-cd build
-cmake .. -DPICO_PLATFORM=rp2350
-make
+./build.sh -p pico
+```
+
+or, for Pico 2:
+
+```bash
+./build.sh -p pico2
+```
+
+The `-p` flag selects the target board:
+
+- `pico` builds for RP2040.
+- `pico2` builds for RP2350.
+
+To build in debug mode, add `-d`:
+
+```bash
+./build.sh -p pico2 -d
+```
+
+## Deploy
+
+After the build finishes, flash the Pico with:
+
+```bash
+./deploy.sh
 ```
