@@ -17,11 +17,6 @@ while getopts "p:d" opt; do
     esac
 done
 
-
-
-# ------ Reboot Pico ------
-picotool reboot -f -u
-
 # ------ Build Folder Check ------
 
 if [ ! -d $BUILD_DIR ]; then
@@ -90,10 +85,3 @@ else
     exit 1
 fi
 
-# ------ Deploying ------
-
-if [ "$PICO_VERSION" == "pico" ]; then
-    picotool load -x "$PICO_FILE" -f
-elif [ "$PICO_VERSION" == "pico2" ]; then
-    picotool load -x "$PICO2_FILE" -f
-fi
