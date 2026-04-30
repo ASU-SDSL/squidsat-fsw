@@ -6,22 +6,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "atomic.h"
+#include <FreeRTOS.h>
 
-#include "FreeRTOS.h"
+#include "semphr.h"
 #include "task.h"
 #include "tusb.h"
+#include "pico/error.h"
 
-// ---- Logging ----
-#define log_info(fmt, ...) \
-        printf("[LOG] " fmt "\n", ##__VA_ARGS__);
-        
-
-#define log_error(fmt, ...) \
-        printf("[ERROR] " fmt "\n", ##__VA_ARGS__);
-
-// ---- Debug Mode Flag ----
-extern volatile bool debug_mode;
 
 // ---- GSE Task ----
 #define GSE_TASK_STACK_SIZE 1024
@@ -29,7 +20,8 @@ extern volatile bool debug_mode;
 #define GSE_BUFFER_SIZE     256
 #define GSE_TASK_DELAY_MS   10
 
-void gse_init();
+void gse_init(); // init stdio & tud_task (USB in tinyUSB)
 void vDebugTask(void *pvParameters);
+void debug_mode_init(void);
 
 #endif // GSE_TASK_H

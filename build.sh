@@ -4,6 +4,7 @@ build_path=./build ;
 PICO_VERSION="pico2" ;
 PICO_FILE="build/freertos_rp2040.uf2" ;
 PICO2_FILE="build/freertos_rp2350.uf2" ;
+DEBUG_MODE="false"
 
 # ------ Flag Catching ------
 
@@ -11,7 +12,8 @@ while getopts "p:d" opt; do
     case $opt in
         p) PICO_VERSION="$OPTARG"
            echo "$PICO_VERSION" ;;
-        d) echo "Debug Build working" ;; # Need to get this working
+        d) DEBUG_MODE="true"
+           echo "Debug Build working" ;; # Need to get this working
     esac
 done
 

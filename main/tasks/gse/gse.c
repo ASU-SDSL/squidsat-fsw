@@ -1,22 +1,5 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "FreeRTOS.h"
-#include "semphr.h"
 #include "gse.h"
-#include "task.h"
-#include "pico/error.h"
-#include "pico/stdlib.h"
-
-/*
-This function allows for basic debug handling. Will need to call a subfunction that actually runs the debug mode
-Ideas:
-    1. Talk to Tyler N on how to make debug hooks that we can call once debug mode
-       is enabled. 
-    2. Want to maybe make a log command to see all the errors (might be part of debug mode tho) 
-*/
+#include "log.h"
 
 /*
     List of known commands
@@ -26,37 +9,64 @@ typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
     CMD_PULLLOG,
+    CMD_REALTIMELOG,
     CMD_UNKNOWN
 } Command;
 
 
-SemaphoreHandle_t debug_handeling;
-volatile bool debug_mode = false;
+static volatile bool debug_mode = false;
+static SemaphoreHandle_t debug_mode_mutex;
 
 /*
     How we parse commands through USB. This is what you type into serial monitor.
-    CMD_UNKNOWN is a base case, should never get there if you typed everything in right.
+    CMD_UNKNOWN is a base case, should never get there if you typed everything in correctly.
 */
 
-Command parse_command(const char* str) {
+static Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
+    if (strcmp(str, "rt_log") == 0) return CMD_REALTIMELOG;
     return CMD_UNKNOWN;
 }
 
-void gse_init(){
+void gse_init(void){
     tud_task();
     stdio_init_all();
+    debug_mode_init();
+    log_init();
 }
 
+void debug_mode_init(void){
+    if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
+}
+
+static void debug_mode_set(bool value){
+    debug_mode_init();
+    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
+    debug_mode = value;
+    xSemaphoreGive(debug_mode_mutex);
+}
+
+static bool get_debug_mode(){
+    debug_mode_init();
+    bool value;
+    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
+    value = debug_mode;
+    xSemaphoreGive(debug_mode_mutex);
+    log_info("Debug mode (0 = OFF, 1 = ON) %d", value);
+    return value;
+}
+
+
 void vDebugTask(void* pm){
-    debug_handeling = xSemaphoreCreateMutex();
-    char buffer[256];
+    debug_mode_init();
+    log_init();
+    char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
     for(;;){
-        int c = getchar_timeout_us(0); 
+        int c = getchar_timeout_us(0);
 
         if (c != PICO_ERROR_TIMEOUT) {
             if (c == '\n' || c == '\r') {
@@ -64,34 +74,29 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        debug_mode = true;
-                        log_info("Debug mode ON");
+                        log_data("Debug mode ON");
+                        debug_mode_set(true);
+                        get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                        debug_mode = false;
-                        log_info("Debug mode OFF");
+                        log_data("Debug mode OFF");
+                        debug_mode_set(false);
+                        get_debug_mode();
                         break;
                     case CMD_PULLLOG:
-                        log_info("The log are:");
+                        print_log();
+                        break;
+                    case CMD_REALTIMELOG:
                         break;
                     default:
-                        log_error("Unknown command: %s", buffer);
+                        log_warning("Unknown command: %s", buffer);
                         break;
                 }
-                
                 buffer_index = 0;
             } else {
                 if(buffer_index < 255) {buffer[buffer_index++] = c;}
             }
         }
         vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS));
-    }
-}
-
-void logging_in_debug(volatile bool debug_mode){
-    if(debug_mode){
-
-    }else{
-        return;
     }
 }

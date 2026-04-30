@@ -1,6 +1,7 @@
 #include "timing.h"
 
 #include "gse.h"
+#include "log.h"
 #include "hardware/i2c.h"
 #include "pico/aon_timer.h"
 #include "rtc.h"

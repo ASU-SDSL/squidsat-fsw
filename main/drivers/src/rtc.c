@@ -4,6 +4,7 @@
 
 #include "HardwareConfig.h"
 #include "gse.h"
+#include "log.h"
 #include "hardware/i2c.h"
 #include "i2c_util.h"
 #include "pico/stdlib.h"
