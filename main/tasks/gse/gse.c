@@ -31,7 +31,6 @@ static Command parse_command(const char* str) {
 }
 
 void gse_init(void){
-    tud_task();
     stdio_init_all();
     debug_mode_init();
     log_init();
@@ -43,29 +42,42 @@ void debug_mode_init(void){
 
 static void debug_mode_set(bool value){
     debug_mode_init();
-    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
-    debug_mode = value;
-    xSemaphoreGive(debug_mode_mutex);
+    if(xSemaphoreTake(debug_mode_mutex, portMAX_DELAY)){
+        debug_mode = value;
+        xSemaphoreGive(debug_mode_mutex);
+    }
 }
 
 static bool get_debug_mode(){
     debug_mode_init();
     bool value;
-    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
-    value = debug_mode;
-    xSemaphoreGive(debug_mode_mutex);
+    if(xSemaphoreTake(debug_mode_mutex, portMAX_DELAY)){
+        value = debug_mode;
+        xSemaphoreGive(debug_mode_mutex);
+    }
     log_info("Debug mode (0 = OFF, 1 = ON) %d", value);
     return value;
 }
 
+void usb_task(void * param){
+    while(1) {
+        tud_task(); 
+        vTaskDelay(1); 
+    }
+}
 
-void vDebugTask(void* pm){
+void debug_task(void* param){
     debug_mode_init();
     log_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
     for(;;){
+        if(stdio_usb_connected() == false){
+            vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
+            continue;
+        }
+
         int c = getchar_timeout_us(0);
 
         if (c != PICO_ERROR_TIMEOUT) {

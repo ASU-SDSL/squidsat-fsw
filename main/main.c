@@ -20,6 +20,7 @@ void led_task(void *pvParameters)
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     while (true) {
+        log_data("Hello data"); 
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(LED_PIN, 0);
@@ -42,8 +43,9 @@ int main()
     // }
 
     // Create the blink task and verify creation succeeded.
+    xTaskCreate(usb_task, "USB", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
     xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
-    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
+    xTaskCreate(debug_task, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
     vTaskStartScheduler();
 
     while (1) {}

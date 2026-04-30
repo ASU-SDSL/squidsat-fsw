@@ -21,7 +21,12 @@
 #define GSE_TASK_DELAY_MS   10
 
 void gse_init(); // init stdio & tud_task (USB in tinyUSB)
-void vDebugTask(void *pvParameters);
+
 void debug_mode_init(void);
+
+void debug_task(void *param);
+
+void usb_task(void * param);
+
 
 #endif // GSE_TASK_H
