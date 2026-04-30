@@ -14,9 +14,7 @@ void led_task(void *pvParameters)
     gpio_init(PICO_DEFAULT_LED_PIN);
     gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
     while (true) {
-
-        
-
+        log_info("Blink!"); 
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(PICO_DEFAULT_LED_PIN, 0);

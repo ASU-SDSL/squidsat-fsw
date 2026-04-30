@@ -11,8 +11,8 @@
 
 uint8_t flash_init(spi_inst_t* spi_bus, uint8_t cs); 
 
-uint8_t read_sector(DWORD address, BYTE* buff); 
+uint8_t read_sector(DWORD address, const BYTE* buff); 
 
-uint8_t write_sector(DWORD address, BYTE* buff); 
+uint8_t write_sector(DWORD address, const BYTE* buff); 
 
 #endif // FLASH_H

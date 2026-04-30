@@ -33,5 +33,5 @@ target_include_directories(FatFs INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/source
 
     # custom implemented diskio
-    ${DISKIO_SOURCE}
+    ${DISKIO_INCLUDE}
 )
