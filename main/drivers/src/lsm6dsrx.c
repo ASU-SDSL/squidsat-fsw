@@ -16,6 +16,8 @@ static const uint8_t LSM6_ADDR = 0x44; //PLACEHOLDER
 // Sensor's registers
 static const uint8_t REG_XL_ODR = 0x10; // Accelerometer Output Data Rate (aka refresh rate) Set to 52hz, and Low-Pass Filter 2 is enabled
 static const uint8_t REG_BDU = 0x12;    // Block Data Update - Can be enabled to prevent writing to a register while reading it
+static const uint8_t REG_WHO_AM_I = 0x0f;     
+
 static const uint8_t REG_TEMP_L = 0x20;
 static const uint8_t REG_TEMP_H = 0x21;
 
@@ -32,12 +34,22 @@ static const uint8_t REG_XL_Z_H = 0x2D;
 
 int lsm6_config(i2c_inst_t *i2c){
     i2c_util_init();
+    uint8_t identify;                   // Buffer to check that i2c is working via WHO_AM_I register on the lsm6
 
-    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_BDU, &CMD_BDU, 1)){    // Initializing the BDU Register
+    if(i2c_read_from_register(i2c, LSM6_ADDR, REG_WHO_AM_I, &identify, 1)){
+        return 1;
+    }
+
+    if(identify != 0x6B){
+        printf("LSM6 I2C connection not found... \n");
+        return 1;
+    }
+
+    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_BDU, &CMD_BDU, 1)){        // Initializing the BDU Register
         return 1;
     }   
 
-    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_XL_ODR, &CMD_XL_ODR, 1)){ // Initializing the Acceleration ODR
+    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_XL_ODR, &CMD_XL_ODR, 1)){  // Initializing the Acceleration ODR
         return 1;
     }    
     
