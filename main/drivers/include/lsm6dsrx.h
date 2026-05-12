@@ -35,4 +35,16 @@ int lsm6_config(i2c_inst_t *i2c);
  */
 uint8_t lsm6_get_temp(i2c_inst_t *i2c, int8_t* whole, uint8_t* fraction);
 
+/**
+ * @brief Gets the acceleration. Keeps the high and low together, to be worked on with fixed-point arithmetic 
+ * avoid costly floating point ops. 
+ * 
+ * @param i2c I2C Instance
+ * @param x_axis Data buffer for the X-Axis. Divide by 10^6 for the actaul value in (g)
+ * @param y_axis Data buffer for the Y-Axis. Divide by 10^6 for the actaul value in (g)
+ * @param z_axis Data buffer for the Z-Axis. Divide by 10^6 for the actaul value in (g)
+ * @return uint8_t Status (0 = Success)
+ */
+uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis);
+
 #endif

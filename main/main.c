@@ -28,7 +28,7 @@ void led_task(void *pvParameters)
     }
 }
 
-void temp_task(void *pvParameters){
+void tempurature_task(void *pvParameters){
     int8_t whole = 0;
     uint8_t fraction = 0;
 
