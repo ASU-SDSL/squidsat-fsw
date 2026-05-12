@@ -29,6 +29,11 @@ static const uint8_t REG_XL_X_L = 0x28; // Accelerometer X-Axis Low Register. On
  uint8_t CMD_XL_ODR = 0x32;             // Set to 52Hz, +-2g and Low-Pass Filter 2 is enabled
  uint8_t CMD_G_ODR = 0x32;              // Set to 52H, and z+- 125dps
 
+// Other Constants 
+static const int GYRO_LSB = 4375;       // Since the full scale we selected for is 4.375 milidegrees/LSB and we use 4375 to avoid using floats
+static const int ACCEL_LSB = 61;        // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
+
+
 uint8_t lsm6_config(i2c_inst_t *i2c){
     i2c_util_init();
     uint8_t identify;                   // Buffer to check that i2c is working via WHO_AM_I register on the lsm6
@@ -91,9 +96,9 @@ uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    *x_axis = raw_x * 61; // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
-    *y_axis = raw_y * 61;
-    *z_axis = raw_z * 61;
+    *x_axis = raw_x * ACCEL_LSB; // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
+    *y_axis = raw_y * ACCEL_LSB;
+    *z_axis = raw_z * ACCEL_LSB;
 
     return 0;
 }
@@ -109,9 +114,9 @@ uint8_t lsm6_get_gyro(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    *x_axis = raw_x * 4375; // Since the full scale we selected for is 4.375 milidegrees/LSB and we use 4375 to avoid using floats
-    *y_axis = raw_y * 4375;
-    *z_axis = raw_z * 4375;
+    *x_axis = raw_x * GYRO_LSB; 
+    *y_axis = raw_y * GYRO_LSB;
+    *z_axis = raw_z * GYRO_LSB;
 
     return 0;
 }

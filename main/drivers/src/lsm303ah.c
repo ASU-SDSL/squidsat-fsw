@@ -21,6 +21,9 @@ static const uint8_t REG_M_X_L = 0x68;   // Magnetometer X-Axis Low Register. On
 uint8_t CMD_M_ODR = 0x00;
 uint8_t CMD_M_OFFSET = 0x02;
 
+// Other Constants 
+static const int MAG_LSB = 15;          // Since the sensitivity is 1.5mG/LSB and we use 15 to avoid using floats. 
+
 uint8_t lsm3_config(i2c_inst_t *i2c){
     i2c_util_init();
 
@@ -45,9 +48,9 @@ uint8_t lsm3_get_mag(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t*
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    *x_axis = raw_x * 15; // Since the sensitivity is 1.5mG/LSB and we use 15 to avoid using floats. 
-    *y_axis = raw_y * 15;
-    *z_axis = raw_z * 15;
+    *x_axis = raw_x * MAG_LSB; 
+    *y_axis = raw_y * MAG_LSB;
+    *z_axis = raw_z * MAG_LSB;
 
     return 0;
 }
