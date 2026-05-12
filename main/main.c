@@ -11,6 +11,7 @@
 
 #include "gse.h"
 #include "i2c_util.h"
+#include "lsm6dsrx.h"
 
 #include "timing.h"
 
@@ -27,6 +28,17 @@ void led_task(void *pvParameters)
     }
 }
 
+void temp_task(void *pvParameters){
+    int8_t whole = 0;
+    uint8_t fraction = 0;
+
+    while(true){
+        lsm6_config(i2c0);
+        vTaskDelay(pdMS_TO_TICKS(1));
+        lsm6_get_temp(i2c0, &whole, &fraction);
+        printf("Testing for whole temp: %dC", whole);
+    }
+}
 
 int main()
 {

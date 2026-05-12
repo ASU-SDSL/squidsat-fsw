@@ -20,8 +20,8 @@ static const uint8_t REG_TEMP_L = 0x20;
 static const uint8_t REG_TEMP_H = 0x21;
 
 // Other Constants
-static const uint8_t CMD_BDU = 0x84;
-static const uint8_t CMD_XL_ODR = 0x20;
+ uint8_t CMD_BDU = 0x84;
+ uint8_t CMD_XL_ODR = 0x20;
 
 int lsm6_config(i2c_inst_t *i2c){
     i2c_util_init();

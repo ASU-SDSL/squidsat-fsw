@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/main/drivers/include",
-                "${workspaceFolder}/build/**"
+                "${workspaceFolder}/build/**",
+                "${workspaceFolder}/lib/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
