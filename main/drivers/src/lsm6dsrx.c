@@ -2,7 +2,7 @@
  * @file lsm6dsrx.c
  * @author Aidan Doyle (Doyle-Squared)
  * @brief 
- * @version 0.1
+ * @version 0.3
  * @date 2026-05-07
  * 
  * @copyright Copyright (c) 2026
@@ -17,31 +17,19 @@ static const uint8_t LSM6_ADDR = 0x44; //PLACEHOLDER
 static const uint8_t REG_XL_ODR = 0x10; // Accelerometer Output Data Rate (aka refresh rate) and sensitivity
 static const uint8_t REG_G_ODR = 0x11;  // Gyroscope output data rate and sensitivity
 static const uint8_t REG_BDU = 0x12;    // Block Data Update - Can be enabled to prevent writing to a register while reading it
-static const uint8_t REG_WHO_AM_I = 0x0f;     
+static const uint8_t REG_WHO_AM_I = 0x0F;     
 
 static const uint8_t REG_TEMP_L = 0x20;
 static const uint8_t REG_TEMP_H = 0x21;
-
-static const uint8_t REG_XL_X_L = 0x28; // Probably your starting/only address, if calling i2c_read to read in 6 bits
-// static const uint8_t REG_XL_X_H = 0x29; 
-// static const uint8_t REG_XL_Y_L = 0x2A; 
-// static const uint8_t REG_XL_Y_H = 0x2B; 
-// static const uint8_t REG_XL_Z_L = 0x2C; 
-// static const uint8_t REG_XL_Z_H = 0x2D; 
-
-static const uint8_t REG_G_X_L = 0x22; // Probably your starting/only address, if calling i2c_read to read in 6 bits
-// static const uint8_t REG_G_X_H = 0x23; 
-// static const uint8_t REG_G_Y_L = 0x24; 
-// static const uint8_t REG_G_Y_H = 0x25; 
-// static const uint8_t REG_G_Z_L = 0x26; 
-// static const uint8_t REG_G_Z_H = 0x27; 
+static const uint8_t REG_G_X_L = 0x22;  // Gyroscope X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x27
+static const uint8_t REG_XL_X_L = 0x28; // Accelerometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x2D
 
 // Commands (Writing to register)
  uint8_t CMD_BDU = 0x84;
  uint8_t CMD_XL_ODR = 0x32;             // Set to 52Hz, +-2g and Low-Pass Filter 2 is enabled
  uint8_t CMD_G_ODR = 0x32;              // Set to 52H, and z+- 125dps
 
-int lsm6_config(i2c_inst_t *i2c){
+uint8_t lsm6_config(i2c_inst_t *i2c){
     i2c_util_init();
     uint8_t identify;                   // Buffer to check that i2c is working via WHO_AM_I register on the lsm6
 
@@ -62,7 +50,7 @@ int lsm6_config(i2c_inst_t *i2c){
         return 1;
     }
     
-    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_G_ODR, &CMD_G_ODR, 1)){  // Initializing the Acceleration ODR
+    if(i2c_write_to_register(i2c, LSM6_ADDR, REG_G_ODR, &CMD_G_ODR, 1)){    // Initializing the Gyroscope ODR
         return 1;
     }   
     
