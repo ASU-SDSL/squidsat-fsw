@@ -51,7 +51,7 @@ add_executable(${PROJECT_NAME}
 
     # utilities 
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
-    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/log/log.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/log.c
 
 
     # tasks 
@@ -65,7 +65,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
-    ${CMAKE_CURRENT_SOURCE_DIR}/main/utilities/log
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/utilities/src
 )
 
 # add FatFs library 
