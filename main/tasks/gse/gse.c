@@ -1,44 +1,37 @@
 #include "gse.h"
 #include "log.h"
 
-/*
-    List of known commands
-    Make sure that if you make a new command you want to use over usb, that is is added here 
-*/
 typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
     CMD_PULLLOG,
-    CMD_REALTIMELOG,
     CMD_UNKNOWN
 } Command;
-
 
 static volatile bool debug_mode = false;
 static SemaphoreHandle_t debug_mode_mutex;
 
-/*
-    How we parse commands through USB. This is what you type into serial monitor.
-    CMD_UNKNOWN is a base case, should never get there if you typed everything in correctly.
-*/
 
 static Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
-    if (strcmp(str, "rt_log") == 0) return CMD_REALTIMELOG;
     return CMD_UNKNOWN;
-}
+};
 
 void gse_init(void){
     stdio_init_all();
     debug_mode_init();
     log_init();
-}
+};
+
+
 
 void debug_mode_init(void){
     if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
-}
+};
+
+
 
 static void debug_mode_set(bool value){
     debug_mode_init();
@@ -46,13 +39,13 @@ static void debug_mode_set(bool value){
         debug_mode = value;
         xSemaphoreGive(debug_mode_mutex);
     }
-}
+};
 
-static bool get_debug_mode(void)
-{
+
+
+bool get_debug_mode(void){
     debug_mode_init();
     if (debug_mode_mutex == NULL) {
-//
         return false;
     }
     bool value = false;
@@ -61,10 +54,11 @@ static bool get_debug_mode(void)
         xSemaphoreGive(debug_mode_mutex);
     }
     return value;
-}
+};
 
 
-void vDebugTask(void* pm){
+
+void vDebugTask(void *pvParameters){
     debug_mode_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
@@ -78,19 +72,12 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                    //
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                    //
                         debug_mode_set(false);
                         get_debug_mode();
-                        break;
-                    case CMD_PULLLOG:
-                        print_log();
-                        break;
-                    case CMD_REALTIMELOG:
                         break;
                     default:
                         break;
@@ -102,4 +89,4 @@ void vDebugTask(void* pm){
         }
         vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS));
     }
-}
+};

@@ -25,7 +25,7 @@ void led_task(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(100));
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(100));
-        log_info("Nothing breaking so far");
+        log_info("We are working");
     }
 
 }
@@ -50,9 +50,12 @@ int main()
     ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreateAffinitySet(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);    
 
+    ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    configASSERT(ok == pdPASS);
+    
     vTaskStartScheduler();
 
     while (1) {}
