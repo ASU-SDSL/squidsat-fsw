@@ -31,7 +31,6 @@ static Command parse_command(const char* str) {
 }
 
 void gse_init(void){
-    tud_task();
     stdio_init_all();
     debug_mode_init();
     log_init();
@@ -43,25 +42,30 @@ void debug_mode_init(void){
 
 static void debug_mode_set(bool value){
     debug_mode_init();
-    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
-    debug_mode = value;
-    xSemaphoreGive(debug_mode_mutex);
+    if(xSemaphoreTake(debug_mode_mutex, portMAX_DELAY) == pdTRUE){
+        debug_mode = value;
+        xSemaphoreGive(debug_mode_mutex);
+    }
 }
 
-static bool get_debug_mode(){
+static bool get_debug_mode(void)
+{
     debug_mode_init();
-    bool value;
-    xSemaphoreTake(debug_mode_mutex, portMAX_DELAY);
-    value = debug_mode;
-    xSemaphoreGive(debug_mode_mutex);
-    log_info("Debug mode (0 = OFF, 1 = ON) %d", value);
+    if (debug_mode_mutex == NULL) {
+//
+        return false;
+    }
+    bool value = false;
+    if (xSemaphoreTake(debug_mode_mutex, portMAX_DELAY) == pdTRUE) {
+        value = debug_mode;
+        xSemaphoreGive(debug_mode_mutex);
+    }
     return value;
 }
 
 
 void vDebugTask(void* pm){
     debug_mode_init();
-    log_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
@@ -74,12 +78,12 @@ void vDebugTask(void* pm){
 
                 switch(parse_command(buffer)) {
                     case CMD_DEBUG:
-                        log_data("Debug mode ON");
+                    //
                         debug_mode_set(true);
                         get_debug_mode();
                         break;
                     case CMD_NODEBUG:
-                        log_data("Debug mode OFF");
+                    //
                         debug_mode_set(false);
                         get_debug_mode();
                         break;
@@ -89,7 +93,6 @@ void vDebugTask(void* pm){
                     case CMD_REALTIMELOG:
                         break;
                     default:
-                        log_warning("Unknown command: %s", buffer);
                         break;
                 }
                 buffer_index = 0;

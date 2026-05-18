@@ -11,6 +11,8 @@
 #include <semphr.h>
 #include "gse.h"
 
+
+
 // ---- Global Variables ----
 #define LOGGING_QUEUE_LENGTH 16
 #define MAX_PACKET_SIZE 256 // bits
@@ -33,26 +35,13 @@ typedef struct {
 
 // ---- Logging Functions ----
 void log_init(void);
-void log_to_queue(LogLevel priority, const char* fmt, ...);
+void log_to_queue(LogLevel lvl, const char* msg);
 void print_log(void);
 
-// ---- Logging Macros ----
-#define log_data(fmt, ...) printf("[DATA] " fmt "\n", ##__VA_ARGS__);
+// ---- Logging Functions ----
 
-#define log_info(fmt, ...)\
-        printf("[INFO]" fmt "\n", ##__VA_ARGS__);\
-        log_to_queue(LOG_INFO, fmt, ##__VA_ARGS__);
+void log_info(const char* msg);
+//void log_error(const char* msg);
 
-#define log_error(fmt, ...)\
-        printf("[ERROR] " fmt "\n", ##__VA_ARGS__);\
-        log_to_queue(LOG_ERROR, fmt, ##__VA_ARGS__);
-
-#define log_warning(fmt, ...)\
-        printf("[WARNING] " fmt "\n", ##__VA_ARGS__);\
-        log_to_queue(LOG_WARNING, fmt, ##__VA_ARGS__);
-
-#define log_mission_crit(fmt, ...)\
-        printf("[MISSION CRITICAL] " fmt "\n", ##__VA_ARGS__);\
-        log_to_queue(LOG_MISSION_CRIT, fmt, ##__VA_ARGS__);
 
 #endif // LOG_H

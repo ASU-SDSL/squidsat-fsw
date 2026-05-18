@@ -5,6 +5,7 @@
 #include "log.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "projdefs.h"
 
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
@@ -21,17 +22,19 @@ void led_task(void *pvParameters)
     gpio_set_dir(LED_PIN, GPIO_OUT);
     while (true) {
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(100));
         gpio_put(LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(100));
+        log_info("Nothing breaking so far");
     }
+
 }
 
 
 int main()
 {
     gse_init();
-    // i2c_util_init(); 
+    i2c_util_init(); 
 
     // uint8_t ts_res = timing_init(); 
     
@@ -42,8 +45,14 @@ int main()
     // }
 
     // Create the blink task and verify creation succeeded.
-    xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
-    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
+    BaseType_t ok;
+
+    ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    configASSERT(ok == pdPASS);
+
+    ok = xTaskCreateAffinitySet(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    configASSERT(ok == pdPASS);    
+
     vTaskStartScheduler();
 
     while (1) {}
@@ -52,16 +61,19 @@ int main()
 
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
-    log_error("STACK OVERFLOW in task: %s\n", pcTaskName);
-    stdio_flush();    
-    configASSERT(0);
+    printf("STACK OVERFLOW in task: %s\n", pcTaskName ? pcTaskName : "unknown");
+    stdio_flush();
+    taskDISABLE_INTERRUPTS();
+    for (;;) {}
 }
 
 // Called if pvPortMalloc() fails to allocate memory.
 void vApplicationMallocFailedHook(void)
 {
-    // Trap here for debugging — replace with your own error handling
-    configASSERT(0);
+    printf("MALLOC FAILED\n");
+    stdio_flush();
+    taskDISABLE_INTERRUPTS();
+    for (;;) {}
 }
 
 
@@ -79,16 +91,15 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 }
 
 /* RP2350 passive idle task memory (second core idle) */
-static StaticTask_t xPassiveIdleTaskTCB;
-static StackType_t uxPassiveIdleTaskStack[configMINIMAL_STACK_SIZE];
-
+static StaticTask_t xPassiveIdleTaskTCBs[configNUMBER_OF_CORES - 1];
+static StackType_t  uxPassiveIdleTaskStacks[configNUMBER_OF_CORES - 1][configMINIMAL_STACK_SIZE];
 
 void vApplicationGetPassiveIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
                                            StackType_t **ppxIdleTaskStackBuffer,
                                            configSTACK_DEPTH_TYPE *puxIdleTaskStackSize,
                                            BaseType_t xPassiveIdleTaskIndex) {
-    *ppxIdleTaskTCBBuffer   = &xPassiveIdleTaskTCB;
-    *ppxIdleTaskStackBuffer = uxPassiveIdleTaskStack;
+    *ppxIdleTaskTCBBuffer   = &xPassiveIdleTaskTCBs[xPassiveIdleTaskIndex];
+    *ppxIdleTaskStackBuffer = uxPassiveIdleTaskStacks[xPassiveIdleTaskIndex];
     *puxIdleTaskStackSize   = configMINIMAL_STACK_SIZE;
 }
 
