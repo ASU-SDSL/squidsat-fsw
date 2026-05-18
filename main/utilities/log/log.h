@@ -26,7 +26,17 @@ typedef enum {
 } LogLevel;
 
 
+/** ---- Queue Entries
+    This is the way all the Log Entries are defined:
+    1. timestamp  - The time at which the log entry was created, recorded in
+                    FreeRTOS ticks via xTaskGetTickCount().
 
+    2. level      - The severity level of the log entry, defined by LogLevel.
+                    See LogLevel enum for all possible values.
+
+    3. data       - The log message itself, stored as a null-terminated string.
+                    Truncated to MAX_PACKET_SIZE - 1 characters if longer.
+ */
 typedef struct {
     uint32_t timestamp;
     LogLevel level;
@@ -73,13 +83,12 @@ void log_task                   (void *pvParameters);
                             operating mode.
 
     4. log_mission_critical - Highest severity level. Use when a failure has occurred that endangers
-                              the mission or requires immediate operator intervention, e.g. propulsion
-                              failure, loss of navigation, or a safety-critical system going offline.
+                              the mission or requires immediate operator intervention, e.g. a safety-critical system 
+                              going offline.
                               These messages should always be investigated.
 
     All levels are no-ops if debug mode is disabled or the queue is full.
     All messages are truncated to MAX_PACKET_SIZE - 1 characters if longer.
-
 */
 void log_info                   (const char* msg);
 void log_error                  (const char* msg);

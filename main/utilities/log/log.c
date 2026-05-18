@@ -40,34 +40,37 @@ static void log_to_queue(LogLevel lvl, const char* msg){
 
 
 void log_task(void *pvParameters){
-    LogEntry entry;
     for(;;){
         if(!get_debug_mode() || log_queue == NULL || printf_mutex == NULL){
             vTaskDelay(pdMS_TO_TICKS(10));
             continue;  // keep looping, waiting for debug to be enabled
         }
 
-        if(xQueueReceive(log_queue, &entry, portMAX_DELAY) == pdTRUE){
-            if(xSemaphoreTake(printf_mutex, portMAX_DELAY) == pdTRUE){
-                switch(entry.level){
-                    case LOG_INFO:
-                        printf("[%10lu] INFO         | %s\n", entry.timestamp, entry.data);
-                        break;
-                    case LOG_ERROR:
-                        printf("[%10lu] ERROR        | %s\n", entry.timestamp, entry.data);
-                        break;
-                    case LOG_WARNING:
-                        printf("[%10lu] WARNING      | %s\n", entry.timestamp, entry.data);
-                        break;
-                    case LOG_MISSION_CRIT:
-                        printf("[%10lu] MISSION CRIT | %s\n", entry.timestamp, entry.data);
-                        break;
-                    default:
-                        printf("[%10lu] UNKNOWN      | %s\n", entry.timestamp, entry.data);
-                        break;
+        {
+            LogEntry entry;
+            if(xQueueReceive(log_queue, &entry, portMAX_DELAY) == pdTRUE){
+                if(xSemaphoreTake(printf_mutex, portMAX_DELAY) == pdTRUE){
+                    switch(entry.level){
+                        case LOG_INFO:
+                            printf("[%10lu] INFO         | %s\n", entry.timestamp, entry.data);
+                            break;
+                        case LOG_ERROR:
+                            printf("[%10lu] ERROR        | %s\n", entry.timestamp, entry.data);
+                            break;
+                        case LOG_WARNING:
+                            printf("[%10lu] WARNING      | %s\n", entry.timestamp, entry.data);
+                            break;
+                        case LOG_MISSION_CRIT:
+                            printf("[%10lu] MISSION CRIT | %s\n", entry.timestamp, entry.data);
+                            break;
+                        default:
+                            printf("[%10lu] UNKNOWN      | %s\n", entry.timestamp, entry.data);
+                            break;
+                    }
+                    xSemaphoreGive(printf_mutex);
                 }
-                xSemaphoreGive(printf_mutex);
             }
+
         }
     }
 }
