@@ -24,15 +24,14 @@
 uint8_t lsm3_config(i2c_inst_t *i2c);
 
 /**
- * @brief Gets the Magnetometer data. Keeps the high and low together, to be worked on with fixed-point arithmetic 
- * avoid costly floating point ops. 
+ * @brief Gets the Magnetometer data.
  * 
  * @param i2c I2C Instance
- * @param x_axis Data buffer for the X-Axis. Divide by 10^3 for the actaul value in Gauss
- * @param y_axis Data buffer for the Y-Axis. Divide by 10^3 for the actaul value in Gauss
- * @param z_axis Data buffer for the Z-Axis. Divide by 10^3 for the actaul value in Gauss
+ * @param x_axis Data buffer for the X-Axis. 
+ * @param y_axis Data buffer for the Y-Axis. 
+ * @param z_axis Data buffer for the Z-Axis. 
  * @return uint8_t Status (0 = Success)
  */
-uint8_t lsm3_get_mag(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis);
+uint8_t lsm3_get_mag(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis);
 
 #endif

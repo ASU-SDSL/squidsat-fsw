@@ -30,8 +30,8 @@ static const uint8_t REG_XL_X_L = 0x28; // Accelerometer X-Axis Low Register. On
  uint8_t CMD_G_ODR = 0x32;              // Set to 52H, and z+- 125dps
 
 // Other Constants 
-static const float GYRO_LSB = 4.375;       // Since the full scale we selected for is 4.375 milidegrees/LSB and we use 4375 to avoid using floats
-static const float ACCEL_LSB = 0.061;        // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
+static const float GYRO_LSB = 4.375;       // Since the full scale we selected for is 4.375 milidegrees/LSB 
+static const float ACCEL_LSB = 0.061;        // Since the full scale we selected for is 0.061m(g)/LSB 
 
 
 uint8_t lsm6_config(i2c_inst_t *i2c){
