@@ -30,8 +30,8 @@ static const uint8_t REG_XL_X_L = 0x28; // Accelerometer X-Axis Low Register. On
  uint8_t CMD_G_ODR = 0x32;              // Set to 52H, and z+- 125dps
 
 // Other Constants 
-static const int GYRO_LSB = 4375;       // Since the full scale we selected for is 4.375 milidegrees/LSB and we use 4375 to avoid using floats
-static const int ACCEL_LSB = 61;        // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
+static const float GYRO_LSB = 4.375;       // Since the full scale we selected for is 4.375 milidegrees/LSB and we use 4375 to avoid using floats
+static const float ACCEL_LSB = 0.061;        // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
 
 
 uint8_t lsm6_config(i2c_inst_t *i2c){
@@ -62,7 +62,7 @@ uint8_t lsm6_config(i2c_inst_t *i2c){
     return 0;
 }
 
-uint8_t lsm6_get_temp(i2c_inst_t *i2c, int8_t* whole, uint8_t* fraction){
+uint8_t lsm6_get_temp(i2c_inst_t *i2c, float *temp){
     int16_t temp_raw;
     int8_t temp_raw_whole;
     uint8_t temp_raw_fraction;
@@ -75,17 +75,21 @@ uint8_t lsm6_get_temp(i2c_inst_t *i2c, int8_t* whole, uint8_t* fraction){
         return 1;
     }
 
-    temp_raw =  (int16_t)(((int16_t)temp_raw_whole << 8) | temp_raw_fraction);
-    temp_raw_whole = (int8_t)(temp_raw >> 8) + 25;
-    temp_raw_fraction = ((uint16_t)(temp_raw & 0xFF) * 100) / 256;
+    temp_raw = ((temp_raw_whole << 8) | temp_raw_fraction);
+    *temp = (temp_raw / 256.0) + 25.0;
 
-    *whole = temp_raw_whole;
-    *fraction = temp_raw_fraction;
+    //Old fixed point arithmetic code. Not too sure if I should delete this, but look how much simpler using floats is
+    // temp_raw =  (int16_t)(((int16_t)temp_raw_whole << 8) | temp_raw_fraction);
+    // temp_raw_whole = (int8_t)(temp_raw >> 8) + 25;
+    // temp_raw_fraction = ((uint16_t)(temp_raw & 0xFF) * 100) / 256;
+
+    // *whole = temp_raw_whole;
+    // *fraction = temp_raw_fraction;
     
     return 0;
 }
 
-uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis){
+uint8_t lsm6_get_accel(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis){
     uint8_t data[6]; // Dont forget to cast when working with the data as this stores as uint, but IMU calculates signed numbers
 
     if(i2c_read_from_register(i2c, LSM6_ADDR, REG_XL_X_L, data, 6)){
@@ -96,14 +100,14 @@ uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    *x_axis = raw_x * ACCEL_LSB; // Since the full scale we selected for is 0.061m(g)/LSB and we use 61 to avoid using floats
-    *y_axis = raw_y * ACCEL_LSB;
-    *z_axis = raw_z * ACCEL_LSB;
+    *x_axis = ((raw_x * ACCEL_LSB) / 1000.0) * 9.80665;     // Units are in G's after dividing by 1000. Units are in m/s^2 after mult by 9.80665
+    *y_axis = ((raw_y * ACCEL_LSB) / 1000.0)* 9.80665;
+    *z_axis = ((raw_z * ACCEL_LSB) / 1000.0)* 9.80665;
 
     return 0;
 }
 
-uint8_t lsm6_get_gyro(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis){
+uint8_t lsm6_get_gyro(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis){
     uint8_t data[6]; // Dont forget to cast when working with the data as this stores as uint, but IMU calculates signed numbers
 
     if(i2c_read_from_register(i2c, LSM6_ADDR, REG_G_X_L, data, 6)){
@@ -114,7 +118,7 @@ uint8_t lsm6_get_gyro(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    *x_axis = raw_x * GYRO_LSB; 
+    *x_axis = raw_x * GYRO_LSB;                             // CALIBRATION OFFSETS HAVE NOT BEEN APPLIED
     *y_axis = raw_y * GYRO_LSB;
     *z_axis = raw_z * GYRO_LSB;
 

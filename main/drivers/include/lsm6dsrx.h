@@ -33,7 +33,7 @@ uint8_t lsm6_config(i2c_inst_t *i2c);
  * @param fraction Data buffer for storing the point fractional(decimal) value of the temperature
  * @return uint8_t Status (0 = Success) 
  */
-uint8_t lsm6_get_temp(i2c_inst_t *i2c, int8_t* whole, uint8_t* fraction);
+uint8_t lsm6_get_temp(i2c_inst_t *i2c, float* temp);
 
 /**
  * @brief Gets the acceleration. Keeps the high and low together, to be worked on with fixed-point arithmetic 
@@ -45,7 +45,7 @@ uint8_t lsm6_get_temp(i2c_inst_t *i2c, int8_t* whole, uint8_t* fraction);
  * @param z_axis Data buffer for the Z-Axis. Divide by 10^6 for the actaul value in (g)
  * @return uint8_t Status (0 = Success)
  */
-uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis);
+uint8_t lsm6_get_accel(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis);
 
 /**
  * @brief Gets the gyroscope's data. Keeps the high and low together, to be worked on with fixed-point arithmetic 
@@ -57,6 +57,6 @@ uint8_t lsm6_get_accel(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_
  * @param z_axis Data buffer for the Z-Axis. Divide by 10^3 for the actaul value in degrees
  * @return uint8_t Status (0 = Success)
  */
-uint8_t lsm6_get_gyro(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis);
+uint8_t lsm6_get_gyro(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis);
 
 #endif

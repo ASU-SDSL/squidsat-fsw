@@ -29,14 +29,13 @@ void led_task(void *pvParameters)
 }
 
 void tempurature_task(void *pvParameters){
-    int8_t whole = 0;
-    uint8_t fraction = 0;
+    float tempurature;
     lsm6_config(i2c0);
     vTaskDelay(pdMS_TO_TICKS(1)); // LSM6 needs 500 microseconds from power on, to temperature being able to be read
 
     while(true){
-        lsm6_get_temp(i2c0, &whole, &fraction);
-        printf("Testing for whole temp: %dC", whole);
+        lsm6_get_temp(i2c0, &tempurature);
+        printf("Testing for whole temp: %dC", tempurature);
     }
 }
 
