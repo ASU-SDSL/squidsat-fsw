@@ -10,7 +10,7 @@ if(PICO_BOARD STREQUAL "pico")
     set(PICO_PLATFORM "rp2040" CACHE STRING "Pico platform")
 
 else()
-    set(PICO_PLATFORM "rp2350-arm-s" CACHE STRING "Pico platform")
+    set(PICO_PLATFORM "rp2350" CACHE STRING "Pico platform")
 endif()
 
 
