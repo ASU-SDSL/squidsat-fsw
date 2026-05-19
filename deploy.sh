@@ -9,6 +9,10 @@ sleep 3
 
 # ------ Deploying ------
 if [ -f "$PICO_FILE" ]; then
+    until lsusb -d 2e8a:0003; do                    #BOOTSEL Mode VID:PID     
+        echo "Waiting for Pico in BOOTSEL mode..."
+        sleep 1
+    done
     if picotool load "$PICO_FILE" -f --verify; then
         echo "Deployment successful and verified for RP2040!"
         picotool reboot

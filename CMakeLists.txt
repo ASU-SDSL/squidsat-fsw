@@ -79,6 +79,7 @@ target_link_libraries(${PROJECT_NAME}
     pico_aon_timer
     hardware_gpio
     hardware_i2c
+    hardware_adc
 
     FatFs
 )

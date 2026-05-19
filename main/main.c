@@ -8,6 +8,7 @@
 
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
+#include "hardware/adc.h"
 
 #include "gse.h"
 #include "i2c_util.h"
@@ -23,6 +24,28 @@ void led_task(void *pvParameters)
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(LED_PIN, 0);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+void pico_temp_task(void *pvParameters)
+{   
+    adc_init();
+    adc_set_temp_sensor_enabled(true);
+    adc_select_input(4);
+    while (true) {
+        uint16_t result = adc_read();
+        
+        // Convert to voltage (3.3V reference)
+        const float conversion_factor = 3.3f / (1 << 12);
+        float voltage = result * conversion_factor;
+        
+        // Convert voltage to temperature in Celsius
+        // Formula: Temp = 27 - (Voltage - 0.706) / 0.001721
+        float temp = 27.0f - (voltage - 0.706f) / 0.001721f;
+        
+        printf("Temperature: %.2f C\n", temp);
+        
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
@@ -43,7 +66,8 @@ int main()
 
     // Create the blink task and verify creation succeeded.
     xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
-    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
+    xTaskCreate(pico_temp_task, "PICO_TEMP", 1024, NULL, 2, NULL);
+    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 3UL, NULL);
     vTaskStartScheduler();
 
     while (1) {}
