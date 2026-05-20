@@ -25,7 +25,7 @@ void led_task(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(100));
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(100));
-        log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
+        // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
         //                             other values depending on the severity.
     }
 }
