@@ -26,7 +26,7 @@ typedef enum {
 } LogLevel;
 
 
-/** ---- Queue Entries
+/** ---- Queue Entries ----
     This is the way all the Log Entries are defined:
     1. timestamp  - The time at which the log entry was created, recorded in
                     FreeRTOS ticks via xTaskGetTickCount().
@@ -43,7 +43,9 @@ typedef struct {
     char data[MAX_PACKET_SIZE];
 } LogEntry;
 
+
 /** ---- Logging Functions ---- */
+
 
 /** ---- Initialization ----
     This is called at the beginning of main.c. It is used to init all the mutex(s)
@@ -66,7 +68,7 @@ static void log_to_queue        (LogLevel lvl, const char* msg);
 */
 void log_task                   (void *pvParameters);
 
-/** ---- Log Levels
+/** ---- Log Levels ----
     This is where all the log levels will be defined:
     
     1. log_info           - Baseline logging level for general status updates and non-critical
