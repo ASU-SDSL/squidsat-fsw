@@ -16,8 +16,8 @@ uint8_t timing_init() {
     return 1;
   }
 
-  log_info("AON Timing initialized as %d/%d/%d %d:%d:%d", now.tm_year,
-           now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec);
+  //log_info("AON Timing initialized as %d/%d/%d %d:%d:%d", now.tm_year,
+  //         now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec);
 
   return 0;
 }
@@ -38,7 +38,7 @@ uint8_t timing_sync() {
 time_t timing_now_epoch() {
   struct timespec ts;
   if (aon_timer_get_time(&ts) == false) {
-    log_error("CRITICAL - AON Timer Failed (timing_now_epoch)");
+    //log_error("CRITICAL - AON Timer Failed (timing_now_epoch)");
   }
 
   return ts.tv_sec;
@@ -48,7 +48,7 @@ struct tm timing_now_tm() {
   struct tm now;
 
   if (aon_timer_get_time_calendar(&now) == false) {
-    log_error("CRITICAL - AON Timer Failed (timing_now_tm)")
+    //log_error("CRITICAL - AON Timer Failed (timing_now_tm)")
   }
 
   return now;
@@ -56,7 +56,7 @@ struct tm timing_now_tm() {
 
 void timing_test() {
   while (1) {
-    log_info("Time: %lld", timing_now_epoch());
+    //log_info("Time: %lld", timing_now_epoch());
     sleep_ms(1000);
   }
 }
