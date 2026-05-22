@@ -1,33 +1,31 @@
-#include <stdint.h>
-#include <stddef.h>
+#pragma once
 
-#define MAX_JOBS 16 // Maximum number of jobs 
-#define MAX_JOBS_NAME 16 // Maximum length of job name
-#define CHECK_DELAY_MS 500// Delay between scheduler 
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
 
+typedef void (*job_function)(void *args);
 
-typedef void (*job_function)(void);
-
-//one single job function
-typedef struct jobs {
-    char name[MAX_JOBS_NAME]; 
-    uint32_t execute_job; //how many ticks until the job should be executed
-    uint32_t recuring_job; //how many ticks until the job should be executed again 
-    job_function function;
-    void* data; //pointer to data 
-} jobs_t;
-
-//scheduler struct for multiple jobs
-typedef struct steve_scheduler {
-    jobs_t jobs[MAX_JOBS]; //numbers of jobs
-    size_t job_count; // Number of active jobs
+typedef struct {
+    Ticktype_t recurr_time; //tracks if the job is recurring or not
+    Ticktype_t execute_time; //the time at which the job should be executed
+    char name[20]; //name of the job
+    job_function func; //function pointer to the job function
+    void *args; //arguments to be passed to the job function
 } scheduler_t;
 
-scheduler_t scheduler; // Global scheduler instance
+typedef struct {
+    uint8_t id;
+    Ticktype_t job_start; //the time at which the worker will be available to execute the next job
+    volatile uint8_t is_busy; //flag to indicate if the worker is currently executing a job
+} worker_t;
 
-//Scheduler functions
-void initialize_job();
-void create_job(const char* job_name, uint8_t execute_time, uint8_t recur_time, job_function job_funct);
-void delete_job(jobs_t* job);
-void run_job(void *unused_arg);
-uint32_t get_uptime();
+Worker_t workers[2]; //2 workers for the scheduler
+
+QueueHandle_t job_queue;
+
+//Scheduler task function
+void create_job();
+void add_to_workers();
+void delete_from_workers();
+void run_scheduler();

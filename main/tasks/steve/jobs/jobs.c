@@ -1,5 +1,10 @@
-include "jobs.h"
+#include "jobs.h"
 
-void dummy_job() {
+void job_recurring() {
+    printf("starting job......\n");
     
+}
+
+void job_once() {
+    printf("starting job......\n");
 }
