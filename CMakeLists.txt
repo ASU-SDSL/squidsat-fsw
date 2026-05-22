@@ -70,6 +70,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/utilities/src
 )
 
 # add FatFs library 
@@ -86,7 +87,7 @@ target_link_libraries(${PROJECT_NAME}
 
     FatFs
 )
-# pico_set_binary_type(${PROJECT_NAME} no_flash)
+#pico_set_binary_type(${PROJECT_NAME} no_flash)
 
 pico_enable_stdio_usb(${PROJECT_NAME}  1)
 pico_enable_stdio_uart(${PROJECT_NAME} 0)

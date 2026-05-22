@@ -57,8 +57,8 @@
  * and the port compiles in single-core mode — causing the
  * "configUSE_CORE_AFFINITY is not supported in single core" error.
  * ─────────────────────────────────────────────────────────────────────────── */
-#define configNUM_CORES                         1
-#define configNUMBER_OF_CORES                   1 // this is just a sanity check
+#define configNUM_CORES                         2
+#define configNUMBER_OF_CORES                   2
 #define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           1
 
