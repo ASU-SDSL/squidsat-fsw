@@ -4,6 +4,7 @@
 
 #include "HardwareConfig.h"
 #include "gse.h"
+#include "log.h"
 #include "hardware/i2c.h"
 #include "i2c_util.h"
 #include "pico/stdlib.h"
@@ -81,9 +82,9 @@ void rtc_test() {
   for (int i = 0; i < 100; i++) {
     struct tm now;
     if (rtc_get_tm_base(i2c, &now)) {
-      log_info("epoch time failed");
+      //log_info("epoch time failed");
     }
-    log_info("Epoch time: %lld", rtc_tm_to_epoch(&now));
+    //log_info("Epoch time: %lld", rtc_tm_to_epoch(&now));
     sleep_ms(1000);
   }
 }
