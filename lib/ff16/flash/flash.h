@@ -9,7 +9,7 @@
 #define DEVICE_SIZE 128000000 // actual 134217728 // bits
 #define SECTOR_SIZE 4096
 
-uint8_t flash_init(spi_inst_t* spi_bus, uint8_t cs); 
+uint8_t flash_init(spi_inst_t* spi_bus, uint8_t cs, uint32_t spi_baud); 
 
 uint8_t read_sector(DWORD address, const BYTE* buff); 
 

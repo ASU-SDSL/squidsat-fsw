@@ -15,6 +15,7 @@
 #include "log.h"
 
 #include "timing.h"
+#include "filesystem.h"
 
 void led_task(void *pvParameters)
 {   
@@ -24,6 +25,9 @@ void led_task(void *pvParameters)
     while (true) {
         log_info("Hello data"); 
         gpio_put(LED_PIN, 1);
+        
+        diskio_test(); 
+
         vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(1000));

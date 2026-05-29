@@ -5,6 +5,7 @@ set(USING_FLASH 1)
 IF (USING_FLASH)
     set(DISKIO_SOURCE
         ${CMAKE_CURRENT_LIST_DIR}/flash/diskio.c
+        ${CMAKE_CURRENT_LIST_DIR}/flash/flash.c
     )
 
     set(DISKIO_INCLUDE
@@ -13,6 +14,7 @@ IF (USING_FLASH)
 ELSE()
     set(DISKIO_SOURCE
         ${CMAKE_CURRENT_LIST_DIR}/mram/diskio.c
+        ${CMAKE_CURRENT_LIST_DIR}/mram/mram.c
     )
 
     set(DISKIO_INCLUDE

@@ -4,13 +4,13 @@
 #include "hardware/gpio.h"
 
 
-uint8_t flash_init(spi_inst_t* spi_bus, uint8_t cs){
+uint8_t flash_init(spi_inst_t* spi_bus, uint8_t cs, uint32_t spi_baud){
 
-    gpio_init(FS_CS_PIN); 
-    gpio_set_dir(FS_CS_PIN, GPIO_OUT); 
-    gpio_put(FS_CS_PIN, 1);
+    gpio_init(cs); 
+    gpio_set_dir(cs, GPIO_OUT); 
+    gpio_put(cs, 1);
 
-    spi_init(FS_SPI_BUS, FS_SPI_BAUDRATE);    
+    spi_init(spi_bus, spi_baud);    
 
     return 0; 
 }

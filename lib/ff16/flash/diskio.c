@@ -10,7 +10,7 @@ static DSTATUS Stat = STA_NOINIT;
 DSTATUS disk_initialize (BYTE pdrv){
     (void)pdrv; // 1 drive system 
 
-    flash_init(FS_SPI_BUS, FS_CS_PIN); 
+    flash_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE); 
 
     Stat = RES_OK;
 

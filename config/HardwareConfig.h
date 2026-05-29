@@ -10,9 +10,8 @@
 #define I2C0_SDA_PIN 8
 #define I2C0_SCL_PIN 9
 
-#define FS_CS_PIN 5
-
 /// Bus definitions 
 #define RTC_I2C_BUS i2c0
 
 #define FS_SPI_BUS spi0
+#define FS_CS_PIN 5
