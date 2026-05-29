@@ -2,50 +2,42 @@
     "version": "0.2.0",
     "configurations": [
         { 
-            "name": "SquidSat OBC RP2350 Cortex-Debug",
+            "name": "SquidSat OBC RP2350 Cortex-Debug Launch",
             "type": "cortex-debug",
+
             "request": "launch",
             "servertype": "openocd",
             "serverpath": "openocd",
             "serverArgs": [
                 "-c adapter speed 1000",
-                "-c", "set USE_CORE 0" 
             ],
-            "preLaunchTask": "buildnflash",
+            "preLaunchTask": "build",
+
             "cwd": "${workspaceRoot}",
             "executable": "${workspaceRoot}/build/freertos_rp2350.elf",
             "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}", 
             "gdbPath": "gdb-multiarch",
-            "device": "RP2350",
             "configFiles": [
                 "interface/cmsis-dap.cfg",
                 "${workspaceRoot}/debug/rp2350.cfg"
             ],
-            "runToEntryPoint": "main", 
+
+            // "runToEntryPoint": "main", // uncomment to break on the first line of main - change "monitor rest run" to "...halt"
+            "targetProcessor": 0,
             "overrideLaunchCommands": [
-                "monitor reset halt",
-                "monitor init"
+                "monitor gdb breakpoint_override hard",
+                "monitor init",
+                "monitor reset run" //halt"
             ],
-            "postLaunchCommands": [
-                "monitor cortex_m maskisr on"
-                // "monitor arm semihosting enable",
+
+            "postRestartCommands": [
+                "monitor resume"
             ],
-            "postRestartCommands": [],
-            "postResetCommands": [],
-            "rtos": "FreeRTOS",
+
+            // "rtos": "FreeRTOS", // not really supported rn but will likely be in the future hopefully
+
             "svdFile": "${env:PICO_SDK_PATH}/src/rp2350/hardware_regs/rp2350.svd",
-            "rttConfig": {
-                "enabled": false,
-                "address": "auto",
-                "decoders": [
-                    {
-                        "label": "",
-                        "port": 0,
-                        "type": "console"
-                    }
-                ]
-            },
-            "showDevDebugOutput": "raw"
+            // "showDevDebugOutput": "raw"
         }
     ]
 }

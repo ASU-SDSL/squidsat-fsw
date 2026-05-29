@@ -3,6 +3,8 @@
         {
             "name": "Pico-SDK (arm-none-eabi-gcc)",
             "includePath": [
+                "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                "${workspaceFolder}/lib/pico-sdk/**",
                 "${workspaceFolder}/**"
             ],
             "defines": [],
@@ -12,7 +14,9 @@
             "intelliSenseMode": "gcc-arm",
             "browse": {
                 "path": [
-                    "${workspaceFolder}"
+                    "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                    "${workspaceFolder}/lib/pico-sdk/**",
+                    "${workspaceFolder}/**"
                 ], 
                 "limitSymbolsToIncludedHeaders": true
             }

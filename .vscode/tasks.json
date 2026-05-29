@@ -2,8 +2,8 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildnflash",
-            "command": "./debug/flash_debug.sh",
+            "label": "build",
+            "command": "./build.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -11,7 +11,7 @@
                 "$gcc"
             ],
             "group": "build",
-            "detail": "Build and flash the SquidSat Flight Software"
+            "detail": "Build the SquidSat Flight Software"
         }
     ]
 }
