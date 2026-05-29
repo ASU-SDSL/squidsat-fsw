@@ -26,7 +26,7 @@ void led_task(void *pvParameters)
         log_info("Hello data"); 
         gpio_put(LED_PIN, 1);
         
-        diskio_test(); 
+        timing_test(); 
 
         vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(LED_PIN, 0);
@@ -44,7 +44,7 @@ int main()
     gse_init();
     i2c_util_init(); 
 
-    // uint8_t ts_res = timing_init(); 
+    uint8_t ts_res = timing_init(); 
     
     // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
     //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 

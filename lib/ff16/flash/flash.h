@@ -5,7 +5,6 @@
 #include "hardware/spi.h"
 #include "ff.h"
 
-#define FS_SPI_BAUDRATE 1000000
 #define DEVICE_SIZE 128000000 // actual 134217728 // bits
 #define SECTOR_SIZE 4096
 
