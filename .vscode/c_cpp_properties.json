@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Pico-SDK (arm-none-eabi-gcc)",
+            "includePath": [
+                "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                "${workspaceFolder}/lib/pico-sdk/**",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                    "${workspaceFolder}/lib/pico-sdk/**",
+                    "${workspaceFolder}/**"
+                ], 
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
