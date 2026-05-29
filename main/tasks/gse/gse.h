@@ -30,4 +30,9 @@ void vDebugTask(void *pvParameters);
 void debug_mode_init(void);
 bool get_debug_mode(void);
 
+void debug_task(void *param);
+
+void usb_task(void * param);
+
+
 #endif // GSE_TASK_H

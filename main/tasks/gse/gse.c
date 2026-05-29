@@ -8,7 +8,13 @@ typedef enum {
     CMD_UNKNOWN
 } Command;
 
+// default to debug off for release builds, debug on for debug builds
+#ifdef DEBUG_BUILD 
+static volatile bool debug_mode = true;
+#else 
 static volatile bool debug_mode = false;
+#endif
+
 static SemaphoreHandle_t debug_mode_mutex;
 
 
@@ -56,6 +62,12 @@ bool get_debug_mode(void){
     return value;
 };
 
+void usb_task(void * param){
+    while(1) {
+        tud_task(); 
+        vTaskDelay(1); 
+    }
+}
 
 
 void vDebugTask(void *pvParameters){
@@ -64,6 +76,11 @@ void vDebugTask(void *pvParameters){
     int buffer_index = 0;
 
     for(;;){
+        if(stdio_usb_connected() == false){
+            vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
+            continue;
+        }
+
         int c = getchar_timeout_us(0);
 
         if (c != PICO_ERROR_TIMEOUT) {

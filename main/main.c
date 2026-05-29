@@ -12,6 +12,7 @@
 
 #include "gse.h"
 #include "i2c_util.h"
+#include "log.h"
 
 #include "timing.h"
 
@@ -21,10 +22,11 @@ void led_task(void *pvParameters)
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     while (true) {
+        log_info("Hello data"); 
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(1000));
         gpio_put(LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(1000));
         // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
         //                             other values depending on the severity.
     }
@@ -33,6 +35,8 @@ void led_task(void *pvParameters)
 
 int main()
 {
+    __asm volatile ("nop"); // for debugger if desired - not used by default
+
     gse_init();
     i2c_util_init(); 
 
