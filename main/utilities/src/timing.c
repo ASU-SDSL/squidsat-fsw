@@ -22,7 +22,7 @@ uint8_t timing_init() {
   uint8_t res = rtc_get_tm(&now);
   if (res != 0) return res;
 
-  if (aon_timer_set_time_calendar(&now) == false) {
+  if (aon_timer_start_calendar(&now) == false) {
     return 1;
   }
 
@@ -75,6 +75,7 @@ struct tm timing_now_tm() {
 }
 
 void timing_test() {
+  log_info("Timing test");
   
   log_infof("Time: %lld", timing_now_epoch());
 
