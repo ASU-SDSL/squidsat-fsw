@@ -1,6 +1,9 @@
 #include "gse.h"
 #include "log.h"
 
+#include "tusb_config.h"
+#include "tusb.h"
+
 typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
@@ -26,7 +29,6 @@ static Command parse_command(const char* str) {
 };
 
 void gse_init(void){
-    stdio_init_all();
     debug_mode_init();
     log_init();
 };
@@ -46,8 +48,6 @@ static void debug_mode_set(bool value){
         xSemaphoreGive(debug_mode_mutex);
     }
 };
-
-
 
 bool get_debug_mode(void){
     debug_mode_init();
@@ -76,7 +76,7 @@ void vDebugTask(void *pvParameters){
     int buffer_index = 0;
 
     for(;;){
-        if(stdio_usb_connected() == false){
+        if(tud_cdc_connected() == false){
             vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
             continue;
         }

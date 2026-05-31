@@ -11,6 +11,7 @@
 #include "hardware/irq.h"
 
 #include "gse.h"
+#include "usb_serial.h"
 #include "i2c_util.h"
 #include "log.h"
 
@@ -37,6 +38,7 @@ int main()
 {
     __asm volatile ("nop"); // for debugger if desired - not used by default
 
+    usb_serial_init(); 
     gse_init();
     i2c_util_init(); 
 
@@ -50,6 +52,8 @@ int main()
 
     // Create the blink task and verify creation succeeded.
     BaseType_t ok;
+
+    ok = xTaskCreate(usb_serial_task, "USB", 256, 0, configMAX_PRIORITIES - 2, &usbTaskHandle);
 
     ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
