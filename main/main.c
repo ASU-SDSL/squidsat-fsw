@@ -3,6 +3,8 @@
 #include "timers.h"
 #include "gse.h"
 #include "log.h"
+#include "sensor_job.h"
+#include "steve.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "projdefs.h"
@@ -30,6 +32,12 @@ void led_task(void *pvParameters)
     }
 }
 
+void scheduler_task(void *pvParameters){
+    setup();
+    add_job(&led_blinking); 
+    run_scheduler();
+
+}
 
 int main()
 {

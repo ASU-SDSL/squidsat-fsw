@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <sensor_job.h>
 
 
 void add_job(scheudler_t *job){
