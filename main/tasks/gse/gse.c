@@ -15,7 +15,7 @@ typedef enum {
 #ifdef DEBUG_BUILD 
 static volatile bool debug_mode = true;
 #else 
-static volatile bool debug_mode = false;
+static volatile bool debug_mode = true;
 #endif
 
 static SemaphoreHandle_t debug_mode_mutex;

@@ -79,7 +79,11 @@ add_executable(${PROJECT_NAME}
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
+
+    # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
+    # stuff we still want from the pico sdk for usb
+    ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/reset_interface.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_descriptors.c
 )
 
