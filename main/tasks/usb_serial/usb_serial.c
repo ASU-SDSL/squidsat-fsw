@@ -105,7 +105,7 @@ void usb_serial_task(void *params){
 
     }
     
-    vTaskDelay(1); 
+    vTaskDelay(1 / portTICK_PERIOD_MS); 
   }
 
 }

@@ -82,9 +82,9 @@ add_executable(${PROJECT_NAME}
 
     # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
-    # stuff we still want from the pico sdk for usb
-    ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/reset_interface.c
+    # modified stuff we still want from the pico sdk for usb
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_descriptors.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/picotool_interface.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -108,6 +108,9 @@ target_link_libraries(${PROJECT_NAME}
     tinyusb_board
 
     pico_stdlib
+    pico_unique_id
+    pico_usb_reset_interface
+
     pico_multicore
     pico_aon_timer
     hardware_gpio
