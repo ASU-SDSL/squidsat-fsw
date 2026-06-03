@@ -18,6 +18,8 @@ Without using the Pico SDK stdio init, printf and other stdio don't do anything 
 
 **At this point stdio works and everything for usb input/output should work other than Picotool**
 
+**Any stdio functions and any USB functions now don't work and shouldn't be used until after the USB Task is started.**
+
 ## Fixing Picotool 
 **This part diverges a decent bit from the SDK so any updates to the Pico SDK or Picotool might break it, but probably not** 
 To fix Picotool the preprocessor conditional parts of `usb_descriptors.c` needed to get mangled because I didn't want to risk pulling in code unexpectedly by using the built-in macros. This means with this setup Picotool can't be turned off. But all that really needed to get done was making sure any part of the code that was only compiled if `PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE` was set was compiled. The exception here is `.bcdUSB = 0x0210` because that's only for Windows compatibility and I didn't want to do the other stuff for that - **with this setup Windows systems can't use Picotool**.
