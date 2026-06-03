@@ -31,7 +31,7 @@ void led_task(void *pvParameters)
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(500));
 
-        printf("Hello data %d\n", it++);
+        // printf("Hello data %d\n", it++);
 
         int c = getchar_timeout_us(0);
         while(c != PICO_ERROR_TIMEOUT){
@@ -43,16 +43,6 @@ void led_task(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(500));
         // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
         //                             other values depending on the severity.
-    }
-}
-
-void other_task(void *pvParameters){
-    int it = 0; 
-    while(1){
-        // do other things here
-        vTaskDelay(pdMS_TO_TICKS(300));
-
-        printf("hello other %d\n", it++); 
     }
 }
 
@@ -82,14 +72,11 @@ int main()
     ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(other_task, "OTHER", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    configASSERT(ok == pdPASS);    
+
+    ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
     configASSERT(ok == pdPASS);
-
-    // ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    // configASSERT(ok == pdPASS);    
-
-    // ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
-    // configASSERT(ok == pdPASS);
     
     vTaskStartScheduler();
 
