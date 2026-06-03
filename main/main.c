@@ -11,8 +11,12 @@
 #include "hardware/irq.h"
 
 #include "gse.h"
+#include "usb_serial.h"
 #include "i2c_util.h"
 #include "log.h"
+
+#include "tusb_config.h"
+#include "tusb.h"
 
 #include "timing.h"
 
@@ -21,22 +25,42 @@ void led_task(void *pvParameters)
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
+    int it = 0; 
     while (true) {
-        log_info("Hello data"); 
+        // log_info("Hello data"); 
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+        printf("Hello data %d\n", it++);
+
+        int c = getchar_timeout_us(0);
+        while(c != PICO_ERROR_TIMEOUT){
+            printf("Received input: %c\n", c);
+            c = getchar_timeout_us(0);
+        }
+
         gpio_put(LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(500));
         // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
         //                             other values depending on the severity.
     }
 }
 
+void other_task(void *pvParameters){
+    int it = 0; 
+    while(1){
+        // do other things here
+        vTaskDelay(pdMS_TO_TICKS(300));
+
+        printf("hello other %d\n", it++); 
+    }
+}
 
 int main()
 {
     __asm volatile ("nop"); // for debugger if desired - not used by default
 
+    usb_serial_init(); 
     gse_init();
     i2c_util_init(); 
 
@@ -51,14 +75,21 @@ int main()
     // Create the blink task and verify creation succeeded.
     BaseType_t ok;
 
+    ok = xTaskCreate(usb_serial_task, "USB", 256, 0, configMAX_PRIORITIES - 2, &usbTaskHandle);
+    vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
+    configASSERT(ok == pdPASS);
+
     ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    configASSERT(ok == pdPASS);    
-
-    ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    ok = xTaskCreate(other_task, "OTHER", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
+
+    // ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    // configASSERT(ok == pdPASS);    
+
+    // ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    // configASSERT(ok == pdPASS);
     
     vTaskStartScheduler();
 
