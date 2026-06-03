@@ -18,7 +18,7 @@ Without using the Pico SDK stdio init, printf and other stdio don't do anything 
 
 **At this point stdio works and everything for usb input/output should work other than Picotool**
 
-**Any stdio functions and any USB functions now don't work and shouldn't be used until after the USB Task is started.**
+**Any stdio functions and any USB functions now won't work and shouldn't be used until after the USB Task is started.**
 
 ## Fixing Picotool 
 **This part diverges a decent bit from the SDK so any updates to the Pico SDK or Picotool might break it, but probably not** 
