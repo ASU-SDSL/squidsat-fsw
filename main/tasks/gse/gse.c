@@ -1,6 +1,9 @@
 #include "gse.h"
 #include "log.h"
 
+#include "tusb_config.h"
+#include "tusb.h"
+
 typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
@@ -8,7 +11,13 @@ typedef enum {
     CMD_UNKNOWN
 } Command;
 
-static volatile bool debug_mode = false;
+// default to debug off for release builds, debug on for debug builds
+#ifdef DEBUG_BUILD 
+static volatile bool debug_mode = true;
+#else 
+static volatile bool debug_mode = true;
+#endif
+
 static SemaphoreHandle_t debug_mode_mutex;
 
 
@@ -20,7 +29,6 @@ static Command parse_command(const char* str) {
 };
 
 void gse_init(void){
-    stdio_init_all();
     debug_mode_init();
     log_init();
 };
@@ -41,8 +49,6 @@ static void debug_mode_set(bool value){
     }
 };
 
-
-
 bool get_debug_mode(void){
     debug_mode_init();
     if (debug_mode_mutex == NULL) {
@@ -56,6 +62,12 @@ bool get_debug_mode(void){
     return value;
 };
 
+void usb_task(void * param){
+    while(1) {
+        tud_task(); 
+        vTaskDelay(1); 
+    }
+}
 
 
 void vDebugTask(void *pvParameters){
@@ -64,6 +76,11 @@ void vDebugTask(void *pvParameters){
     int buffer_index = 0;
 
     for(;;){
+        if(tud_cdc_connected() == false){
+            vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
+            continue;
+        }
+
         int c = getchar_timeout_us(0);
 
         if (c != PICO_ERROR_TIMEOUT) {
