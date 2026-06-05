@@ -48,7 +48,6 @@ void led_task(void *pvParameters)
     }
 }
 
-<<<<<<< HEAD
 void scheduler_task(void *pvParameters){
     setup();
     add_job(&led_blinking); 
@@ -56,8 +55,6 @@ void scheduler_task(void *pvParameters){
 
 }
 
-=======
->>>>>>> main
 int main()
 {
     __asm volatile ("nop"); // for debugger if desired - not used by default
