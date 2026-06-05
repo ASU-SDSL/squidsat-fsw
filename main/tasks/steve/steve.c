@@ -42,7 +42,7 @@ void run_scheduler(){
             vTaskDelay(pdMS_TO_TICKS(10)); //delay for a short period before checking again
             continue; //nothing to run
         }
-        //if we get here, we have a job to run
+        //run job
         scheduler_t *job_to_run = global_job_context.jobs[run_index]; //get the job to run
         job_to_run->func(job_to_run->args); //execute the job function with arguments
 

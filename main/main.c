@@ -22,33 +22,7 @@
 
 #include "timing.h"
 
-/*
-void led_task(void *pvParameters)
-{   
-    int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    int it = 0; 
-    while (true) {
-        // log_info("Hello data"); 
-        gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(500));
 
-        // printf("Hello data %d\n", it++);
-
-        int c = getchar_timeout_us(0);
-        while(c != PICO_ERROR_TIMEOUT){
-            printf("Received input: %c\n", c);
-            c = getchar_timeout_us(0);
-        }
-
-        gpio_put(LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(500));
-        // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
-        //                             other values depending on the severity.
-    }
-}
-*/
 void scheduler_task(void *pvParameters){
     sensor_setup();
     add_job(&led_blinking); 
