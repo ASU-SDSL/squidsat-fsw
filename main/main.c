@@ -22,6 +22,7 @@
 
 #include "timing.h"
 
+/*
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
@@ -47,9 +48,9 @@ void led_task(void *pvParameters)
         //                             other values depending on the severity.
     }
 }
-
+*/
 void scheduler_task(void *pvParameters){
-    setup();
+    sensor_setup();
     add_job(&led_blinking); 
     run_scheduler();
 
@@ -78,7 +79,7 @@ int main()
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    ok = xTaskCreate(scheduler_task, "SCHED", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);

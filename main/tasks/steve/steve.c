@@ -6,7 +6,7 @@
 #include <sensor_job.h>
 
 
-void add_job(scheudler_t *job){
+void add_job(scheduler_t *job){
 
     if(job == NULL){ //if the job is null, we cannot add it to the job context
         printf("Invalid job, cannot add to job context"); //print error message
@@ -20,7 +20,7 @@ void add_job(scheudler_t *job){
     global_job_context.job_count++; //increment the job count for the next job
 }
 
-static int run_job(Ticktype_t current_time){
+static int find_ready_job(TickType_t current_time){
 
     for(size_t i = 0; i < global_job_context.job_count;i++){
         if(global_job_context.jobs[i]->execute_time <= current_time){ //if the job is ready to run
@@ -34,16 +34,16 @@ void run_scheduler(){
 
     for(;;){ //infinite loop to keep the scheduler running
 
-        Ticktype_t current_time = xTaskGetTickCount(); //get the current time in ticks(FreeRTOS)
+        TickType_t current_time = xTaskGetTickCount(); //get the current time in ticks(FreeRTOS)
 
-        int run_job = run_job(current_time);
+        int run_index = find_ready_job(current_time);
 
-        if(run_job < 0){ //if no job is ready to run
+        if(run_index < 0){ //if no job is ready to run
             vTaskDelay(pdMS_TO_TICKS(10)); //delay for a short period before checking again
             continue; //nothing to run
         }
         //if we get here, we have a job to run
-        scheduler_t *job_to_run = global_job_context.jobs[run_job]; //get the job to run
+        scheduler_t *job_to_run = global_job_context.jobs[run_index]; //get the job to run
         job_to_run->func(job_to_run->args); //execute the job function with arguments
 
         if(job_to_run->recurr_time != 0){ //check if the job is a recurring job 
@@ -54,3 +54,8 @@ void run_scheduler(){
         }
     }
 }
+//initializes the scheduler’s container for storing registered jobs.
+job_context_t global_job_context = {
+    .jobs = {0},
+    .job_count = 0
+};

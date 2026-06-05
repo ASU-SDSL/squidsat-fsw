@@ -79,6 +79,9 @@ add_executable(${PROJECT_NAME}
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/steve.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job.c
+
 
     # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
@@ -96,6 +99,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/usb_serial
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs
+
 )
 
 # add FatFs library 

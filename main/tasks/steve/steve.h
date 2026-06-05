@@ -21,10 +21,10 @@ typedef struct {
     size_t job_count; //number of jobs currently
 } job_context_t;
 
-job_context_t global_job_context;
+extern job_context_t global_job_context;
 
 //Scheduler task function
 //void create_job();
 //void delete_job();
-void add_job(job);
+void add_job(scheduler_t *job);
 void run_scheduler();
