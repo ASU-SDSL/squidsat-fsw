@@ -1,5 +1,6 @@
 #include "pico/stdlib.h"
 #include <sensor_job.h>
+#include <stdio.h>
 
 //hardcode for testing
 
@@ -29,12 +30,24 @@ void led_blinking_job(void *args){
     gpio_put(LED_PIN, 1); //led stay on whole time
 }
 
+void heart_beat_job(void *args){
+    printf("heartbeat\n");
+}
+
 
 scheduler_t led_blinking = {
     .func = led_blinking_job,
     .recurr_time = pdMS_TO_TICKS(500),
     .execute_time = 0, 
     .name = "LED Blinking Job",
-    .args = NULL
+    .args = NULL,
 
+};
+
+scheduler_t heart_beat = {
+    .func = heart_beat_job,
+    .recurr_time = pdMS_TO_TICKS(1000),
+    .execute_time = 0,
+    .name = "heartbeat",
+    .args = NULL,
 };

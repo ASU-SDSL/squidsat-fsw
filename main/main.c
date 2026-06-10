@@ -52,6 +52,7 @@ void led_task(void *pvParameters)
 void scheduler_task(void *pvParameters){
     sensor_setup();
     add_job(&led_blinking); 
+    add_job(&heart_beat);
     run_scheduler();
 
 }
