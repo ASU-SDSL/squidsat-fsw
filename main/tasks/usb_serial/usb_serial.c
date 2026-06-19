@@ -15,6 +15,22 @@
 TaskHandle_t usbTaskHandle;
 SemaphoreHandle_t usb_mutex;
 
+// public usb / serial interfaces - anything that uses tinyusb needs to be through here 
+
+bool safe_tud_cdc_connected() {
+  bool res = false; 
+  
+  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
+    res = tud_cdc_connected();
+
+    xSemaphoreGive(usb_mutex); 
+  }
+
+  return res; 
+}
+
+// private internal functions and task 
+
 static void usb_serial_out_chars(const char* buf, int len){
   if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
     if(tud_cdc_connected()){
