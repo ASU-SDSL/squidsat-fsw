@@ -1,4 +1,8 @@
 #include "flash.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "HardwareConfig.h"
 #include "hardware/spi.h"
 #include "hardware/gpio.h"
@@ -22,26 +26,42 @@
 static uint8_t _cs; 
 static spi_inst_t* _bus; 
 
-static bool is_busy() {
+// reference: https://github.com/tylermnielsen/SparkFun_SPI_SerialFlash_Arduino_Library/tree/main
+// critical sections are necessary 
+
+uint8_t flash_read_status1() {
+
+    taskENTER_CRITICAL(); 
     gpio_put(_cs, 0); 
     uint8_t buf = SFE_FLASH_COMMAND_READ_STATUS_25XX; 
     spi_write_blocking(_bus, &buf, 1);
     
     spi_read_blocking(_bus, 0xFF, &buf, 1); 
-    gpio_put(_cs, 1); 
+    gpio_put(_cs, 1);
+    taskEXIT_CRITICAL(); 
+
+    return buf; 
+}
+
+static bool is_busy() {
+    uint8_t buf = flash_read_status1(); 
 
     return (buf & (1 << 0));
 }
 
 static void blocking_busy_wait() {
-    while (is_busy()){
-        sleep_ms(1); 
+    while (is_busy()){ // can be made more continuous
+        vTaskDelay(pdMS_TO_TICKS(1)); 
     }
 }
 
 int flash_init(spi_inst_t* spi_bus, uint8_t cs, uint32_t spi_baud){
     _cs = cs; 
     _bus = spi_bus; 
+
+    spi_init(spi_bus, spi_baud);
+
+    spi_set_format(spi_bus, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST); 
 
     // spi pins 
     gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI); 
@@ -52,26 +72,47 @@ int flash_init(spi_inst_t* spi_bus, uint8_t cs, uint32_t spi_baud){
     gpio_set_dir(cs, GPIO_OUT); 
     gpio_put(cs, 1);
 
-    spi_init(spi_bus, spi_baud);
-
     return 0; 
 }
 
-static void send_simple_command(uint8_t cmd) {
+int flash_read_id() {
+
     blocking_busy_wait(); 
 
+    taskENTER_CRITICAL(); 
+    gpio_put(_cs, 0); 
+
+    int id = 0; 
+    uint8_t cmd = SFE_FLASH_COMMAND_READ_JEDEC_ID; 
+    int res = spi_write_blocking(_bus, &cmd, 1); 
+
+    uint8_t buf[4]; 
+    spi_read_blocking(_bus, 0xFF, buf, 3); 
+
+    gpio_put(_cs, 1); 
+    taskEXIT_CRITICAL(); 
+
+    id = (buf[0] << 16) | (buf[1] << 8) | (buf[2] << 0); 
+
+    return id; 
+}
+
+static void send_simple_command(uint8_t cmd) {
+    taskENTER_CRITICAL(); 
     gpio_put(_cs, 0);
     spi_write_blocking(_bus, &cmd, 1);
     gpio_put(_cs, 1);
+    taskEXIT_CRITICAL(); 
 }
 
-static int erase_sector(DWORD address){
+int erase_sector(DWORD address){
     blocking_busy_wait(); 
 
     // write enable 
     send_simple_command(SFE_FLASH_COMMAND_WRITE_ENABLE);
 
     // erase sector
+    taskENTER_CRITICAL(); 
     gpio_put(_cs, 0); 
     uint8_t buf[4] = {
         SFE_FLASH_COMMAND_ERASE_SECTOR, 
@@ -83,33 +124,16 @@ static int erase_sector(DWORD address){
     int res = spi_write_blocking(_bus, buf, sizeof(buf));
 
     gpio_put(_cs, 1);
+    taskEXIT_CRITICAL(); 
     
     return res; 
 }
 
-int flash_read_id() {
+int read_page(DWORD address, BYTE* buff){
     blocking_busy_wait(); 
 
-    gpio_put(_cs, 0); 
-
-    int id = 0; 
-    uint8_t cmd = SFE_FLASH_COMMAND_READ_JEDEC_ID; 
-    int res = spi_write_blocking(_bus, &cmd, 1); 
-
-    uint8_t buf[4]; 
-    spi_read_blocking(_bus, 0xFF, buf, 3); 
-
-    gpio_put(_cs, 1); 
-
-    id = (buf[0] << 16) | (buf[1] << 8) | (buf[2] << 0); 
-
-    return id; 
-}
-
-int read_sector(DWORD address, const BYTE* buff){
-    blocking_busy_wait();
-
-    // read sector
+    // read page 
+    taskENTER_CRITICAL(); 
     gpio_put(_cs, 0); 
 
     uint8_t buf[4] = {
@@ -120,23 +144,34 @@ int read_sector(DWORD address, const BYTE* buff){
     }; 
     spi_write_blocking(_bus, buf, sizeof(buf));
 
-    int res = spi_read_blocking(_bus, 0xFF, buff, SECTOR_SIZE); 
+    int res = spi_read_blocking(_bus, 0xFF, buff, PAGE_SIZE); 
 
     gpio_put(_cs, 1); 
+    taskEXIT_CRITICAL(); 
 
     return res; 
 }
 
-int write_sector(DWORD address, const BYTE* buff){
-    blocking_busy_wait(); 
+int read_sector(DWORD address, BYTE* buff){
+    
+    // read sector by page
+    int res = 0; 
 
-    // erase sector first
-    erase_sector(address); 
+    for(int i = 0; i < SECTOR_SIZE; i += PAGE_SIZE) {
+        res += read_page(address + i, buff + i); 
+    }
+
+    return res; 
+}
+
+static int write_page(DWORD address, const BYTE* buff){
+    blocking_busy_wait(); 
 
     // write enable 
     send_simple_command(SFE_FLASH_COMMAND_WRITE_ENABLE);
-
-    // write sector
+    
+    // write page
+    taskENTER_CRITICAL(); 
     gpio_put(_cs, 0); 
     uint8_t write_cmd[4] = {
         SFE_FLASH_COMMAND_PAGE_PROGRAM,
@@ -147,8 +182,30 @@ int write_sector(DWORD address, const BYTE* buff){
 
     spi_write_blocking(_bus, write_cmd, sizeof(write_cmd)); 
 
-    int res = spi_write_blocking(_bus, buff, SECTOR_SIZE); 
+    int res = spi_write_blocking(_bus, buff, PAGE_SIZE);
+    
     gpio_put(_cs, 1); 
+    taskEXIT_CRITICAL(); 
+
+    return res; 
+}
+
+int write_sector(DWORD address, const BYTE* buff){    
+    // erase sector first
+    erase_sector(address); // has blocking_busy_wait in it 
+    printf("erase done\n"); 
+
+    // wait to finish 
+    blocking_busy_wait();
+    printf("ready to write\n");
+
+    // write sector by page
+    int res = 0; 
+
+    for(int i = 0; i < SECTOR_SIZE; i += PAGE_SIZE) {
+        res += write_page(address + i, buff + i); 
+    }
+
 
     return res; 
 }

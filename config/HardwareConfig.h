@@ -15,4 +15,4 @@
 
 #define FS_SPI_BUS spi0
 #define FS_CS_PIN 5
-#define FS_SPI_BAUDRATE 1000000
+#define FS_SPI_BAUDRATE 2000000

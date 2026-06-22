@@ -41,13 +41,13 @@ DRESULT disk_read (BYTE pdrv, BYTE* buff, LBA_t sector, UINT count){
 // write sectors to disk 
 DRESULT disk_write (BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count){
     (void)pdrv; // 1 drive system
-    DWORD address = sector * SECTOR_SIZE; 
+
+    DWORD address = sector * SECTOR_SIZE;
 
     for(int i = 0; i < count; i++){
-        write_sector(address, buff); 
+        write_sector(address, buff + (i * SECTOR_SIZE));  
 
         address += SECTOR_SIZE; 
-        buff += SECTOR_SIZE;
     }
     
     return 0; 

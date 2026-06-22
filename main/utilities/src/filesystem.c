@@ -1,5 +1,8 @@
 #include "filesystem.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "gse.h"
 #include "log.h"
 
@@ -12,61 +15,97 @@
 
 FATFS fs; // extern'ed
 
+
 void diskio_test(){
+    static uint8_t _it = 0; 
+
     printf("\n--------- Diskio test -----------\n");
     
     printf("Current AON Time: %lld\n", timing_now_epoch());
+    int res; 
 
-    uint8_t res = flash_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE); 
-    printf("Flash init result: %d\n", res);
+    if(_it == 0){
+        res = flash_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE); 
+        printf("Flash init result: %d\n", res);
+        vTaskDelay(10); 
+    }
+    _it++; 
 
     int id = flash_read_id();
     printf("Flash ID: %x\n", id); 
 
-    // ----------------------------------------------------------------------
+    uint8_t status = flash_read_status1(); 
+    printf("Status1: 0x%02x\n", status); 
 
+    // -------------------------------------------------------------------
+    // flash test
     uint8_t buff[SECTOR_SIZE]; 
 
-    DRESULT read_res = disk_read(0, buff, 0, 1);
-    printf("\nRead sector result: %d\n", read_res); 
+    printf("Read\n"); 
+    res = read_sector(0, buff);
+    printf("res: %d\n", res);
 
     for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]);
+        printf("0x%02x ", buff[i]); 
     }
     printf("\n"); 
 
     vTaskDelay(pdMS_TO_TICKS(1000)); 
 
+    printf("Write\n");
+    for(int i = 0; i < 5; i++){
+        buff[i] = _it; 
+    }
+    res = write_sector(0, buff); 
+    printf("res: %d\n", res);
+
+    // ----------------------------------------------------------------------
+
+    // uint8_t buff[SECTOR_SIZE]; 
+
+    // DRESULT read_res = disk_read(0, buff, 0, 1);
+    // printf("\nRead sector result: %d\n", read_res); 
+
+    // for(int i = 0; i < 10; i++){
+    //     printf("0x%02x ", buff[i]);
+    // }
+    // printf("\n"); 
+
+    // vTaskDelay(pdMS_TO_TICKS(1000)); 
+
+    // int erase_res = erase_sector(0);
+
+    // printf("Erase res: %d\n", erase_res); 
+
+    // vTaskDelay(pdMS_TO_TICKS(1000)); 
+
     // -----------------------------------------------------------------------
 
-    uint8_t seed = to_ms_since_boot(get_absolute_time()); 
-    for(int i = 0; i < SECTOR_SIZE; i++){
-        buff[i] = seed; 
-    }
+    // uint8_t seed = _it; 
+    // for(int i = 0; i < SECTOR_SIZE; i++){
+    //     buff[i] = seed; 
+    // }
 
-    DRESULT write_res = disk_write(0, buff, 0, 1); 
-    printf("\nWrite res (seed = 0x%02x): %d\n", seed, write_res); 
-    printf("Wrote ("); 
-    for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]); 
-    }
-    printf(")\n");
+    // DRESULT write_res = disk_write(0, buff, 0, 1); 
+    // printf("\nWrite res (seed = 0x%02x): %d\n", seed, write_res); 
 
-    vTaskDelay(pdMS_TO_TICKS(1000)); // wait for read to complete?
+    // vTaskDelay(pdMS_TO_TICKS(1000)); // wait for read to complete?
 
     // ---------------------------------------------------------------------
 
-    read_res = disk_read(0, buff, 0, 1);
-    printf("\nRead after write result: %d\n", read_res); 
+    // read_res = disk_read(0, buff, 0, 1);
+    // printf("\nRead after write result: %d\n", read_res); 
 
-    for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]);
-    }
-    printf("\n"); 
+    // for(int i = 0; i < 10; i++){
+    //     printf("0x%02x ", buff[i]);
+    // }
+    // printf("\n"); 
 
-    vTaskDelay(pdMS_TO_TICKS(3000)); 
+    // -----------------------------------------------------------------------
 
-    log_info("Diskio test done."); 
+    vTaskDelay(pdMS_TO_TICKS(1000)); 
+
+    printf("Diskio test done."); 
 }
 
 DWORD get_fattime(void){
