@@ -42,6 +42,8 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
   return RES_OK;
 }
 
+#if FF_FS_READONLY == 0 
+
 // write sectors to disk
 DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
   (void)pdrv;  // 1 drive system
@@ -49,13 +51,16 @@ DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
   DWORD address = sector * SECTOR_SIZE;
 
   for (int i = 0; i < count; i++) {
-    write_sector(address, buff + (i * SECTOR_SIZE));
+    write_sector(address, buff);
 
     address += SECTOR_SIZE;
+    buff += SECTOR_SIZE; 
   }
 
   return 0;
 }
+
+#endif 
 
 // misc ioctl
 DRESULT disk_ioctl(BYTE pdrv, BYTE cmd, void *buff) {
