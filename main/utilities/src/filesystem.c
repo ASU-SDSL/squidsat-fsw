@@ -3,15 +3,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "timing.h"
 #include "gse.h"
 #include "log.h"
 
+#include "ff.h"
 #include "diskio.h"
+
 #include "flash.h"
 #include "HardwareConfig.h"
-
-#include "ff.h"
-#include "timing.h"
 
 FATFS fs; // extern'ed
 
