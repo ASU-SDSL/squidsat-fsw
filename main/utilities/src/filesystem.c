@@ -27,7 +27,7 @@ void diskio_test(){
     if(_it == 0){
         res = flash_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE); 
         printf("Flash init result: %d\n", res);
-        vTaskDelay(10); 
+        vTaskDelay(10); // arbitrary delay
     }
     _it++; 
 
@@ -39,73 +39,67 @@ void diskio_test(){
 
     // -------------------------------------------------------------------
     // flash test
+    // uint8_t buff[SECTOR_SIZE]; 
+
+    // printf("Read\n"); 
+    // res = read_sector(0, buff);
+    // printf("res: %d\n", res);
+
+    // for(int i = 0; i < 10; i++){
+    //     printf("0x%02x ", buff[i]); 
+    // }
+    // printf("\n"); 
+
+    // vTaskDelay(pdMS_TO_TICKS(1000)); 
+
+    // printf("Write\n");
+    // for(int i = 0; i < 5; i++){
+    //     buff[i] = _it; 
+    // }
+    // res = write_sector(0, buff); 
+    // printf("res: %d\n", res);
+
+    // ----------------------------------------------------------------------
+
     uint8_t buff[SECTOR_SIZE]; 
 
-    printf("Read\n"); 
-    res = read_sector(0, buff);
-    printf("res: %d\n", res);
+    DRESULT read_res = disk_read(0, buff, 0, 1);
+    printf("\nRead sector result: %d\n", read_res); 
 
     for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]); 
+        printf("0x%02x ", buff[i]);
     }
     printf("\n"); 
 
     vTaskDelay(pdMS_TO_TICKS(1000)); 
 
-    printf("Write\n");
-    for(int i = 0; i < 5; i++){
-        buff[i] = _it; 
-    }
-    res = write_sector(0, buff); 
-    printf("res: %d\n", res);
-
-    // ----------------------------------------------------------------------
-
-    // uint8_t buff[SECTOR_SIZE]; 
-
-    // DRESULT read_res = disk_read(0, buff, 0, 1);
-    // printf("\nRead sector result: %d\n", read_res); 
-
-    // for(int i = 0; i < 10; i++){
-    //     printf("0x%02x ", buff[i]);
-    // }
-    // printf("\n"); 
-
-    // vTaskDelay(pdMS_TO_TICKS(1000)); 
-
-    // int erase_res = erase_sector(0);
-
-    // printf("Erase res: %d\n", erase_res); 
-
-    // vTaskDelay(pdMS_TO_TICKS(1000)); 
-
     // -----------------------------------------------------------------------
 
-    // uint8_t seed = _it; 
-    // for(int i = 0; i < SECTOR_SIZE; i++){
-    //     buff[i] = seed; 
-    // }
+    uint8_t seed = _it; 
+    for(int i = 0; i < 5; i++){
+        buff[i] = seed; 
+    }
 
-    // DRESULT write_res = disk_write(0, buff, 0, 1); 
-    // printf("\nWrite res (seed = 0x%02x): %d\n", seed, write_res); 
+    DRESULT write_res = disk_write(0, buff, 0, 1); 
+    printf("\nWrite res (seed = 0x%02x): %d\n", seed, write_res); 
 
-    // vTaskDelay(pdMS_TO_TICKS(1000)); // wait for read to complete?
+    vTaskDelay(pdMS_TO_TICKS(1000)); // wait for read to complete?
 
     // ---------------------------------------------------------------------
 
-    // read_res = disk_read(0, buff, 0, 1);
-    // printf("\nRead after write result: %d\n", read_res); 
+    read_res = disk_read(0, buff, 0, 1);
+    printf("\nRead after write result: %d\n", read_res); 
 
-    // for(int i = 0; i < 10; i++){
-    //     printf("0x%02x ", buff[i]);
-    // }
-    // printf("\n"); 
+    for(int i = 0; i < 10; i++){
+        printf("0x%02x ", buff[i]);
+    }
+    printf("\n"); 
 
     // -----------------------------------------------------------------------
 
     vTaskDelay(pdMS_TO_TICKS(1000)); 
 
-    printf("Diskio test done."); 
+    printf("\n-------- Diskio test done. ----------\n"); 
 }
 
 DWORD get_fattime(void){
