@@ -6,7 +6,7 @@
 
 extern FATFS fs; 
 
-void diskio_test(); 
+void diskio_test_simple(); 
 void filesystem_init(); 
 void filesystem_make(); 
 void filesystem_test(); 

@@ -20,6 +20,7 @@
 
 #include "timing.h"
 #include "filesystem.h"
+#include "diskio_test.h"
 
 void led_task(void *pvParameters)
 {   
@@ -29,10 +30,21 @@ void led_task(void *pvParameters)
     int it = 0; 
     while (true) {
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(5000));
 
         log_infof("Hello led_task %d", it++);
-        diskio_test(); 
+        // diskio_test_simple(); 
+        int rc;
+        DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
+
+        /* Check function/compatibility of the physical drive #0 */
+        rc = test_diskio(0, 3, buff, sizeof buff);
+
+        if (rc) {
+            printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
+        } else {
+            printf("Congratulations! The disk driver works well.\n");
+        }
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -62,7 +74,7 @@ int main()
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);

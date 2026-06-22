@@ -297,7 +297,7 @@ int test_diskio (
 
 
 
-int main (int argc, char* argv[])
+int example_main (int argc, char* argv[])
 {
     int rc;
     DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */

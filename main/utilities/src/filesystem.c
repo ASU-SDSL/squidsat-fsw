@@ -16,7 +16,7 @@
 FATFS fs; // extern'ed
 
 
-void diskio_test(){
+void diskio_test_simple(){
     static uint8_t _it = 0; 
 
     printf("\n--------- Diskio test -----------\n");

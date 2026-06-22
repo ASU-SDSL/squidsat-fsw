@@ -74,7 +74,7 @@ DRESULT disk_ioctl(BYTE pdrv, BYTE cmd, void *buff) {
       *(DWORD *)buff = SECTOR_SIZE;
       return RES_OK;
     case CTRL_SYNC:
-      return RES_OK;  // this should be smarter
+      return RES_OK;  // this could be smarter
     case GET_BLOCK_SIZE:
       *(DWORD *)buff =
           SECTOR_SIZE;  // how does FatFs differentiate between SECTOR and BLOCK
