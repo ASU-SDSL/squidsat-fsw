@@ -14,10 +14,10 @@
             "intelliSenseMode": "gcc-arm",
             "browse": {
                 "path": [
+                    "${workspaceFolder}/lib/ff16/**",
                     "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
                     "${workspaceFolder}/lib/pico-sdk/**",
-                    "${workspaceFolder}/**",
-                    "${workspaceFolder}/lib/ff16/**"
+                    "${workspaceFolder}/**"
                 ], 
                 "limitSymbolsToIncludedHeaders": true
             }

@@ -100,8 +100,6 @@ int test_diskio (
         sz_sect = FF_MAX_SS;
 #endif
 
-        printf("Done (%d).\n", cc); 
-        continue; // skip for now 
 
         printf("**** Get block size ****\n");
         printf(" disk_ioctl(%u, GET_BLOCK_SIZE, 0x%X)", pdrv, (UINT)&sz_eblk);
@@ -300,20 +298,20 @@ int test_diskio (
 
 
 
-int example_main (int argc, char* argv[])
-{
-    int rc;
-    DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
+// int main (int argc, char* argv[])
+// {
+//     int rc;
+//     DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
 
-    /* Check function/compatibility of the physical drive #0 */
-    rc = test_diskio(0, 3, buff, sizeof buff);
+//     /* Check function/compatibility of the physical drive #0 */
+//     rc = test_diskio(0, 3, buff, sizeof buff);
 
-    if (rc) {
-        printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
-    } else {
-        printf("Congratulations! The disk driver works well.\n");
-    }
+//     if (rc) {
+//         printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
+//     } else {
+//         printf("Congratulations! The disk driver works well.\n");
+//     }
 
-    return rc;
-}
+//     return rc;
+// }
 

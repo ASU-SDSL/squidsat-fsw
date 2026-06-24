@@ -22,6 +22,7 @@
 #include "filesystem.h"
 #include "diskio_test.h"
 
+static DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
@@ -35,8 +36,7 @@ void led_task(void *pvParameters)
         log_infof("Hello led_task %d", it++);
         // diskio_test_simple(); 
         int rc;
-        DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
-
+        
         /* Check function/compatibility of the physical drive #0 */
         rc = test_diskio(0, 3, buff, sizeof buff);
 

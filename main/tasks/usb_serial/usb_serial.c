@@ -47,14 +47,14 @@ static void usb_serial_out_chars(const char* buf, int len){
         // find the max amount we can send
         int avail = (int) tud_cdc_write_available(); 
         // if the max available is less than what we want to send, cap it 
-        if(n > avail) n = avail; 
+        if(n > avail) n = avail;
 
-        // if there is still some availability  
+        // if there is still some availability
         if(n) {
-          int n2 = (int) tud_cdc_write(buf + i, (uint32_t)n); 
-          tud_task(); // this may be over servicing 
-          tud_cdc_write_flush(); 
-          i += n2; 
+          int n2 = (int) tud_cdc_write(buf + i, (uint32_t)n);
+          // tud_task(); // this may be over servicing 
+          // tud_cdc_write_flush();
+          i += n2;
         } else {
           // if there is no availability - service usb and flush 
           tud_task(); 
