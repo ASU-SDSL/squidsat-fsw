@@ -33,18 +33,7 @@ void led_task(void *pvParameters)
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(5000));
 
-        log_infof("Hello led_task %d", it++);
-        // diskio_test_simple(); 
-        int rc;
-        
-        /* Check function/compatibility of the physical drive #0 */
-        rc = test_diskio(0, 3, buff, sizeof buff);
-
-        if (rc) {
-            printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
-        } else {
-            printf("Congratulations! The disk driver works well.\n");
-        }
+        filesystem_test(); 
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));

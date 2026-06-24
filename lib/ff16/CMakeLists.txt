@@ -26,6 +26,8 @@ target_sources(FatFs INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/source/ffsystem.c
     ${CMAKE_CURRENT_LIST_DIR}/source/ffunicode.c
     ${CMAKE_CURRENT_LIST_DIR}/source/ff.c
+
+    # diskio test
     ${CMAKE_CURRENT_LIST_DIR}/test/diskio_test.c
     
     # custom implemented diskio
@@ -34,6 +36,8 @@ target_sources(FatFs INTERFACE
 
 target_include_directories(FatFs INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/source
+
+    # diskio test 
     ${CMAKE_CURRENT_LIST_DIR}/test
 
     # custom implemented diskio

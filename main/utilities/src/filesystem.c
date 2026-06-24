@@ -2,6 +2,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 #include "timing.h"
 #include "gse.h"
@@ -10,96 +11,88 @@
 #include "ff.h"
 #include "diskio.h"
 
-#include "flash.h"
-#include "HardwareConfig.h"
+#define file_logf(...) printf(__VA_ARGS__)
+
+/**
+ * restrains the use of the file system to avoid using 
+ * too many resources. Tasks that call FatFS functions 
+ * should ask first to get an instance of the fs_use 
+ * counting mutex AND handle rejection 
+ * (but this is not enforced) 
+ */
+// overall filesystem lock - if locked do not get instance 
+SemaphoreHandle_t fs_lock;
+// instance management 
+SemaphoreHandle_t fs_available; // instance management
+
+#define FS_LOCK_DELAY_MS 1000 
+#define FS_AVAILABLE_DELAY_MS 1000 
+
+bool filesystem_start_use(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms){
+    bool res = false; 
+    if(xSemaphoreTake(fs_lock, fs_lock_delay_ms) == pdTRUE){
+        res = xSemaphoreTake(fs_available, fs_available_delay_ms); 
+
+        xSemaphoreGive(fs_lock); 
+    }
+
+    return res; 
+}
+
+void filesystem_end_use(){
+    xSemaphoreGive(fs_available); 
+}
+
+// kind of arbitrary but some restriction is safer
+#define FS_AVAILABLE_INSTANCES 4 
+
+#define MKFS_WORKING_BUFFER_LEN FF_MAX_SS
+
+// later adding resource management - locking mutex, counting mutex, drain 
 
 FATFS fs; // extern'ed
 
-
-void diskio_test_simple(){
-    static uint8_t _it = 0; 
-
-    printf("\n--------- Diskio test -----------\n");
+void filesystem_init(){
+    fs_available = xSemaphoreCreateCounting(FS_AVAILABLE_INSTANCES, FS_AVAILABLE_INSTANCES); 
     
-    printf("Current AON Time: %lld\n", timing_now_epoch());
-    int res; 
-
-    if(_it == 0){
-        res = flash_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE); 
-        printf("Flash init result: %d\n", res);
-        vTaskDelay(10); // arbitrary delay
+    FRESULT fr = f_mount(&fs, "0:", 1); 
+    if(fr != FR_OK){
+        file_logf("Failed to mount filesystem (%d), attempting to rebuild\n", fr); 
+        filesystem_mkfs(); 
     }
-    _it++; 
+}
 
-    int id = flash_read_id();
-    printf("Flash ID: %x\n", id); 
+FRESULT filesystem_mkfs(){
+    file_logf("Making filesystem\n");
+    // make filesystem on drive 0 
+    void* buf = pvPortMalloc(MKFS_WORKING_BUFFER_LEN); 
+    FRESULT fr = f_mkfs("", NULL, buf, MKFS_WORKING_BUFFER_LEN); 
+    // free buf 
+    vPortFree(buf); 
 
-    uint8_t status = flash_read_status1(); 
-    printf("Status1: 0x%02x\n", status); 
-
-    // -------------------------------------------------------------------
-    // flash test
-    // uint8_t buff[SECTOR_SIZE]; 
-
-    // printf("Read\n"); 
-    // res = read_sector(0, buff);
-    // printf("res: %d\n", res);
-
-    // for(int i = 0; i < 10; i++){
-    //     printf("0x%02x ", buff[i]); 
-    // }
-    // printf("\n"); 
-
-    // vTaskDelay(pdMS_TO_TICKS(1000)); 
-
-    // printf("Write\n");
-    // for(int i = 0; i < 5; i++){
-    //     buff[i] = _it; 
-    // }
-    // res = write_sector(0, buff); 
-    // printf("res: %d\n", res);
-
-    // ----------------------------------------------------------------------
-
-    uint8_t buff[SECTOR_SIZE]; 
-
-    DRESULT read_res = disk_read(0, buff, 0, 1);
-    printf("\nRead sector result: %d\n", read_res); 
-
-    for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]);
-    }
-    printf("\n"); 
-
-    vTaskDelay(pdMS_TO_TICKS(1000)); 
-
-    // -----------------------------------------------------------------------
-
-    uint8_t seed = _it; 
-    for(int i = 0; i < 5; i++){
-        buff[i] = seed; 
+    if(fr != FR_OK){
+        file_logf("(mkfs) Failed to make filesystem (%d)\n", fr);    
+        return fr; 
     }
 
-    DRESULT write_res = disk_write(0, buff, 0, 1); 
-    printf("\nWrite res (seed = 0x%02x): %d\n", seed, write_res); 
-
-    vTaskDelay(pdMS_TO_TICKS(1000)); // wait for read to complete?
-
-    // ---------------------------------------------------------------------
-
-    read_res = disk_read(0, buff, 0, 1);
-    printf("\nRead after write result: %d\n", read_res); 
-
-    for(int i = 0; i < 10; i++){
-        printf("0x%02x ", buff[i]);
+    file_logf("Mounting filesystem\n"); 
+    fr = f_mount(&fs, "0:", 1); 
+    if(fr != FR_OK){
+        file_logf("(mkfs) Failed to mount filesystem (%d)\n", fr); 
+        return fr; 
     }
-    printf("\n"); 
 
-    // -----------------------------------------------------------------------
+    return fr; // should only be FR_OK at this point 
+}
 
-    vTaskDelay(pdMS_TO_TICKS(1000)); 
+void filesystem_test(){
+    file_logf("Testing filesystem");
+    vTaskDelay(pdMS_TO_TICKS(100)); 
 
-    printf("\n-------- Diskio test done. ----------\n"); 
+    FRESULT fr = filesystem_mkfs(); 
+    file_logf("MKFS res: %d\n", fr);
+
+    file_logf("Done."); 
 }
 
 DWORD get_fattime(void){
@@ -115,21 +108,4 @@ DWORD get_fattime(void){
            (DWORD)now.tm_hour << 11 |
            (DWORD)now.tm_min << 5 |
            (DWORD)now.tm_sec >> 1;
-}
-
-void filesystem_init(){
-    
-}
-
-void filesystem_make(){
-    log_info("Making filesystem");
-    void* buf = pvPortMalloc(0x400); 
-    FRESULT fr = f_mkfs("", NULL, buf, 0x400); 
-
-}
-
-void filesystem_test(){
-    log_info("Testing filesystem");
-
-    log_info("Done."); 
 }

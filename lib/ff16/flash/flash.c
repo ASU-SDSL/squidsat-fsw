@@ -1,12 +1,13 @@
 #include "flash.h"
 
 #include <stdio.h>
-
 #include "FreeRTOS.h"
-#include "HardwareConfig.h"
+#include "task.h"
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
-#include "task.h"
+
+#include "HardwareConfig.h"
+
 
 #define SFE_FLASH_COMMAND_WRITE_STATUS_REG 0x01  // WRSR
 #define SFE_FLASH_COMMAND_PAGE_PROGRAM 0x02
@@ -32,7 +33,7 @@ static spi_inst_t *_bus;
 // reference:
 // https://github.com/tylermnielsen/SparkFun_SPI_SerialFlash_Arduino_Library/tree/main
 // critical sections are necessary
-// later can be improved with spi dma
+// later can be improved with spi dma - but that needs better synchronization if done 
 
 uint8_t flash_read_status1() {
   taskENTER_CRITICAL();

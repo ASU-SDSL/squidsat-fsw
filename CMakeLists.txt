@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 
+# metadata export for VSCode linter
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # ── Platform Selection ────────────────────────────────────────────────────────
 # Set defaults if not passed in from bash via -DPICO_BOARD and -DPICO_PLATFORM
 if(NOT DEFINED PICO_BOARD)
