@@ -24,3 +24,5 @@ SPI interactions need to be in critical sections to avoid context switches causi
 6/24/2026 - `diskio_test` works for flash
 
 6/24/2026 - started re-entrant and full filesystem using provided FreeRTOS functions in `/source/ffsystem.c`
+
+6/24/2026 - working with filesystem test - still untested for re-entrant but that is implemented and was a default config so it'll likely work just fine. The SPI bus I don't think needs it's own thread protection so long as ONLY the filesystem uses that SPI bus. 

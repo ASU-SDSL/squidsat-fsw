@@ -22,7 +22,6 @@
 #include "filesystem.h"
 #include "diskio_test.h"
 
-static DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
@@ -31,9 +30,9 @@ void led_task(void *pvParameters)
     int it = 0; 
     while (true) {
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(5000));
+        vTaskDelay(pdMS_TO_TICKS(500));
 
-        filesystem_test(); 
+        log_infof("Hello LED");
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -48,7 +47,9 @@ int main()
     gse_init();
     i2c_util_init(); 
 
-    uint8_t ts_res = timing_init(); 
+    // uint8_t ts_res = timing_init(); 
+
+    // FRESULT fs_res = filesystem_init(); 
     
     // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
     //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
