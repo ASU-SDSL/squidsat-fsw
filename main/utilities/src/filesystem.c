@@ -26,13 +26,27 @@
 
 /// Overall filesystem lock - if locked do not get instance 
 static SemaphoreHandle_t fs_lock;
-/// instance management 
+/// instance management & use record
 static SemaphoreHandle_t fs_available; // instance management
 
+/// Default claim delay for fs_lock 
 #define FS_LOCK_DELAY_MS 1000 
+/// Default claim delay for fs_available 
 #define FS_AVAILABLE_DELAY_MS 1000 
 
+/// Max number of fs_available claims
+#define FS_AVAILABLE_INSTANCES 4 // kind of arbitrary but some restriction is safer
+#define MKFS_WORKING_BUFFER_LEN FF_MAX_SS // must be >= FF_MAX_SS
 
+/**
+ * @brief Requests use instance of the filesystem. Called before any file system 
+ * use. When the use is done call filesystem_end_use().
+ * 
+ * @param fs_lock_delay_ms Time to wait to take the fs_lock semaphore
+ * @param fs_available_delay_ms Time to wait to take the fs_available semaphore
+ * @return true if the fs_available semaphore is successfully taken 
+ * @return false if either semaphore cannot be taken in the given times
+ */
 bool filesystem_start_use_args(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms){
     bool res = false; 
     if(fs_lock != NULL && xSemaphoreTake(fs_lock, fs_lock_delay_ms) == pdTRUE){
@@ -46,16 +60,31 @@ bool filesystem_start_use_args(uint32_t fs_lock_delay_ms, uint32_t fs_available_
     return res; 
 }
 
+/**
+ * @brief Default call to filesystem_start_use_args() with FS_LOCK_DELAY_MS 
+ * and FS_AVAILABLE_DELAY_MS delays as arguments.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool filesystem_start_use(){
     return filesystem_start_use_args(FS_LOCK_DELAY_MS, FS_AVAILABLE_DELAY_MS);
 }
 
+/**
+ * @brief Releases the fs_available mutex. Called at end of filesystem use.
+ * 
+ */
 void filesystem_end_use(){
     if(fs_available != NULL) xSemaphoreGive(fs_available); 
 }
 
-// for code blocks intended to be executed with nothing else using the fs
-// should only be used inside filesystem.c
+/**
+ * @brief For wrapping code blocks intended to be executed with nothing else 
+ * using the fs. Should only be used inside filesystem.c, blocks at max delay
+ * and waits for all uses of the fs_available to be yielded. 
+ * 
+ */
 #define filesystem_with_max_lockout(code)                                      \
     if (fs_lock != NULL && xSemaphoreTake(fs_lock, portMAX_DELAY))         \
     {                                                                      \
@@ -68,31 +97,35 @@ void filesystem_end_use(){
             xSemaphoreGive(fs_lock);                                       \
     }
 
-// later adding resource management - locking mutex, counting mutex, drain 
-
-/**-----------------------------------------------------------------------------
- * File system utility functions
- * -----------------------------------------------------------------------------
- * Combining commonly used filesystem code into functions
- */
-
-// kind of arbitrary but some restriction is safer
-#define FS_AVAILABLE_INSTANCES 4 
-#define MKFS_WORKING_BUFFER_LEN FF_MAX_SS
-
+/// FatFs struct for overall use     
 FATFS fs; // extern'ed
 
-void filesystem_init(){
+/**
+ * @brief Initializes FatFs filesystem with resource management system. Attempts
+ * to mount an existing filesystem, if that fails will attempt to make a new 
+ * fileystem on the storage and mount that.
+ * 
+ * @return FRESULT FR_OK or pass along result of filesystem_build()
+ */
+FRESULT filesystem_init(){
     fs_lock = xSemaphoreCreateMutex(); 
     fs_available = xSemaphoreCreateCounting(FS_AVAILABLE_INSTANCES, FS_AVAILABLE_INSTANCES); 
     
     FRESULT fr = f_mount(&fs, "0:", 1); 
     if(fr != FR_OK){
         file_logf("Failed to mount filesystem (%d), attempting to rebuild\n", fr); 
-        filesystem_build(); 
+        return filesystem_build(); 
     }
+
+    return FR_OK;  
 }
 
+/**
+ * @brief Builts and mounts a new filesystem on the storage device (1 drive 
+ * system).
+ * 
+ * @return FRESULT Result of f_mkfs or f_mount if either fail, else FR_OK
+ */
 FRESULT filesystem_build(){
     FRESULT fr; 
 
@@ -122,6 +155,10 @@ FRESULT filesystem_build(){
     return fr; // should only be FR_OK at this point 
 }
 
+/**
+ * @brief Test function for filesystem implementation
+ * 
+ */
 void filesystem_test(){
     static bool needs_init = true; 
 
@@ -186,6 +223,12 @@ void filesystem_test(){
     file_logf("Done.\n"); 
 }
 
+/**
+ * @brief Gets the current time for file timestamps, declared in diskio.h. Not
+ * intended for use outside of FatFS, see utilities/timing.c
+ * 
+ * @return DWORD 
+ */
 DWORD get_fattime(void){
     // struct tm now = {0}; 
     // if(rtc_get_tm(&now)){
