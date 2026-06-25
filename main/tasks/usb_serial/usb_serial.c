@@ -1,3 +1,19 @@
+/**
+ * @file usb_serial.c
+ * @author Tyler Nielsen
+ * @brief USB stack management with RTOS SMP safety and driver integration into 
+ * the Pico SDK's stdio stack. 
+ * @version 0.1
+ * @date 2026-06-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ * Everything that interacts directly with the TinyUSB stack should be defined here. 
+ * See usb_serial/readme_usb.md for more info. 
+ * Reference Arduino-Pico
+ * Reference https://github.com/hathach/tinyusb/blob/master/examples/device/cdc_msc_freertos/src/main.c
+ * Reference https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb.c#L63
+ */
 #include "usb_serial.h"
 
 #include "FreeRTOS.h"
@@ -9,19 +25,24 @@
 #include "pico/stdlib.h"
 #include "pico/stdio/driver.h"
 
-// Reference Arduino-Pico
-// Reference https://github.com/hathach/tinyusb/blob/master/examples/device/cdc_msc_freertos/src/main.c
-// reference https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb.c#L63
+/// Time to wait for available buffer before dropping usb write (value from pico/stdio_usb.h)
+#define USB_WRITE_TIMEOUT_US 500000 
 
-
-#define USB_WRITE_TIMEOUT_US 500000 // value from pico/stdio_usb.h
 #define USB_MUTEX_TIMEOUT_MS 500 
 
 TaskHandle_t usbTaskHandle;
 SemaphoreHandle_t usb_mutex;
 
-// public usb / serial interfaces - anything that uses tinyusb needs to be through here 
+// -----------------------------------------------------------------------------
+// Public USB functions
+// -----------------------------------------------------------------------------
 
+/**
+ * @brief Thread safe tud_cdc_connected() wrapper. See TinyUSB docs.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool safe_tud_cdc_connected() {
   bool res = false; 
   
@@ -34,8 +55,9 @@ bool safe_tud_cdc_connected() {
   return res; 
 }
 
-// private internal functions and task 
-
+// -----------------------------------------------------------------------------
+// Private internal functions for stdio driver
+// -----------------------------------------------------------------------------
 static void usb_serial_out_chars(const char* buf, int len){
   if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, USB_MUTEX_TIMEOUT_MS) == pdTRUE){
     uint32_t start = time_us_32(); // for timeout 
@@ -97,7 +119,7 @@ static int usb_serial_in_chars(char* buf, int len){
   return 0;
 }
 
-// could I enable and then filter out usb to get pico tool? 
+// to be defined elsewere but called in the USB task 
 static void (*usb_serial_chars_available_fn)(void*); 
 static void* usb_serial_chars_available_param;
 
@@ -115,6 +137,7 @@ static void usb_serial_set_chars_available_callback(void (*fn)(void*), void *par
   usb_serial_chars_available_param = param; 
 }
 
+// Pico SDK compatible driver 
 static stdio_driver_t usb_stdio_driver = {
   .out_chars = usb_serial_out_chars, // not used
   .out_flush = usb_serial_out_flush, // not used
@@ -128,6 +151,14 @@ static stdio_driver_t usb_stdio_driver = {
 #endif
 };
 
+
+// -----------------------------------------------------------------------------
+// USB Task function and initialization
+// -----------------------------------------------------------------------------
+/**
+ * @brief Initializes USB mutex and registers custom Pico SDK stdio driver. 
+ * 
+ */
 void usb_serial_init(){
   usb_mutex = xSemaphoreCreateMutex();
   
@@ -136,6 +167,12 @@ void usb_serial_init(){
 
 }
 
+/**
+ * @brief USB Task, thread safe servicing TinyUSB stack and 
+ * usb_serial_call_chars_available_callback()
+ * 
+ * @param params 
+ */
 void usb_serial_task(void *params){
 
   // should be called after scheduler is started
