@@ -7,5 +7,5 @@ void sensor_setup(void);
 void heart_beat_job(void *args);
 
 
-extern scheduler_t led_blinking;
-extern scheduler_t heart_beat;
+extern jobs_t led_blinking;
+extern jobs_t heart_beat;

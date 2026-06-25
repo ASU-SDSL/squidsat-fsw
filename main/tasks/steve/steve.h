@@ -14,10 +14,10 @@ typedef struct {
     char name[20]; //name of the job
     job_function func; //function pointer to the job function
     void *args; //arguments to be passed to the job function
-} scheduler_t;
+} jobs_t;
 
 typedef struct {
-    scheduler_t *jobs[MAX_JOBS]; 
+    jobs_t *jobs[MAX_JOBS]; 
     size_t job_count; //number of jobs currently
 } job_context_t;
 
@@ -25,6 +25,7 @@ extern job_context_t global_job_context;
 
 //Scheduler task function
 //void create_job();
-//void delete_job();
-void add_job(scheduler_t *job);
+void delete_job(jobs_t *job);
+void scheduler_task(void *pvParameters);
+void add_job(jobs_t *job);
 void run_scheduler();

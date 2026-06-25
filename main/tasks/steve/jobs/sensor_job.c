@@ -1,8 +1,8 @@
 #include "pico/stdlib.h"
 #include <sensor_job.h>
-#include <stdio.h>
+#include <log.h>
 
-//hardcode for testing
+//hardcode for testing 
 
 
 const uint LED_PIN = PICO_DEFAULT_LED_PIN; 
@@ -11,6 +11,7 @@ void sensor_setup(void){
     stdio_init_all();
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
+    gpio_put(LED_PIN, 1); 
 }
 
 void led_blinking_job(void *args){
@@ -27,24 +28,25 @@ void led_blinking_job(void *args){
     //gpio_put(LED_PIN,count < 3);
 
     //test 3: solid LED
-    gpio_put(LED_PIN, 1); //led stay on whole time
+    gpio_put(LED_PIN, 0); 
+    log_error("LED job ran - turning off");
 }
 
 void heart_beat_job(void *args){
-    printf("heartbeat\n");
+    log_error("heartbeat\n");
 }
 
 
-scheduler_t led_blinking = {
+jobs_t led_blinking = {
     .func = led_blinking_job,
-    .recurr_time = pdMS_TO_TICKS(500),
-    .execute_time = 0, 
+    .recurr_time = 0, 
+    .execute_time = 1, 
     .name = "LED Blinking Job",
     .args = NULL,
 
 };
 
-scheduler_t heart_beat = {
+jobs_t heart_beat = {
     .func = heart_beat_job,
     .recurr_time = pdMS_TO_TICKS(1000),
     .execute_time = 0,
