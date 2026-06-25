@@ -42,7 +42,7 @@ bool filesystem_start_use_args(uint32_t fs_lock_delay_ms, uint32_t fs_available_
 
         xSemaphoreGive(fs_lock); 
     }
-
+    
     return res; 
 }
 
@@ -56,14 +56,16 @@ void filesystem_end_use(){
 
 // for code blocks intended to be executed with nothing else using the fs
 // should only be used inside filesystem.c
-#define filesystem_with_lockout(code)                              \
-    if (fs_lock != NULL && xSemaphoreTake(fs_lock, portMAX_DELAY)) \
-    {                                                              \
-        /* wait for current uses to be given up */                 \
-        while (uxSemaphoreGetCount(fs_available) > 0)              \
-            vTaskDelay(pdMS_TO_TICKS(100));                        \
-        code                                                       \
-            xSemaphoreGive(fs_lock);                               \
+#define filesystem_with_max_lockout(code)                                      \
+    if (fs_lock != NULL && xSemaphoreTake(fs_lock, portMAX_DELAY))         \
+    {                                                                      \
+        /* wait for current uses to be given up */                         \
+        while (uxSemaphoreGetCount(fs_available) < FS_AVAILABLE_INSTANCES) \
+        {                                                                  \
+            vTaskDelay(pdMS_TO_TICKS(100));                                \
+        }                                                                  \
+        code                                                               \
+            xSemaphoreGive(fs_lock);                                       \
     }
 
 // later adding resource management - locking mutex, counting mutex, drain 
@@ -81,6 +83,7 @@ void filesystem_end_use(){
 FATFS fs; // extern'ed
 
 void filesystem_init(){
+    fs_lock = xSemaphoreCreateMutex(); 
     fs_available = xSemaphoreCreateCounting(FS_AVAILABLE_INSTANCES, FS_AVAILABLE_INSTANCES); 
     
     FRESULT fr = f_mount(&fs, "0:", 1); 
@@ -93,9 +96,9 @@ void filesystem_init(){
 FRESULT filesystem_build(){
     FRESULT fr; 
 
-    filesystem_with_lockout(
+    filesystem_with_max_lockout(
 
-        file_logf("Making filesystem\n");
+        file_logf("Making new filesystem\n");
         // make filesystem on drive 0 
         void* buf = pvPortMalloc(MKFS_WORKING_BUFFER_LEN); 
         fr = f_mkfs("", NULL, buf, MKFS_WORKING_BUFFER_LEN); 
@@ -107,7 +110,7 @@ FRESULT filesystem_build(){
             return fr; 
         }
 
-        file_logf("Mounting filesystem\n"); 
+        file_logf("Mounting new filesystem\n"); 
         fr = f_mount(&fs, "0:", 1); 
         if(fr != FR_OK){
             file_logf("(mkfs) Failed to mount filesystem (%d)\n", fr); 
@@ -120,35 +123,61 @@ FRESULT filesystem_build(){
 }
 
 void filesystem_test(){
-    file_logf("Testing filesystem\n");
+    static bool needs_init = true; 
+
+    file_logf("\n---------- Testing filesystem ----------\n");
+
+    if(needs_init) {
+        file_logf("Initializing filesystem...\n");
+        filesystem_init(); 
+        file_logf("Done\n");
+
+        if(fs_lock != NULL) file_logf("\tfs_lock exists\n");
+        if(fs_available != NULL) file_logf("\tfs_available exists\n"); 
+
+        needs_init = false; 
+    } else {
+        file_logf("Filesytem already initialized\n");
+    }
+
     vTaskDelay(pdMS_TO_TICKS(100)); 
 
     FRESULT fr = filesystem_build(); 
     file_logf("MKFS res: %d\n", fr);
 
-    // make file 
+    vTaskDelay(pdMS_TO_TICKS(100)); 
+
     if(filesystem_start_use()) {
         file_logf("Claimed filesystem use\n"); 
 
+        // make file 
         FIL file; 
         fr = f_open(&file, "test.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE); 
         file_logf("open res: %d\n", fr); 
 
+        // write to file 
         const char* buf = "Testing, testing. 1 2 3";
         UINT count;
-        fr = f_write(&file, buf, sizeof(buf), &count);
-        file_logf("write res: %d\n", fr); 
+        fr = f_write(&file, buf, strlen(buf) + 1, &count);
+        file_logf("write res: %d count: %u\n", fr, count); 
 
+        // move the file pointer back to top of the file 
+        fr = f_lseek(&file, 0);
+        file_logf("seek res: %d\n", fr); 
+
+        // read from file 
         char* rbuf[30]; 
-        fr = f_read(&file, rbuf, sizeof(buf), &count);
+        fr = f_read(&file, rbuf, strlen(buf) + 1, &count);
         rbuf[29] = '\0'; // for safety
-        file_logf("read res: %d\n", fr); 
+        file_logf("read res: %d count: %u\n", fr, count); 
         file_logf("Read: %s\n", rbuf);
 
+        // close file 
         fr = f_close(&file); 
         file_logf("close res: %d\n", fr); 
 
         filesystem_end_use(); 
+
     } else {
         file_logf("Unable to claim filesystem use\n"); 
     }
