@@ -12,25 +12,28 @@
 #include "ff.h"
 #include "diskio.h"
 
+// tbd later
 #define file_logf(...) printf(__VA_ARGS__)
 
 /**
- * restrains the use of the file system to avoid using 
- * too many resources. Tasks that call FatFS functions 
- * should ask first (with the public functions) to get 
- * an instance of the fs_use counting mutex AND handle 
- * rejection 
- * (but this is not enforced on fatfs functions) 
+ * File System Resource Management
+ * 
+ * Restrains the use of the file system to avoid using too many resources. 
+ * Tasks that call FatFS functions should ask first (with the public functions) 
+ * to get an instance of the fs_use counting mutex AND handle rejection 
+ * (but this is not enforced on fatfs functions)
  */
-// overall filesystem lock - if locked do not get instance 
+
+/// Overall filesystem lock - if locked do not get instance 
 static SemaphoreHandle_t fs_lock;
-// instance management 
+/// instance management 
 static SemaphoreHandle_t fs_available; // instance management
 
 #define FS_LOCK_DELAY_MS 1000 
 #define FS_AVAILABLE_DELAY_MS 1000 
 
-bool filesystem_start_use(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms){
+
+bool filesystem_start_use_args(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms){
     bool res = false; 
     if(fs_lock != NULL && xSemaphoreTake(fs_lock, fs_lock_delay_ms) == pdTRUE){
         if(fs_available != NULL) {
@@ -43,8 +46,8 @@ bool filesystem_start_use(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay
     return res; 
 }
 
-bool filesystem_start_use_default(){
-    return filesystem_start_use(FS_LOCK_DELAY_MS, FS_AVAILABLE_DELAY_MS);
+bool filesystem_start_use(){
+    return filesystem_start_use_args(FS_LOCK_DELAY_MS, FS_AVAILABLE_DELAY_MS);
 }
 
 void filesystem_end_use(){
@@ -52,6 +55,7 @@ void filesystem_end_use(){
 }
 
 // for code blocks intended to be executed with nothing else using the fs
+// should only be used inside filesystem.c
 #define filesystem_with_lockout(code)                              \
     if (fs_lock != NULL && xSemaphoreTake(fs_lock, portMAX_DELAY)) \
     {                                                              \
@@ -62,12 +66,17 @@ void filesystem_end_use(){
             xSemaphoreGive(fs_lock);                               \
     }
 
+// later adding resource management - locking mutex, counting mutex, drain 
+
+/**-----------------------------------------------------------------------------
+ * File system utility functions
+ * -----------------------------------------------------------------------------
+ * Combining commonly used filesystem code into functions
+ */
+
 // kind of arbitrary but some restriction is safer
 #define FS_AVAILABLE_INSTANCES 4 
-
 #define MKFS_WORKING_BUFFER_LEN FF_MAX_SS
-
-// later adding resource management - locking mutex, counting mutex, drain 
 
 FATFS fs; // extern'ed
 
@@ -77,11 +86,11 @@ void filesystem_init(){
     FRESULT fr = f_mount(&fs, "0:", 1); 
     if(fr != FR_OK){
         file_logf("Failed to mount filesystem (%d), attempting to rebuild\n", fr); 
-        filesystem_mkfs(); 
+        filesystem_build(); 
     }
 }
 
-FRESULT filesystem_mkfs(){
+FRESULT filesystem_build(){
     FRESULT fr; 
 
     filesystem_with_lockout(
@@ -114,8 +123,36 @@ void filesystem_test(){
     file_logf("Testing filesystem\n");
     vTaskDelay(pdMS_TO_TICKS(100)); 
 
-    FRESULT fr = filesystem_mkfs(); 
+    FRESULT fr = filesystem_build(); 
     file_logf("MKFS res: %d\n", fr);
+
+    // make file 
+    if(filesystem_start_use()) {
+        file_logf("Claimed filesystem use\n"); 
+
+        FIL file; 
+        fr = f_open(&file, "test.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE); 
+        file_logf("open res: %d\n", fr); 
+
+        const char* buf = "Testing, testing. 1 2 3";
+        UINT count;
+        fr = f_write(&file, buf, sizeof(buf), &count);
+        file_logf("write res: %d\n", fr); 
+
+        char* rbuf[30]; 
+        fr = f_read(&file, rbuf, sizeof(buf), &count);
+        rbuf[29] = '\0'; // for safety
+        file_logf("read res: %d\n", fr); 
+        file_logf("Read: %s\n", rbuf);
+
+        fr = f_close(&file); 
+        file_logf("close res: %d\n", fr); 
+
+        filesystem_end_use(); 
+    } else {
+        file_logf("Unable to claim filesystem use\n"); 
+    }
+
 
     file_logf("Done.\n"); 
 }

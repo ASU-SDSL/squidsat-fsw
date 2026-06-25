@@ -8,12 +8,12 @@
 extern FATFS fs; 
 
 void filesystem_init(); 
-FRESULT filesystem_mkfs(); 
+FRESULT filesystem_build(); 
 void filesystem_test(); 
 
-bool filesystem_start_use(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms); 
+bool filesystem_start_use_args(uint32_t fs_lock_delay_ms, uint32_t fs_available_delay_ms); 
 
-bool filesystem_start_use_default(); 
+bool filesystem_start_use(); 
 
 void filesystem_end_use(); 
 
