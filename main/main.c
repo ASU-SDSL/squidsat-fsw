@@ -32,7 +32,7 @@ void led_task(void *pvParameters)
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(500));
 
-        log_infof("Hello LED");
+        log_info("Hello LED");
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));
