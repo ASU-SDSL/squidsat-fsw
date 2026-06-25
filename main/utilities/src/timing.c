@@ -1,3 +1,14 @@
+/**
+ * @file timing.c
+ * @author Tyler Nielsen
+ * @brief Timing utiltiy functions using the RP2350's Always On Timer (AON) 
+ * and an external Real Time Clock (RTC).
+ * @version 0.1
+ * @date 2026-06-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "timing.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -10,7 +21,12 @@
 
 static SemaphoreHandle_t timing_mutex;
 
-// only used before schedular starts 
+/**
+ * @brief Initializes the AON Timer from the RTC, can only be called on boot
+ * before schedular is started
+ *
+ * @return uint8_t
+ */
 uint8_t timing_init() {
   if (timing_mutex == NULL){
     timing_mutex = xSemaphoreCreateMutex(); 
@@ -32,6 +48,13 @@ uint8_t timing_init() {
   return 0;
 }
 
+/**
+ * @brief Syncs the AON Timer with the RTC, intended as the only reading
+ * interaction with the RTC after this all timing should come from AON or uptime
+ * - call periodically
+ *
+ * @return uint8_t
+ */
 uint8_t timing_sync() {
   struct tm now;
 
@@ -48,6 +71,11 @@ uint8_t timing_sync() {
   return 0;
 }
 
+/**
+ * @brief Returns current epoch time timestamp from AON Timer
+ *
+ * @return time_t Epoch time in seconds
+ */
 time_t timing_now_epoch() {
   struct timespec ts;
 
@@ -61,6 +89,11 @@ time_t timing_now_epoch() {
   return ts.tv_sec;
 }
 
+/**
+ * @brief Returns current tm timestamp from AON Timer
+ *
+ * @return struct tm Timestamp
+ */
 struct tm timing_now_tm() {
   struct tm now;
   
@@ -74,6 +107,10 @@ struct tm timing_now_tm() {
   return now;
 }
 
+/**
+ * @brief Testing timing functionality, needs to be called after timing_init()
+ *
+ */
 void timing_test() {
   log_info("Timing test");
   

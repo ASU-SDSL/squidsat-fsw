@@ -1,3 +1,17 @@
+/**
+ * @file filesystem.c
+ * @author Tyler Nielsen
+ * @brief FatFs implementation for RTOS SMP with resource management. 
+ * @version 0.1
+ * @date 2026-06-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ * Restrains the use of the file system to avoid using too many resources. 
+ * Tasks that call FatFS functions should ask first (with the public functions) 
+ * to get an instance of the fs_use counting mutex AND handle rejection 
+ * (but this is not enforced on fatfs functions)
+ */
 #include "filesystem.h"
 
 #include "FreeRTOS.h"
@@ -14,15 +28,6 @@
 
 // tbd later
 #define file_logf(...) printf(__VA_ARGS__)
-
-/**
- * File System Resource Management
- * 
- * Restrains the use of the file system to avoid using too many resources. 
- * Tasks that call FatFS functions should ask first (with the public functions) 
- * to get an instance of the fs_use counting mutex AND handle rejection 
- * (but this is not enforced on fatfs functions)
- */
 
 /// Overall filesystem lock - if locked do not get instance 
 static SemaphoreHandle_t fs_lock;
