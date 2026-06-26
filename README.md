@@ -46,4 +46,5 @@ The first time you flash a pico, you will have to do the traditional drag and dr
 the uf2 file. This is due to the fact that we need to get usb initialized on the pico.
 
 <hr />
-<img src="https://asu-sdsl.github.io/images/sdsl-logo.png" alt="SDSL Logo" style="height:50px; display:block; margin: 0 auto;">
+
+<a href="https://asu-sdsl.github.io/" target="_blank"><img src="https://asu-sdsl.github.io/images/sdsl-logo.png" alt="SDSL Logo" style="height:50px; display:block; margin: 0 auto;"></a>
