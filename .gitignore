@@ -1,3 +1,4 @@
 # This file are all the files ignored by git
 build/
 .DS_STORE
+docs

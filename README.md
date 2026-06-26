@@ -1,4 +1,4 @@
-# SQUIDSAT FSW 
+# SQUIDSAT FSW
 
 ## Clone
 
