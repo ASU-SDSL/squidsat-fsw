@@ -204,9 +204,13 @@
 /  arbitrary physical drive and partition listed in the VolToPart[]. Also f_fdisk()
 /  will be available. */
 
-
+#if USE_FLASH == 1 
 #define FF_MIN_SS		4096 // 512
 #define FF_MAX_SS		4096 // 512
+#else 
+#define FF_MIN_SS   512
+#define FF_MAX_SS   512 
+#endif 
 /* This set of options configures the range of sector size to be supported. (512,
 /  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
 /  harddisk, but a larger value may be required for on-board flash memory and some

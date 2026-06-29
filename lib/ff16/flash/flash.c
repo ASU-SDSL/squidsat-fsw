@@ -27,7 +27,7 @@
 #define SFE_FLASH_COMMAND_READ_STATUS_45XX 0xD7
 #define SFE_FLASH_COMMAND_ERASE_SECTOR 0x20
 
-static uint8_t _cs;
+static uint _cs;
 static spi_inst_t *_bus;
 
 // reference:
@@ -60,7 +60,7 @@ static void blocking_busy_wait() {
   }
 }
 
-int flash_init(spi_inst_t *spi_bus, uint8_t cs, uint32_t spi_baud) {
+int flash_init(spi_inst_t *spi_bus, uint cs, uint32_t spi_baud) {
   _cs = cs;
   _bus = spi_bus;
 
@@ -104,7 +104,9 @@ int flash_read_id() {
 static void send_simple_command(uint8_t cmd) {
   taskENTER_CRITICAL();
   gpio_put(_cs, 0);
+  
   spi_write_blocking(_bus, &cmd, 1);
+
   gpio_put(_cs, 1);
   taskEXIT_CRITICAL();
 }

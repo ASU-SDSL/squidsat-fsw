@@ -1,6 +1,10 @@
 add_library(FatFs INTERFACE)
 
-set(USING_FLASH 1)
+set(USING_FLASH 0)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    USE_FLASH=${USING_FLASH}
+)
 
 IF (USING_FLASH)
     set(DISKIO_SOURCE
@@ -11,6 +15,7 @@ IF (USING_FLASH)
     set(DISKIO_INCLUDE
         ${CMAKE_CURRENT_LIST_DIR}/flash
     )
+    
 ELSE()
     set(DISKIO_SOURCE
         ${CMAKE_CURRENT_LIST_DIR}/mram/diskio.c

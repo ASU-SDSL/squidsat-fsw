@@ -10,7 +10,7 @@
 #define SECTOR_SIZE 4096
 #define PAGE_SIZE 256
 
-int flash_init(spi_inst_t *spi_bus, uint8_t cs, uint32_t spi_baud);
+int flash_init(spi_inst_t *spi_bus, uint cs, uint32_t spi_baud);
 
 int read_sector(DWORD address, BYTE *buff);
 
