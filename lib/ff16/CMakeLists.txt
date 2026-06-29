@@ -1,6 +1,6 @@
 add_library(FatFs INTERFACE)
 
-set(USING_FLASH 1)
+set(USING_FLASH 0)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     USE_FLASH=${USING_FLASH}

@@ -18,4 +18,6 @@ int write_sector(DWORD address, const BYTE *buff);
 
 int mram_read_id();
 
+void mram_test(); 
+
 #endif 

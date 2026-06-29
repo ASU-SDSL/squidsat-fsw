@@ -56,7 +56,8 @@ int mram_init(spi_inst_t *spi_bus, uint cs, uint32_t spi_baud){
   _bus = spi_bus; 
   _cs = cs; 
 
-  spi_init(spi_bus, spi_baud);
+  uint real_baud = spi_init(spi_bus, spi_baud);
+  printf("real baud: %u\n", real_baud); 
 
   // spi pins
   gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);
@@ -72,6 +73,7 @@ int mram_init(spi_inst_t *spi_bus, uint cs, uint32_t spi_baud){
   return 0; 
 }
 
+// expected id is 0xd9
 int mram_read_id(){
   blocking_busy_wait(); 
 
@@ -87,13 +89,7 @@ int mram_read_id(){
   gpio_put(_cs, 1); 
   taskEXIT_CRITICAL(); 
 
-  int id = 0; 
-  for(int i = 0; i < 4; i++){
-    id |= buf[i];
-    id <<= (24 - i * 8);
-  }
-
-  return id; 
+  return buf[0]; // just the manufacturer id 
 }
 
 int read_sector(DWORD address, BYTE *buff){
@@ -135,4 +131,13 @@ int write_sector(DWORD address, const BYTE *buff){
 }
 
 
+void mram_test() {
+  printf("MRAM Test\n");
+  
+  mram_init(FS_SPI_BUS, FS_CS_PIN, FS_SPI_BAUDRATE);
 
+  int id = mram_read_id(); 
+  printf("mram id: 0x%x\n", id); 
+
+  printf("End MRAM Test\n"); 
+}
