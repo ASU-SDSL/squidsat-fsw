@@ -79,6 +79,7 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/log.c
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/filesystem.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/circular_log.c
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c

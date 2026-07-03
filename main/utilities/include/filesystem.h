@@ -4,6 +4,7 @@
 
 #include "ff.h"
 #include <stdbool.h>
+#include <stdarg.h>
 
 extern FATFS fs; 
 
