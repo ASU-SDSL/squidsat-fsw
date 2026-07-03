@@ -82,6 +82,7 @@ add_executable(${PROJECT_NAME}
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/watchdog/watchdog.c
 
     # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
@@ -98,6 +99,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/gse
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/watchdog
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/usb_serial
 )
 

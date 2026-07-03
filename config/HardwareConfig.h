@@ -31,3 +31,8 @@
 // duration of transactions (critical sections) which should be better for the 
 // scheduler 
 #define FS_SPI_BAUDRATE 15000000 
+
+/// External watchdog heartbeat 
+#define WD_WAKE_PIN 16
+/// External watchdog response?
+#define WD_DONE_PIN 17

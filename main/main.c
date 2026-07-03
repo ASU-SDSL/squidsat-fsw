@@ -12,6 +12,7 @@
 
 #include "gse.h"
 #include "usb_serial.h"
+#include "watchdog.h"
 #include "i2c_util.h"
 #include "log.h"
 
@@ -57,11 +58,17 @@ int main()
     //     ts_res = timing_init();
     // }
 
+    watchdog_init(); // watchdog timer starts now 
+
     // Create the blink task and verify creation succeeded.
     BaseType_t ok;
 
     ok = xTaskCreate(usb_serial_task, "USB", 256, 0, configMAX_PRIORITIES - 2, &usbTaskHandle);
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
+    configASSERT(ok == pdPASS);
+
+    // idle priority so that it can be starved - indicate if another task is misbehaving? 
+    ok = xTaskCreate(watchdog_task, "WATCHDOG", 1024, NULL, tskIDLE_PRIORITY, &xWatchdogTaskHandler);
     configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
