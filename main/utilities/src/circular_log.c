@@ -9,8 +9,17 @@
 #define cl_printf(...) printf(__VA_ARGS__); 
 
 // used for making names clearer 
+// log naming needs to take into account buffer sizes use in the functions 
+// (see LOG_FILE_PATH_BUFFER_SIZE) best to keep base names short (~4 chars)
 #define LOGS_BASE "/log"
 #define MAX_ENTRY_LENGTH 128
+#define MAX_LOG_FILE_SIZE (MAX_ENTRY_LENGTH * 10)
+#define MAX_LOG_FILE_INDEX 2
+#define LOG_FILE_PATH_BUFFER_SIZE 20
+
+// used to make macros into string constants 
+#define FORCE_INTERPRET(x) #x
+#define STRINGIFY(x) FORCE_INTERPRET(x)
 
 int clog_create(){
     if(filesystem_start_use()) {
@@ -58,10 +67,34 @@ int clog_create(){
 int clog_log(const char* fmt, ...){
 
     if(filesystem_start_use()){
-        FIL fp; 
-        FRESULT res = f_open(&fp, LOGS_BASE "/" LOGS_BASE ".txt", FA_OPEN_APPEND | FA_WRITE);
+        
+        FILINFO fno;
 
-        if(res != FR_OK){
+        // check size of the file
+        FRESULT fres = f_stat(LOGS_BASE "/" LOGS_BASE "0.txt", &fno);
+
+        if(fres == FR_OK && fno.fsize > MAX_LOG_FILE_SIZE){
+            // delete oldest log
+            (void) f_unlink(LOGS_BASE "/" LOGS_BASE STRINGIFY(MAX_LOG_FILE_INDEX) ".txt");
+
+            // cycle logs 
+            for(int i = MAX_LOG_FILE_INDEX; i >= 0; i--){
+                // ignore FR_NO_FILE - let fatfs just not do anything
+                char old_name[LOG_FILE_PATH_BUFFER_SIZE]; 
+                char new_name[LOG_FILE_PATH_BUFFER_SIZE]; 
+                sprintf(old_name, LOGS_BASE "/" LOGS_BASE "%d.txt", i);
+                sprintf(new_name, LOGS_BASE "/" LOGS_BASE "%d.txt", i+1);
+
+                (void) f_rename(old_name, new_name);
+            }
+        }
+
+        // open the base log for appending
+
+        FIL fil; 
+        fres = f_open(&fil, LOGS_BASE "/" LOGS_BASE "0.txt", FA_OPEN_APPEND | FA_WRITE);
+
+        if(fres != FR_OK){
             filesystem_end_use(); 
             return 1; 
         }
@@ -75,21 +108,21 @@ int clog_log(const char* fmt, ...){
         va_end(args);
 
         // write log 
-        int written = f_printf(&fp, "%s\n", buf); 
+        int written = f_printf(&fil, "%s\n", buf); 
 
         if(written < 0){
             filesystem_end_use(); 
             return written; 
         }
 
-        if(res != FR_OK){
-            f_close(&fp);
+        if(fres != FR_OK){
+            f_close(&fil);
 
             filesystem_end_use(); 
-            return res; 
+            return fres; 
         }
 
-        f_close(&fp);
+        f_close(&fil);
         filesystem_end_use(); 
     } else {
         cl_printf("Failed to get filesystem use\n");
@@ -99,49 +132,63 @@ int clog_log(const char* fmt, ...){
     return 0; 
 }
 
-void clog_dump() {
+int clog_dump(uint32_t index, uint32_t line_start, uint32_t line_stop) {
+    // validate 
+    if(index > MAX_LOG_FILE_INDEX){
+        cl_printf("Invalid index: %d\n", index); 
+        return 0; 
+    }
+
+    int line = 0; 
+
     if(filesystem_start_use()){
-        FIL fp; 
-        FRESULT res = f_open(&fp, LOGS_BASE "/" LOGS_BASE ".txt", FA_READ);
+        FIL fil; 
+        char log_file[LOG_FILE_PATH_BUFFER_SIZE];
+        sprintf(log_file, LOGS_BASE "/" LOGS_BASE "%d.txt", index); 
+        FRESULT res = f_open(&fil, log_file, FA_READ);
 
         if(res != FR_OK){
             filesystem_end_use(); 
-            return; 
+            return -((int)res); 
         }
-        cl_printf("Logs:\n");
-        while(f_eof(&fp) == false) {
+        cl_printf("Logs (%d: %d-%d):\n", index, line_start, line_stop);
+        while(f_eof(&fil) == false && line <= line_stop) {
             char buf[MAX_ENTRY_LENGTH+1];
 
-            char* res_buf = f_gets(buf, sizeof(buf), &fp); 
+            char* res_buf = f_gets(buf, sizeof(buf), &fil); 
 
-            if(res_buf != buf) {
-                cl_printf("Line Error\n"); 
-            } else {
-                cl_printf(buf); 
+            if(line >= line_start) {
+                if(res_buf != buf) {
+                    cl_printf("Line Error\n"); 
+                } else {
+                    cl_printf(buf); 
+                }
             }
+            
+            line++; 
         }
         cl_printf("Logs Done.\n"); 
+
+        f_close(&fil); 
 
         filesystem_end_use(); 
     } else {
         cl_printf("Failed to get filesystem use\n");
     }
 
-    return; 
+    return line - line_start; 
 }
 
 void clog_test() {
     printf("Starting circular log test...\n");
 
-    // delete log file if it exists
+    printf("Cleanup"); 
+    // delete log files if they exist
     if(filesystem_start_use()){
-        FILINFO fno;
-        FRESULT res = f_stat(LOGS_BASE "/" LOGS_BASE ".txt", &fno);
-        if(res == FR_OK) {
-            res = f_unlink(LOGS_BASE "/" LOGS_BASE ".txt");
-            if(res != FR_OK) {
-                printf("Failed to delete log file, res: %d\n", res);
-            }
+        for(int i = 0; i <= MAX_LOG_FILE_INDEX; i++){
+            char log_file[LOG_FILE_PATH_BUFFER_SIZE]; 
+            sprintf(log_file, LOGS_BASE "/" LOGS_BASE "%d.txt", i); 
+            (void) f_unlink(log_file);
         }
         filesystem_end_use();
     } else {
@@ -153,12 +200,42 @@ void clog_test() {
 
     printf("Starting logging\n"); 
 
-    for(int i = 0; i < 10; i++){
-        res = clog_log("This is log entry %d", i); 
-        printf("\tLog res: %d\n", res);
-    }
+    for(int j = 0; j < 3; j++){
+        printf("Write logs...\n"); 
+        for(int i = 0; i < 100; i++){
+            res = clog_log("This is log entry %d", i); 
+            if(res != 0){
+                printf("Failed to log entry %d, res: %d\n", i, res); 
+            }
+        }
+        printf("Done\n"); 
 
-    clog_dump();
+        // display directory 
+        DIR dir; 
+        if(filesystem_start_use()){
+            FRESULT res = f_opendir(&dir, LOGS_BASE); 
+            if(res == FR_OK){
+                printf("Log directory contents:\n"); 
+                FILINFO fno; 
+                while(true){
+                    res = f_readdir(&dir, &fno); 
+                    if(res != FR_OK || fno.fname[0] == 0){
+                        break; 
+                    }
+                    printf("%s | %d\n", fno.fname, fno.fsize); 
+                }
+                f_closedir(&dir); 
+            } else {
+                printf("Failed to open log directory, res: %d\n", res); 
+            }
+            filesystem_end_use(); 
+        } else {
+            printf("Failed to get filesystem use\n");
+        }
+
+        clog_dump(0, 6, 12);
+
+    }
 
     printf("Done.\n"); 
 }
