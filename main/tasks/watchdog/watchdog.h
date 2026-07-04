@@ -12,4 +12,6 @@ void watchdog_freeze();
 
 void watchdog_task(void *pvParameters);
 
+bool watchdog_check_browned_out(); 
+
 #endif // WATCHDOG_H
