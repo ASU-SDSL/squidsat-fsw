@@ -3,8 +3,12 @@
 
 #include <stdarg.h>
 
-int circular_log_create();
+int clog_create();
 
-int circular_log(const char* fmt, ...);
+int clog_log(const char* fmt, ...);
+
+void clog_dump();
+
+void clog_test();
 
 #endif // CIRCULAR_LOG_H

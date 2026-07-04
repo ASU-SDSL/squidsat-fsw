@@ -20,6 +20,7 @@
 
 #include "timing.h"
 #include "filesystem.h"
+#include "circular_log.h"
 
 
 void led_task(void *pvParameters)
@@ -32,7 +33,8 @@ void led_task(void *pvParameters)
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(500));
 
-        log_info("Hello LED");
+        // log_info("Hello LED");
+        clog_test(); 
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -49,7 +51,7 @@ int main()
 
     uint8_t ts_res = timing_init(); 
 
-    // FRESULT fs_res = filesystem_init(); 
+    FRESULT fs_res = filesystem_init(); 
     
     // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
     //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
