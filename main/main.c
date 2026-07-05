@@ -34,7 +34,8 @@ void led_task(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(500));
 
         // log_info("Hello LED");
-        clog_test(); 
+        // clog_test(); 
+        filesystem_test(); 
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));

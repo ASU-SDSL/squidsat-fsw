@@ -57,7 +57,7 @@ int mram_init(spi_inst_t *spi_bus, uint cs, uint32_t spi_baud){
   _cs = cs; 
 
   uint real_baud = spi_init(spi_bus, spi_baud);
-  printf("real baud: %u\n", real_baud); 
+  // printf("real baud: %u\n", real_baud); 
 
   // spi pins
   gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);

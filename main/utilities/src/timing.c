@@ -35,6 +35,9 @@ uint8_t timing_init() {
   // timing_sync WITHOUT mutex take to be use only before schedular starts 
   struct tm now;
 
+  // set RTC time 
+  // rtc_set_time(i2c0, 2026, 7, 4, 5, 18, 35);
+
   uint8_t res = rtc_get_tm(&now);
   if (res != 0) return res;
 

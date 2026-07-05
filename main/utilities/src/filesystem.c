@@ -161,6 +161,150 @@ FRESULT filesystem_build(){
 }
 
 /**
+ * @brief DEBUG ONLY - prints a list of items in a directory with file_logf().
+ * Sourced from: https://elm-chan.org/fsw/ff/doc/readdir.html
+ * @param path 
+ */
+void filesystem_ls(const char* path) {
+    FRESULT res;
+    DIR dir;
+    FILINFO fno;
+    int nfile, ndir;
+
+
+    res = f_opendir(&dir, path);                   /* Open the directory */
+    if (res == FR_OK) {
+        nfile = ndir = 0;
+        for (;;) {
+            res = f_readdir(&dir, &fno);           /* Read a directory item */
+            if (fno.fname[0] == 0) break;          /* Error or end of dir */
+            if (fno.fattrib & AM_DIR) {            /* It is a directory */
+                file_logf("   <DIR>   %s\n", fno.fname);
+                ndir++;
+            } else {                               /* It is a file */
+                file_logf("%10u %s\n", fno.fsize, fno.fname);
+                nfile++;
+            }
+        }
+        f_closedir(&dir);
+        file_logf("%d dirs, %d files.\n", ndir, nfile);
+    } else {
+        file_logf("Failed to open \"%s\". (%u)\n", path, res);
+    }
+}
+
+/**
+ * @brief DEBUG ONLY - prints the stat of a file or directory with file_logf().
+ * Sourced from: https://elm-chan.org/fsw/ff/doc/stat.html
+ * @param path 
+ */
+void filesystem_stat(const char* path) {
+    FRESULT fr;
+    FILINFO fno;
+
+    file_logf("Test for \"%s\"...\n", path);
+
+    fr = f_stat(path, &fno);
+    switch (fr) {
+
+    case FR_OK:
+        file_logf("Size: %lu\n", fno.fsize);
+        file_logf("Timestamp: %u-%02u-%02u, %02u:%02u\n",
+               (fno.fdate >> 9) + 1980, fno.fdate >> 5 & 15, fno.fdate & 31,
+               fno.ftime >> 11, fno.ftime >> 5 & 63);
+        file_logf("Attributes: %c%c%c%c%c\n",
+               (fno.fattrib & AM_DIR) ? 'D' : '-',
+               (fno.fattrib & AM_RDO) ? 'R' : '-',
+               (fno.fattrib & AM_HID) ? 'H' : '-',
+               (fno.fattrib & AM_SYS) ? 'S' : '-',
+               (fno.fattrib & AM_ARC) ? 'A' : '-');
+        break;
+
+    case FR_NO_FILE:
+    case FR_NO_PATH:
+        file_logf("\"%s\" is not exist.\n", path);
+        break;
+
+    default:
+        file_logf("An error occurred. (%d)\n", fr);
+    }
+}
+
+/**
+ * @brief DEBUG ONLY - prints the contents of a file with file_logf() as text.
+ * 
+ * @param path 
+ */
+void filesystem_dump(const char* path){
+    FRESULT fres; 
+    FIL fil; 
+
+    fres = f_open(&fil, path, FA_READ);
+    if(fres != FR_OK){
+        file_logf("Failed to open file \"%s\" for reading (%d)\n", path, fres);
+        return; 
+    }
+
+    while(f_eof(&fil) == false){
+        char buf[100]; 
+        UINT count; 
+        fres = f_read(&fil, buf, sizeof(buf) - 1, &count); 
+        if(fres != FR_OK){
+            file_logf("[Failed to read file \"%s\" (%d)]", path, fres);
+            break; 
+        }
+
+        buf[count] = '\0'; // null terminate for safety
+        file_logf("%s", buf); 
+    }
+
+    file_logf("\n"); 
+
+    fres = f_close(&fil);
+    if(fres != FR_OK){
+        file_logf("Failed to close file \"%s\" after reading (%d)\n", path, fres);
+    }
+}
+
+/**
+ * @brief DEBUG ONLY - prints the contents of a file with file_logf() as hex.
+ * 
+ * @param path 
+ */
+void filesystem_dump_hex(const char* path){
+FRESULT fres; 
+    FIL fil; 
+
+    fres = f_open(&fil, path, FA_READ);
+    if(fres != FR_OK){
+        file_logf("Failed to open file \"%s\" for reading (%d)\n", path, fres);
+        return; 
+    }
+
+    while(f_eof(&fil) == false){
+        char buf[100]; 
+        UINT count; 
+        fres = f_read(&fil, buf, sizeof(buf) - 1, &count); 
+        if(fres != FR_OK){
+            file_logf("[Failed to read file \"%s\" (%d)]", path, fres);
+            break; 
+        }
+
+        for(int i = 0; i < count; i++){
+            file_logf("%02X ", (unsigned char)buf[i]); 
+        }
+        
+    }
+
+    file_logf("\n"); 
+
+    fres = f_close(&fil);
+    if(fres != FR_OK){
+        file_logf("Failed to close file \"%s\" after reading (%d)\n", path, fres);
+    }
+}
+
+/**
  * @brief Test function for filesystem implementation
  * 
  */
@@ -217,6 +361,19 @@ void filesystem_test(){
         // close file 
         fr = f_close(&file); 
         file_logf("close res: %d\n", fr); 
+
+        filesystem_ls("/");
+
+        file_logf("\nStat test.txt: \n");
+
+        filesystem_stat("test.txt");
+
+        fr = f_open(&file, "test.txt", FA_READ); 
+        file_logf("second open res: %d\n", fr);
+
+        filesystem_dump("test.txt"); 
+
+        f_close(&file);
 
         filesystem_end_use(); 
 

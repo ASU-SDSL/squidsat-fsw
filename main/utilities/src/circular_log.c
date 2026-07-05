@@ -195,6 +195,9 @@ void clog_test() {
         printf("Failed to get filesystem use\n");
     }
 
+    printf("/log before create:\n");
+    filesystem_ls(LOGS_BASE); 
+
     int res = clog_create();
     printf("Created log res %d\n", res); 
 
