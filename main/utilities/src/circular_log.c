@@ -182,55 +182,32 @@ int clog_dump(uint32_t index, uint32_t line_start, uint32_t line_stop) {
 void clog_test() {
     printf("Starting circular log test...\n");
 
-    printf("Cleanup"); 
-    // delete log files if they exist
-    if(filesystem_start_use()){
-        for(int i = 0; i <= MAX_LOG_FILE_INDEX; i++){
-            char log_file[LOG_FILE_PATH_BUFFER_SIZE]; 
-            sprintf(log_file, LOGS_BASE "/" LOGS_BASE "%d.txt", i); 
-            (void) f_unlink(log_file);
-        }
-        filesystem_end_use();
-    } else {
-        printf("Failed to get filesystem use\n");
-    }
+    printf("Make clean filesystem\n"); 
+    filesystem_build(); 
 
-    printf("/log before create:\n");
-    filesystem_ls(LOGS_BASE); 
-
+    printf("Create log\n");
     int res = clog_create();
-    printf("Created log res %d\n", res); 
+    printf("\tCreated log res %d\n", res); 
 
     printf("Starting logging\n"); 
 
-    for(int j = 0; j < 3; j++){
-        printf("Write logs...\n"); 
+    for(int j = 0; j < 4; j++){
+        printf("\nIteration %d\n", j);
+        printf("\tWrite logs...\n"); 
         for(int i = 0; i < 100; i++){
             res = clog_log("This is log entry %d", i); 
             if(res != 0){
                 printf("Failed to log entry %d, res: %d\n", i, res); 
             }
         }
-        printf("Done\n"); 
+        printf("\tDone\n"); 
 
         // display directory 
-        DIR dir; 
         if(filesystem_start_use()){
-            FRESULT res = f_opendir(&dir, LOGS_BASE); 
-            if(res == FR_OK){
-                printf("Log directory contents:\n"); 
-                FILINFO fno; 
-                while(true){
-                    res = f_readdir(&dir, &fno); 
-                    if(res != FR_OK || fno.fname[0] == 0){
-                        break; 
-                    }
-                    printf("%s | %d\n", fno.fname, fno.fsize); 
-                }
-                f_closedir(&dir); 
-            } else {
-                printf("Failed to open log directory, res: %d\n", res); 
-            }
+            printf("Directory " LOGS_BASE ":\n");
+            filesystem_ls(LOGS_BASE);
+            printf("\n"); 
+
             filesystem_end_use(); 
         } else {
             printf("Failed to get filesystem use\n");

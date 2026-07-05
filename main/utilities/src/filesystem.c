@@ -375,6 +375,13 @@ void filesystem_test(){
 
         f_close(&file);
 
+        file_logf("Cleaning up\n");
+
+        fr = f_unlink("test.txt");
+        file_logf("unlink res: %d\n", fr);
+
+        filesystem_ls("/"); 
+
         filesystem_end_use(); 
 
     } else {
