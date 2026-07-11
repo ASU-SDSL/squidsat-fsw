@@ -47,7 +47,7 @@ int main()
     gse_init();
     i2c_util_init(); 
 
-    uint8_t ts_res = timing_init(); 
+    // uint8_t ts_res = timing_init(); 
 
     // FRESULT fs_res = filesystem_init(); 
     
