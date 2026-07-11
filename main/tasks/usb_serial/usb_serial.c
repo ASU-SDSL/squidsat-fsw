@@ -1,3 +1,19 @@
+/**
+ * @file usb_serial.c
+ * @author Tyler Nielsen
+ * @brief USB stack management with RTOS SMP safety and driver integration into 
+ * the Pico SDK's stdio stack. 
+ * @version 0.1
+ * @date 2026-06-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ * Everything that interacts directly with the TinyUSB stack should be defined here. 
+ * See usb_serial/readme_usb.md for more info. 
+ * Reference Arduino-Pico
+ * Reference https://github.com/hathach/tinyusb/blob/master/examples/device/cdc_msc_freertos/src/main.c
+ * Reference https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb.c#L63
+ */
 #include "usb_serial.h"
 
 #include "FreeRTOS.h"
@@ -9,16 +25,71 @@
 #include "pico/stdlib.h"
 #include "pico/stdio/driver.h"
 
-// Reference Arduino-Pico
-// Reference https://github.com/hathach/tinyusb/blob/master/examples/device/cdc_msc_freertos/src/main.c
+/// Time to wait for available buffer before dropping usb write (value from pico/stdio_usb.h)
+#define USB_WRITE_TIMEOUT_US 500000 
+
+#define USB_MUTEX_TIMEOUT_MS 500 
 
 TaskHandle_t usbTaskHandle;
 SemaphoreHandle_t usb_mutex;
 
+// -----------------------------------------------------------------------------
+// Public USB functions
+// -----------------------------------------------------------------------------
+
+/**
+ * @brief Thread safe tud_cdc_connected() wrapper. See TinyUSB docs.
+ * 
+ * @return true 
+ * @return false 
+ */
+bool safe_tud_cdc_connected() {
+  bool res = false; 
+  
+  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, USB_MUTEX_TIMEOUT_MS) == pdTRUE){
+    res = tud_cdc_connected();
+
+    xSemaphoreGive(usb_mutex); 
+  }
+
+  return res; 
+}
+
+// -----------------------------------------------------------------------------
+// Private internal functions for stdio driver
+// -----------------------------------------------------------------------------
 static void usb_serial_out_chars(const char* buf, int len){
-  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
+  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, USB_MUTEX_TIMEOUT_MS) == pdTRUE){
+    uint32_t start = time_us_32(); // for timeout 
     if(tud_cdc_connected()){
-      tud_cdc_write(buf, len);
+      // go through buffer 
+      for(int i = 0; i < len; ){
+        // find the amount we still need to send 
+        int n = len - i; 
+        // find the max amount we can send
+        int avail = (int) tud_cdc_write_available(); 
+        // if the max available is less than what we want to send, cap it 
+        if(n > avail) n = avail;
+
+        // if there is still some availability
+        if(n) {
+          int n2 = (int) tud_cdc_write(buf + i, (uint32_t)n);
+          // tud_task(); // this may be over servicing 
+          // tud_cdc_write_flush();
+          i += n2;
+        } else {
+          // if there is no availability - service usb and flush 
+          tud_task(); 
+          tud_cdc_write_flush();
+          // this might need better termination but for now if disconnect detected or write taking too long
+          if(!tud_cdc_connected() || (time_us_32() - start > USB_WRITE_TIMEOUT_US)) {
+            // if it's not connected anymore, break 
+            break; 
+          }
+        }
+
+
+      }
     }
 
     xSemaphoreGive(usb_mutex);
@@ -26,7 +97,7 @@ static void usb_serial_out_chars(const char* buf, int len){
 }
 
 static void usb_serial_out_flush(void){
-  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
+  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, USB_MUTEX_TIMEOUT_MS) == pdTRUE){
     if(tud_cdc_connected()){
       tud_cdc_write_flush();
     }
@@ -36,7 +107,7 @@ static void usb_serial_out_flush(void){
 }
 
 static int usb_serial_in_chars(char* buf, int len){
-  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
+  if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, USB_MUTEX_TIMEOUT_MS) == pdTRUE){
     int count = 0; 
     if(tud_cdc_connected()){
       count = tud_cdc_read(buf, len);
@@ -48,11 +119,11 @@ static int usb_serial_in_chars(char* buf, int len){
   return 0;
 }
 
-// could I enable and then filter out usb to get pico tool? 
+// to be defined elsewere but called in the USB task 
 static void (*usb_serial_chars_available_fn)(void*); 
 static void* usb_serial_chars_available_param;
 
-// should be called in the usb task mutex
+// must be called in the usb task mutex
 static void usb_serial_call_chars_available_callback(){
   if(tud_cdc_available()){
     if(usb_serial_chars_available_fn){
@@ -66,6 +137,7 @@ static void usb_serial_set_chars_available_callback(void (*fn)(void*), void *par
   usb_serial_chars_available_param = param; 
 }
 
+// Pico SDK compatible driver 
 static stdio_driver_t usb_stdio_driver = {
   .out_chars = usb_serial_out_chars, // not used
   .out_flush = usb_serial_out_flush, // not used
@@ -79,6 +151,14 @@ static stdio_driver_t usb_stdio_driver = {
 #endif
 };
 
+
+// -----------------------------------------------------------------------------
+// USB Task function and initialization
+// -----------------------------------------------------------------------------
+/**
+ * @brief Initializes USB mutex and registers custom Pico SDK stdio driver. 
+ * 
+ */
 void usb_serial_init(){
   usb_mutex = xSemaphoreCreateMutex();
   
@@ -87,6 +167,12 @@ void usb_serial_init(){
 
 }
 
+/**
+ * @brief USB Task, thread safe servicing TinyUSB stack and 
+ * usb_serial_call_chars_available_callback()
+ * 
+ * @param params 
+ */
 void usb_serial_task(void *params){
 
   // should be called after scheduler is started
@@ -96,6 +182,7 @@ void usb_serial_task(void *params){
     BaseType_t ss = xTaskGetSchedulerState(); 
     if(ss != taskSCHEDULER_SUSPENDED){
 
+      // times out immediately to just try again next loop
       if(usb_mutex != NULL && xSemaphoreTake(usb_mutex, 0) == pdTRUE){
         tud_task();
 
