@@ -58,10 +58,16 @@
  * "configUSE_CORE_AFFINITY is not supported in single core" error.
  * ─────────────────────────────────────────────────────────────────────────── */
 #define configNUM_CORES                         2
-#define configNUMBER_OF_CORES                   2 // this is just a sanity check
+#define configNUMBER_OF_CORES                   2
 #define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           1
+
+#if configNUM_CORES == 2
 #define configUSE_CORE_AFFINITY                 1
+#else 
+#define configUSE_CORE_AFFINITY                 0
+#endif 
+
  
 /* ── Cortex-M33 interrupt priorities ─────────────────────────────────────────
  * RP2350 implements 3 priority bits → 8 levels (0 = highest, 7 = lowest).

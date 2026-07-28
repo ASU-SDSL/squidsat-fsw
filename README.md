@@ -41,3 +41,6 @@ After the build finishes, flash the Pico with:
 ```bash
 ./deploy.sh
 ```
+
+The first time you flash a pico, you will have to do the traditional drag and drop
+the uf2 file. This is due to the fact that we need to get usb initialized on the pico.

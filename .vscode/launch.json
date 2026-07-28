@@ -1,0 +1,43 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        { 
+            "name": "SquidSat OBC RP2350 Cortex-Debug Launch",
+            "type": "cortex-debug",
+
+            "request": "launch",
+            "servertype": "openocd",
+            "serverpath": "openocd",
+            "serverArgs": [
+                "-c adapter speed 1000",
+            ],
+            "preLaunchTask": "build",
+
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/freertos_rp2350.elf",
+            "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}", 
+            "gdbPath": "gdb-multiarch",
+            "configFiles": [
+                "interface/cmsis-dap.cfg",
+                "${workspaceRoot}/debug/rp2350.cfg"
+            ],
+
+            // "runToEntryPoint": "main", // uncomment to break on the first line of main - change "monitor rest run" to "...halt"
+            "targetProcessor": 0,
+            "overrideLaunchCommands": [
+                "monitor gdb breakpoint_override hard",
+                "monitor init",
+                "monitor reset run" //halt"
+            ],
+
+            "postRestartCommands": [
+                "monitor resume"
+            ],
+
+            // "rtos": "FreeRTOS", // not really supported rn but will likely be in the future hopefully
+
+            "svdFile": "${env:PICO_SDK_PATH}/src/rp2350/hardware_regs/rp2350.svd",
+            // "showDevDebugOutput": "raw"
+        }
+    ]
+}

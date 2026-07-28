@@ -1,3 +1,13 @@
+/**
+ * @file i2c_util.c
+ * @author Tyler Nielsen
+ * @brief I2C Helper functions - based on Coconut implementation
+ * @version 0.1
+ * @date 2026-06-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "i2c_util.h"
 
 #include "HardwareConfig.h"
@@ -6,6 +16,10 @@
 #define I2CSpeed 100000        /// Default of 100k
 #define I2CTimeout_us 1000000  /// Timeout for read and writes in micro-seconds
 
+
+/**
+ * @brief Initialize i2c speed and pins
+ */
 void i2c_util_init() {
   // i2c0 initialize
   i2c_init(i2c0, I2CSpeed);
@@ -13,6 +27,17 @@ void i2c_util_init() {
   gpio_set_function(I2C0_SCL_PIN, GPIO_FUNC_I2C);
 }
 
+/**
+ * @brief Write [reg] and [buf] to i2c device, [reg] is just inserted before
+ * [buf]
+ *
+ * @param i2c I2C instance to use
+ * @param addr Device address
+ * @param reg Register to write to
+ * @param buf Data Buffer
+ * @param nbytes Length of Data Buffer
+ * @return int Status of operation (0 = good)
+ */
 int i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr,
                           const uint8_t reg, uint8_t *buf,
                           const uint8_t nbytes) {
@@ -36,6 +61,17 @@ int i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr,
   return 0;  // no errors
 }
 
+/**
+ * @brief Write [reg] byte to i2c device and then read [nbytes] from it. Read
+ * bytes are stored in [buf]
+ *
+ * @param i2c I2C instance to use
+ * @param addr Device address
+ * @param reg Register to read from
+ * @param buf Data Buffer
+ * @param nbytes Length of Data Buffer
+ * @return int Status of operation (0 = good)
+ */
 int i2c_read_from_register(i2c_inst_t *i2c, const uint8_t addr,
                            const uint8_t reg, uint8_t *buf,
                            const uint8_t nbytes) {

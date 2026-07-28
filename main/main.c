@@ -5,26 +5,38 @@
 #include "log.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "projdefs.h"
 
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
 
 #include "gse.h"
+#include "usb_serial.h"
 #include "i2c_util.h"
 #include "lsm6dsrx.h"
+#include "log.h"
+
+#include "tusb_config.h"
+#include "tusb.h"
 
 #include "timing.h"
+#include "filesystem.h"
+
 
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
+    int it = 0; 
     while (true) {
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+        log_info("Hello LED");
+
         gpio_put(LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
 
@@ -41,10 +53,15 @@ void tempurature_task(void *pvParameters){
 
 int main()
 {
+    __asm volatile ("nop"); // for debugger if desired - not used by default
+
+    usb_serial_init(); 
     gse_init();
-    // i2c_util_init(); 
+    i2c_util_init(); 
 
     // uint8_t ts_res = timing_init(); 
+
+    // FRESULT fs_res = filesystem_init(); 
     
     // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
     //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
@@ -53,8 +70,21 @@ int main()
     // }
 
     // Create the blink task and verify creation succeeded.
-    xTaskCreate(led_task, "LED", 1024, NULL, tskIDLE_PRIORITY + 1UL, NULL);
-    xTaskCreate(vDebugTask, "DEBUG", 1024, NULL, tskIDLE_PRIORITY + 2UL, NULL);
+    BaseType_t ok;
+
+    ok = xTaskCreate(usb_serial_task, "USB", 256, 0, configMAX_PRIORITIES - 2, &usbTaskHandle);
+    vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
+    configASSERT(ok == pdPASS);
+
+    ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
+    configASSERT(ok == pdPASS);
+
+    ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    configASSERT(ok == pdPASS);    
+
+    ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
+    configASSERT(ok == pdPASS);
+    
     vTaskStartScheduler();
 
     while (1) {}
@@ -63,16 +93,19 @@ int main()
 
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
-    log_error("STACK OVERFLOW in task: %s\n", pcTaskName);
-    stdio_flush();    
-    configASSERT(0);
+    printf("STACK OVERFLOW in task: %s\n", pcTaskName ? pcTaskName : "unknown");
+    stdio_flush();
+    taskDISABLE_INTERRUPTS();
+    for (;;) {}
 }
 
 // Called if pvPortMalloc() fails to allocate memory.
 void vApplicationMallocFailedHook(void)
 {
-    // Trap here for debugging — replace with your own error handling
-    configASSERT(0);
+    printf("MALLOC FAILED\n");
+    stdio_flush();
+    taskDISABLE_INTERRUPTS();
+    for (;;) {}
 }
 
 
@@ -90,16 +123,15 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 }
 
 /* RP2350 passive idle task memory (second core idle) */
-static StaticTask_t xPassiveIdleTaskTCB;
-static StackType_t uxPassiveIdleTaskStack[configMINIMAL_STACK_SIZE];
-
+static StaticTask_t xPassiveIdleTaskTCBs[configNUMBER_OF_CORES - 1];
+static StackType_t  uxPassiveIdleTaskStacks[configNUMBER_OF_CORES - 1][configMINIMAL_STACK_SIZE];
 
 void vApplicationGetPassiveIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
                                            StackType_t **ppxIdleTaskStackBuffer,
                                            configSTACK_DEPTH_TYPE *puxIdleTaskStackSize,
                                            BaseType_t xPassiveIdleTaskIndex) {
-    *ppxIdleTaskTCBBuffer   = &xPassiveIdleTaskTCB;
-    *ppxIdleTaskStackBuffer = uxPassiveIdleTaskStack;
+    *ppxIdleTaskTCBBuffer   = &xPassiveIdleTaskTCBs[xPassiveIdleTaskIndex];
+    *ppxIdleTaskStackBuffer = uxPassiveIdleTaskStacks[xPassiveIdleTaskIndex];
     *puxIdleTaskStackSize   = configMINIMAL_STACK_SIZE;
 }
 
