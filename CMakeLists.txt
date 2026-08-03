@@ -74,6 +74,7 @@ add_executable(${PROJECT_NAME}
     # drivers 
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/mcp2515.c
 
     # utilities 
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c

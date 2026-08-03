@@ -17,14 +17,13 @@
 #define MOSI_PIN    11
 #define SCK_PIN     10
 
-typedef struct
-{
+typedef struct{
     /* data */
     uint32_t    id;
     uint8_t     extended;
     uint8_t     dlc;
     uint8_t     data[8]
-};
+} can_message; 
 
 
 

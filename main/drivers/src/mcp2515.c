@@ -33,10 +33,10 @@ void start_spi()
     spi_init(SPI_PORT, CLK_SPEED);
 
     // SPI pins
-    gpio_set_function(8, GPIO_FUNC_SPI);   // MISO
-    gpio_set_function(9, GPIO_FUNC_SPI);   // CS
-    gpio_set_function(10, GPIO_FUNC_SPI);  // SCK
-    gpio_set_function(11, GPIO_FUNC_SPI);  // MOSI
+    gpio_set_function(MISO_PIN, GPIO_FUNC_SPI);   // MISO
+    gpio_set_function(CS_PIN, GPIO_FUNC_SPI);   // CS
+    gpio_set_function(SCK_PIN, GPIO_FUNC_SPI);  // SCK
+    gpio_set_function(MOSI_PIN, GPIO_FUNC_SPI);  // MOSI
 
 
     // CS is manually controlled
@@ -68,8 +68,6 @@ static void cs_high(){
  */
 void mcp2515_reset(){
     uint8_t cmd = MCP2515_RESET;
-
-
     if (xSemaphoreTake(spi_transmit_semphr, portMAX_DELAY) == pdTRUE){
         cs_low();
 
@@ -82,8 +80,6 @@ void mcp2515_reset(){
         cs_high();
         xSemaphoreGive(spi_transmit_semphr);
     }
-
-
     sleep_ms(10);
 
     log_info("MCP2515 reset complete");
@@ -117,8 +113,6 @@ uint8_t mcp2515_read_register(uint8_t address){
         cs_high();
         xSemaphoreGive(spi_transmit_semphr);
     }
-
-
     return rx[2];
 }
 
@@ -129,11 +123,9 @@ uint8_t mcp2515_read_register(uint8_t address){
 void mcp2515_write_register(uint8_t address, uint8_t value){
     uint8_t tx[3];
 
-
     tx[0] = MCP2515_WRITE;
     tx[1] = address;
     tx[2] = value;
-
 
     if (xSemaphoreTake(spi_transmit_semphr, portMAX_DELAY) == pdTRUE){
         cs_low();
@@ -143,9 +135,7 @@ void mcp2515_write_register(uint8_t address, uint8_t value){
             tx,
             3
         );
-
         cs_high();
-
         xSemaphoreGive(spi_transmit_semphr);
     }
 }
