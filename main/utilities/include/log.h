@@ -97,6 +97,8 @@ void log_error                  (const char* msg);
 void log_warning                (const char* msg);
 void log_mission_critical       (const char* msg);
 
+// temp
+#define log_infof(fmt, ...) { char buf[256]; snprintf(buf, sizeof(buf), fmt, __VA_ARGS__); log_info(buf); }
 
 
 #endif // LOG_H

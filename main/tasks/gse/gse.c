@@ -1,8 +1,7 @@
 #include "gse.h"
 #include "log.h"
 
-#include "tusb_config.h"
-#include "tusb.h"
+#include "usb_serial.h"
 
 typedef enum {
     CMD_DEBUG,
@@ -15,7 +14,7 @@ typedef enum {
 #ifdef DEBUG_BUILD 
 static volatile bool debug_mode = true;
 #else 
-static volatile bool debug_mode = true;
+static volatile bool debug_mode = false;
 #endif
 
 static SemaphoreHandle_t debug_mode_mutex;
@@ -62,21 +61,13 @@ bool get_debug_mode(void){
     return value;
 };
 
-void usb_task(void * param){
-    while(1) {
-        tud_task(); 
-        vTaskDelay(1); 
-    }
-}
-
-
 void vDebugTask(void *pvParameters){
     debug_mode_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
     for(;;){
-        if(tud_cdc_connected() == false){
+        if(safe_tud_cdc_connected() == false){
             vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
             continue;
         }
