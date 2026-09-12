@@ -8,7 +8,8 @@
 
 
 job_context_t global_job_context;  
-
+static QueueHandle_t manager_job_queue;
+static SemaphoreHandle_t job_mutex;
 
 void add_job(jobs_t *job){
 

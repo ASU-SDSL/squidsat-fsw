@@ -24,7 +24,6 @@ typedef struct {
 extern job_context_t global_job_context;
 
 //Scheduler task function
-//void create_job();
 void delete_job(jobs_t *job);
 void scheduler_task(void *pvParameters);
 void add_job(jobs_t *job);
