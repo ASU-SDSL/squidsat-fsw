@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 
+# metadata export for VSCode linter
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # ── Platform Selection ────────────────────────────────────────────────────────
 # Set defaults if not passed in from bash via -DPICO_BOARD and -DPICO_PLATFORM
 if(NOT DEFINED PICO_BOARD)
@@ -75,7 +78,7 @@ add_executable(${PROJECT_NAME}
     # utilities 
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/timing.c
     ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/log.c
-
+    ${CMAKE_CURRENT_LIST_DIR}/main/utilities/src/filesystem.c
 
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
@@ -121,6 +124,7 @@ target_link_libraries(${PROJECT_NAME}
     pico_aon_timer
     hardware_gpio
     hardware_i2c
+    hardware_spi
 
     FatFs
 )
