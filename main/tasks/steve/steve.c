@@ -8,8 +8,9 @@
 
 
 job_context_t global_job_context;  
-static QueueHandle_t manager_job_queue;
+static QueueHandle_t job_queue;
 static SemaphoreHandle_t job_mutex;
+
 
 void add_job(jobs_t *job){
 
@@ -56,30 +57,37 @@ void scheduler_init(void) {
     global_job_context.job_count = 0; //initialize 
 }
 
-void run_scheduler(){
+void manager_task(){
+    jobs_t *job_done;
 
-    for(;;){ //infinite loop to keep the scheduler running
-
+    for(;;){
         TickType_t current_time = xTaskGetTickCount(); //get the current time in ticks(FreeRTOS)
 
+        while(xQueueReceive(job_queue, &job_done,0) == pdTRUE){
+
+            if(job_done->recurr_time != 0){
+                job_done->execute_time = current_time + job_done->recurr_time;
+            }
+            else{
+                delete_job(job_done);
+            }
+        }
         int run_index = find_ready_job(current_time);
+        if(run_index < 0){
+            vTaskDelay(pdMS_TO_TICKS(10));
+            continue;
+        }
+        jobs_t *job_to_run = global_job_context.jobs[run_index];
+        
+    }
+}
+void worker_task(){
+    jobs_t *job;
 
-        if(run_index < 0){ //if no job is ready to run
-            vTaskDelay(pdMS_TO_TICKS(10)); //delay for a short period before checking again
-            continue; //nothing to run
-        }
-        //run job
-        jobs_t *job_to_run = global_job_context.jobs[run_index]; //get the job to run
-        job_to_run->func(job_to_run->args); //execute the job function with arguments
-
-        if(job_to_run->recurr_time != 0){ //check if the job is a recurring job 
-            job_to_run->execute_time = current_time + job_to_run->recurr_time; //update the execute time for the next run
-        }
-        else{
-            printf("deleting '%s', count before=%d", job_to_run->name, global_job_context.job_count);
-            delete_job(job_to_run); 
-            //printf("after delete, count=%d", global_job_context.job_count);
-        }
+    for(;;){
+        xQueueReceive(job_queue, &job, portMAX_DELAY);
+        job->func(job->args); //run jobs
+        xQueueSend(job_queue, &job, portMAX_DELAY);
     }
 }
 
@@ -88,6 +96,6 @@ void scheduler_task(void *pvParameters){
     sensor_setup();
     add_job(&led_blinking); 
     add_job(&heart_beat);
-    run_scheduler();
+    worker_task();
 
 }

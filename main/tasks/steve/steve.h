@@ -27,4 +27,5 @@ extern job_context_t global_job_context;
 void delete_job(jobs_t *job);
 void scheduler_task(void *pvParameters);
 void add_job(jobs_t *job);
-void run_scheduler();
+void manager_task();
+void worker_task();

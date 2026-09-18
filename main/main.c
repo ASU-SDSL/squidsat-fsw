@@ -69,9 +69,14 @@ int main()
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(scheduler_task, "SCHED", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    //ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
+    ok = xTaskCreate(worker_task,  "WORKER",  2048, NULL, tskIDLE_PRIORITY + 1, NULL);
     configASSERT(ok == pdPASS);
+
+    ok = xTaskCreate(manager_task, "MANAGER", 2048, NULL, tskIDLE_PRIORITY + 2, NULL);
+    configASSERT(ok == pdPASS);
+
+    //ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
+    //configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);    
