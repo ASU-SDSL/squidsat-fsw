@@ -8,7 +8,7 @@
 
 
 job_context_t global_job_context;  
-
+static SemaphoreHandle_t job_mutex;
 
 void add_job(jobs_t *job){
 
@@ -20,8 +20,9 @@ void add_job(jobs_t *job){
         log_error("Job context is full, cannot add more jobs"); //print error message
         return;
     }
-    global_job_context.jobs[global_job_context.job_count] = job; //Put the new job in the next open slot (which equals the job count)
-    global_job_context.job_count++; //increment the job count for the next job
+        global_job_context.jobs[global_job_context.job_count] = job; //Put the new job in the next open slot (which equals the job count)
+        global_job_context.job_count++; //increment the job count for the next job
+
 }
 
 static int find_ready_job(TickType_t current_time){
@@ -42,7 +43,7 @@ static void reorganize_job(size_t job_index){
 }
 
 void delete_job(jobs_t * job){
-    for(int i = 0; i <  global_job_context.job_count;i++){ //itterate through the jobs
+    for(int i = 0; i < global_job_context.job_count;i++){ //itterate through the jobs
         if(global_job_context.jobs[i] == job){ // check if it is the job we want to delete
             global_job_context.jobs[i] = NULL; //set it to null to remove job
             reorganize_job(i);
@@ -57,6 +58,7 @@ void scheduler_init(void) {
 
 void run_scheduler(){
 
+    job_mutex = xSemaphoreCreateMutex();
     for(;;){ //infinite loop to keep the scheduler running
 
         TickType_t current_time = xTaskGetTickCount(); //get the current time in ticks(FreeRTOS)
@@ -85,8 +87,10 @@ void run_scheduler(){
 void scheduler_task(void *pvParameters){
     scheduler_init();
     sensor_setup();
-    add_job(&led_blinking); 
-    add_job(&heart_beat);
+    add_job(&led_blinking_once); 
+    add_job(&led_blinking_recurr); 
+    add_job(&led_blinking_onoff); 
+    add_job(&led_blinking_fast_blink); 
+    
     run_scheduler();
-
 }
