@@ -11,11 +11,11 @@
 
 
 #define SPI_PORT    spi1
+#define SPI_CS      25
+#define SPI_MOSI    27
+#define SPI_MISO    28
+#define SPI_SCK     26
 #define CLK_SPEED   100000
-#define CS_PIN      9
-#define MISO_PIN    8
-#define MOSI_PIN    11
-#define SCK_PIN     10
 
 typedef struct{
     /* data */
@@ -30,7 +30,7 @@ typedef struct{
 void start_spi();
 
 int mcp2515_send(uint32_t data);
-int mcp2515_recieve();
+can_message mcp2515_recieve();
 
 
 
