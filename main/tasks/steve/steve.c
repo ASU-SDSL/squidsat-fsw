@@ -6,6 +6,12 @@
 #include <log.h>
 #include <sensor_job.h>
 
+/**
+ * @authors: Koowum Joshi, Quan Le
+ * @breif: STEVE Scheduler Implementation.
+ * @version: 1.0
+ * @date: 2026-09-25
+ */
 
 job_context_t global_job_context;  
 static SemaphoreHandle_t job_mutex;
@@ -32,7 +38,7 @@ void add_job(jobs_t *job){
 static int find_ready_job(TickType_t current_time){
     if(xSemaphoreTake(job_mutex, portMAX_DELAY)){
         for(int i = 0; i < global_job_context.job_count; i++){
-            if(global_job_context.jobs[i]->execute_time <= current_time){ //if the job is ready to run
+            if ((int32_t)(current_time - global_job_context.jobs[i]->execute_time) >= 0){ //if the job is ready to run
                 xSemaphoreGive(job_mutex);
                 return i; //return the index of the job to be run
             }
@@ -65,7 +71,6 @@ void delete_job(jobs_t * job){
                 reorganize_job(i);
             }
         }
-        log_error("job not found\n");
         xSemaphoreGive(job_mutex);
     }
 }

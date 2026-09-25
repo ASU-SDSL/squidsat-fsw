@@ -52,7 +52,7 @@ jobs_t test_steve = {
     .func = steve_test,
     .recurr_time = 1000,
     .execute_time = 0,
-    .name = "GSE LED Task",
+    .name = "GSE Print Task",
     .args = NULL
 };
 
@@ -108,6 +108,7 @@ void vDebugTask(void *pvParameters){
                         break;
                     case CMD_REMOVE_STEVE:
                         delete_job(&test_steve);
+                        break;
                     default:
                         break;
                 }
