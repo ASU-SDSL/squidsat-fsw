@@ -18,10 +18,10 @@ typedef struct {
 
 typedef struct {
     jobs_t *jobs[MAX_JOBS]; 
-    size_t job_count; //number of jobs currently
+    int job_count; //number of jobs currently
 } job_context_t;
 
-extern job_context_t global_job_context;
+extern job_context_t global_job_contmext;
 
 //Scheduler task function
 //void create_job();

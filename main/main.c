@@ -46,8 +46,8 @@ void led_task(void *pvParameters)
 
 int main()
 {
-    __asm volatile ("nop"); // for debugger if desired - not used by default
-
+    // __asm volatile ("nop"); // for debugger if desired - not used by default
+    // stdio_init_all();
     usb_serial_init(); 
     gse_init();
     i2c_util_init(); 

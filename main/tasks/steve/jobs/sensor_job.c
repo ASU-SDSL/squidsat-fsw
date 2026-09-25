@@ -6,13 +6,12 @@
 #define HOLD_MS_onoff 7000
 #define FAST_BLINK_MS  70
 
-const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+#define LED_PIN PICO_DEFAULT_LED_PIN
 
 static bool led_state = false;
 static uint32_t run_count = 0;
 
 void sensor_setup(void){
-    stdio_init_all();
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     gpio_put(LED_PIN, 1);
@@ -74,7 +73,6 @@ void led_blinking_job_recurring(void *args){
     run_count++;
     led_state = !led_state;
     gpio_put(LED_PIN, led_state);
-    
 }
 
 jobs_t led_blinking_once = {
