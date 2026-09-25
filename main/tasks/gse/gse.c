@@ -1,12 +1,14 @@
 #include "gse.h"
 #include "log.h"
-
+#include "steve.h"
 #include "usb_serial.h"
 
 typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
     CMD_PULLLOG,
+    CMD_STEVE_USB,
+    CMD_REMOVE_STEVE,
     CMD_UNKNOWN
 } Command;
 
@@ -24,6 +26,8 @@ static Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
+    if (strcmp(str, "send_steve") == 0) return CMD_STEVE_USB;
+    if (strcmp(str, "remove_steve_task") == 0) return CMD_REMOVE_STEVE;
     return CMD_UNKNOWN;
 };
 
@@ -38,7 +42,19 @@ void debug_mode_init(void){
     if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
 };
 
+static void steve_test(void *args){
+    (void) args;
 
+    log_info("Steve works on multiple task (Core Safe)");
+}
+
+jobs_t test_steve = {
+    .func = steve_test,
+    .recurr_time = 1000,
+    .execute_time = 0,
+    .name = "GSE LED Task",
+    .args = NULL
+};
 
 static void debug_mode_set(bool value){
     debug_mode_init();
@@ -87,6 +103,11 @@ void vDebugTask(void *pvParameters){
                         debug_mode_set(false);
                         get_debug_mode();
                         break;
+                    case CMD_STEVE_USB:
+                        add_job(&test_steve);
+                        break;
+                    case CMD_REMOVE_STEVE:
+                        delete_job(&test_steve);
                     default:
                         break;
                 }
