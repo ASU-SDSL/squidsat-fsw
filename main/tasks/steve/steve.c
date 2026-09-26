@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <log.h>
-#include <sensor_job.h>
+#include "log.h"
+#include "sensor_job/sensor_job.h"
 
 /**
  * @authors: Koowum Joshi, Quan Le
@@ -35,20 +35,19 @@ void add_job(jobs_t *job){
     }
 }
 
-static int find_ready_job(TickType_t current_time){
-    if(xSemaphoreTake(job_mutex, portMAX_DELAY)){
+static jobs_t *find_ready_job(TickType_t current_time){
+    jobs_t *ready = NULL;
+    if(xSemaphoreTake(job_mutex, portMAX_DELAY) == pdTRUE){
         for(int i = 0; i < global_job_context.job_count; i++){
-            if ((int32_t)(current_time - global_job_context.jobs[i]->execute_time) >= 0){ //if the job is ready to run
-                xSemaphoreGive(job_mutex);
-                return i; //return the index of the job to be run
+            jobs_t *job = global_job_context.jobs[i];
+            if((int32_t)(current_time - job->execute_time) >= 0){
+                ready = job;          // grab the pointer while still locked
+                break;
             }
         }
-
-        // log_info("No job is ready to run...");
-        xSemaphoreGive(job_mutex);
+        xSemaphoreGive(job_mutex);    // single exit point, always released
     }
-
-    return -1; //return -1 if no job is ready 
+    return ready;
 }
 
 // Function CANNOT be called outside of delete job or a race condition will happen
@@ -67,6 +66,9 @@ void delete_job(jobs_t * job){
     if(xSemaphoreTake(job_mutex, portMAX_DELAY)){
         for(int i = 0; i < global_job_context.job_count;i++){ //iterate through the jobs
             if(global_job_context.jobs[i] == job){ // check if it is the job we want to delete
+                char msg[64];
+                snprintf(msg, sizeof(msg), "deleting %s, count before deletion: %d", global_job_context.jobs[i]->name, global_job_context.job_count);
+                log_warning(msg);
                 global_job_context.jobs[i] = NULL; //set it to null to remove job
                 reorganize_job(i);
             }
@@ -81,32 +83,28 @@ void scheduler_init(void) {
 }
 
 void run_scheduler(){
-    for(;;){ //infinite loop to keep the scheduler running
-        TickType_t current_time = xTaskGetTickCount(); //get the current time in ticks(FreeRTOS)
+    for(;;){
+        TickType_t current_time = xTaskGetTickCount();
+        jobs_t *job_to_run = find_ready_job(current_time);
 
-        int run_index = find_ready_job(current_time);
-
-        if(run_index < 0){ //if no job is ready to run
-            vTaskDelay(pdMS_TO_TICKS(10)); //delay for a short period before checking again
-            continue; //nothing to run
+        if(job_to_run == NULL){
+            vTaskDelay(pdMS_TO_TICKS(10));   // no lock held here
+            continue;
         }
-        //run job
-        jobs_t *job_to_run = global_job_context.jobs[run_index]; //get the job to run
-        job_to_run->func(job_to_run->args); //execute the job function with arguments
 
-        if(job_to_run->recurr_time != 0){ //check if the job is a recurring job 
-            job_to_run->execute_time = current_time + job_to_run->recurr_time; //update the execute time for the next run
-        } else{
-            char msg[64];
-            snprintf(msg, sizeof(msg), "deleting '%s', count before=%d", job_to_run->name, global_job_context.job_count);
-            log_info(msg);
-            delete_job(job_to_run); 
+        job_to_run->func(job_to_run->args);  // no lock held while the job runs
+
+        if(job_to_run->recurr_time != 0){
+            job_to_run->execute_time = current_time + job_to_run->recurr_time;
+        } else {
+            delete_job(job_to_run);          // takes and releases the lock itself
         }
     }
 }
 
 void scheduler_task(void *pvParameters){
     scheduler_init();
+
     sensor_setup();
     // add_job(&led_blinking_once); 
     // add_job(&led_blinking_recurr); 

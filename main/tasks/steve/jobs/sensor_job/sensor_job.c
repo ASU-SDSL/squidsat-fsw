@@ -1,5 +1,5 @@
 #include "pico/stdlib.h"
-#include <sensor_job.h>
+#include "sensor_job.h"
 #include <log.h>
 
 #define HOLD_MS 1000
@@ -23,7 +23,7 @@ void led_blinking_job_once(void *args){
     (void)args;
     gpio_put(LED_PIN, 0);
     led_state = false;
-    log_error("once: LED off");
+    log_warning("once: LED off");
 }  
 // test 2: turn the LED on, hold a few seconds, then turn it off
 void led_blinking_job_on_off(void *args){
@@ -31,13 +31,13 @@ void led_blinking_job_on_off(void *args){
 
     gpio_put(LED_PIN, 1);
     led_state = true;
-    log_error("on_off: LED on");
+    log_warning("on_off: LED on");
 
     sleep_ms(HOLD_MS_onoff);
 
     gpio_put(LED_PIN, 0);
     led_state = false;
-    log_error("on_off: LED off");
+    log_warning("on_off: LED off");
 }
 
 void led_blinking_job_fast_blink(void *args){
@@ -64,7 +64,7 @@ void led_blinking_job_fast_blink(void *args){
     }
 
     led_state = false;
-    log_error("solid: done");
+    log_warning("solid: done");
 }
 
 //test 4: LED running multiple times

@@ -3,7 +3,7 @@
 #include "timers.h"
 #include "gse.h"
 #include "log.h"
-#include "sensor_job.h"
+#include "steve/jobs/sensor_job/sensor_job.h"
 #include "steve.h"
 #include <stdio.h>
 #include "pico/stdlib.h"

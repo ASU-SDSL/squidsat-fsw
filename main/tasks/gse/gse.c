@@ -2,6 +2,7 @@
 #include "log.h"
 #include "steve.h"
 #include "usb_serial.h"
+#include "steve/jobs/gse_test/gse_test.h"
 
 typedef enum {
     CMD_DEBUG,
@@ -27,7 +28,7 @@ static Command parse_command(const char* str) {
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
     if (strcmp(str, "send_steve") == 0) return CMD_STEVE_USB;
-    if (strcmp(str, "remove_steve_task") == 0) return CMD_REMOVE_STEVE;
+    if (strcmp(str, "remove_steve_job") == 0) return CMD_REMOVE_STEVE;
     return CMD_UNKNOWN;
 };
 
@@ -40,20 +41,6 @@ void gse_init(void){
 
 void debug_mode_init(void){
     if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
-};
-
-static void steve_test(void *args){
-    (void) args;
-
-    log_info("Steve works on multiple task (Core Safe)");
-}
-
-jobs_t test_steve = {
-    .func = steve_test,
-    .recurr_time = 1000,
-    .execute_time = 0,
-    .name = "GSE Print Task",
-    .args = NULL
 };
 
 static void debug_mode_set(bool value){

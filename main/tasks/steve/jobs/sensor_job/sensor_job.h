@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../steve.h"
+#include "steve.h"
 
 void led_blinking_job_once(void *args);
 void led_blinking_job_on_off(void *args);
