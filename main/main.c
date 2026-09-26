@@ -3,6 +3,8 @@
 #include "timers.h"
 #include "gse.h"
 #include "log.h"
+#include "steve/jobs/sensor_job/sensor_job.h"
+#include "steve.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "projdefs.h"
@@ -22,6 +24,7 @@
 #include "filesystem.h"
 
 
+/*
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
@@ -38,11 +41,13 @@ void led_task(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
+*/
+
 
 int main()
 {
-    __asm volatile ("nop"); // for debugger if desired - not used by default
-
+    // __asm volatile ("nop"); // for debugger if desired - not used by default
+    // stdio_init_all();
     usb_serial_init(); 
     gse_init();
     i2c_util_init(); 
@@ -64,8 +69,9 @@ int main()
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
-    configASSERT(ok == pdPASS);
+    ok = xTaskCreate(scheduler_task, "SCHED", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    //ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
+    //configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);    
