@@ -53,6 +53,7 @@ jobs:
           rm -rf doxygen-1.17.0
       - name: Commit 
         run: |
+          git status
           git add .
           git commit -am "Auto-docs generated"
           git push 
