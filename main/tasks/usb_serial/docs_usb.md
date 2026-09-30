@@ -1,5 +1,12 @@
+\dir 
+
+\brief TinyUSB Integration
+
+<hr /> 
+
 # TinyUSB with FreeRTOS SMP
-This is a dump overview of the stuff that went into getting this to work to make sure it doesn't get forgotten
+
+This is a dump overview of the stuff that went into getting this to work to make sure it doesn't get forgotten.
 
 ## The Problem
 The root of the problem is that although Raspberry Pi and the Pico SDK are set up to be somewhat compatible with FreeRTOS SMP, TinyUSB just isn't, it's only setup to be compatible with non-SMP FreeRTOS. The TinyUSB stack can call the callbacks to get it to work, if they are left as interrupts at anytime with no protection for SMP. This means that we can't just use the TinyUSB FreeRTOS config settting, but instead need to use the Pico config setting and do our own port into FreeRTOS SMP. This is once of the reasons the TinyUSB backend in any RTOS is often it's own task. 

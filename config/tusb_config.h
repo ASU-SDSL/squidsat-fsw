@@ -1,6 +1,17 @@
+/**
+ * @file tusb_config.h
+ * @author Tyler Nielsen
+ * @brief TinyUSB Config 
+ * @version 0.1
+ * @date 2026-05-30
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ * Modified from https://github.com/earlephilhower/arduino-pico/blob/6a1d13e960e0854da2bf328b1a5fc05481d89aba/include/tusb_config.h#L27
+ * 
+ */
 #ifndef TUSB_CONFIG_H
 #define TUSB_CONFIG_H
-// modified from https://github.com/earlephilhower/arduino-pico/blob/6a1d13e960e0854da2bf328b1a5fc05481d89aba/include/tusb_config.h#L27
 
 #ifdef __cplusplus
  extern "C" {
