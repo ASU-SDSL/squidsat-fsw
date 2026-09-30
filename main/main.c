@@ -3,6 +3,8 @@
 #include "timers.h"
 #include "gse.h"
 #include "log.h"
+#include "steve/jobs/sensor_job/sensor_job.h"
+#include "steve.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "projdefs.h"
@@ -19,7 +21,10 @@
 #include "tusb.h"
 
 #include "timing.h"
+#include "filesystem.h"
 
+
+/*
 void led_task(void *pvParameters)
 {   
     int LED_PIN = PICO_DEFAULT_LED_PIN; // this is for testing OBC hardware
@@ -27,34 +32,29 @@ void led_task(void *pvParameters)
     gpio_set_dir(LED_PIN, GPIO_OUT);
     int it = 0; 
     while (true) {
-        // log_info("Hello data"); 
         gpio_put(LED_PIN, 1);
         vTaskDelay(pdMS_TO_TICKS(500));
 
-        // printf("Hello data %d\n", it++);
-
-        int c = getchar_timeout_us(0);
-        while(c != PICO_ERROR_TIMEOUT){
-            printf("Received input: %c\n", c);
-            c = getchar_timeout_us(0);
-        }
+        log_info("Hello LED");
 
         gpio_put(LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(500));
-        // log_info("We are working"); // this is an example of how to use the logging metric, log_info can be replace with any of
-        //                             other values depending on the severity.
     }
 }
+*/
+
 
 int main()
 {
-    __asm volatile ("nop"); // for debugger if desired - not used by default
-
+    // __asm volatile ("nop"); // for debugger if desired - not used by default
+    // stdio_init_all();
     usb_serial_init(); 
     gse_init();
     i2c_util_init(); 
 
     // uint8_t ts_res = timing_init(); 
+
+    // FRESULT fs_res = filesystem_init(); 
     
     // while(ts_res){ // retry bc this is critical - get a better solution to failure later 
     //     log_error("CRITICAL - Timing setup fail (%d)", ts_res); 
@@ -69,8 +69,9 @@ int main()
     vTaskCoreAffinitySet(usbTaskHandle, 1 << 0);
     configASSERT(ok == pdPASS);
 
-    ok = xTaskCreate(led_task, "LED", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    configASSERT(ok == pdPASS);
+    ok = xTaskCreate(scheduler_task, "SCHED", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    //ok = xTaskCreate(led_task, "LED", 2048 * 2, NULL, tskIDLE_PRIORITY, NULL);
+    //configASSERT(ok == pdPASS);
 
     ok = xTaskCreate(vDebugTask, "DEBUG", 2048, NULL, tskIDLE_PRIORITY, NULL);
     configASSERT(ok == pdPASS);    

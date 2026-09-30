@@ -1,13 +1,15 @@
 #include "gse.h"
 #include "log.h"
-
-#include "tusb_config.h"
-#include "tusb.h"
+#include "steve.h"
+#include "usb_serial.h"
+#include "steve/jobs/gse_test/gse_test.h"
 
 typedef enum {
     CMD_DEBUG,
     CMD_NODEBUG,
     CMD_PULLLOG,
+    CMD_STEVE_USB,
+    CMD_REMOVE_STEVE,
     CMD_UNKNOWN
 } Command;
 
@@ -15,7 +17,7 @@ typedef enum {
 #ifdef DEBUG_BUILD 
 static volatile bool debug_mode = true;
 #else 
-static volatile bool debug_mode = true;
+static volatile bool debug_mode = false;
 #endif
 
 static SemaphoreHandle_t debug_mode_mutex;
@@ -25,6 +27,8 @@ static Command parse_command(const char* str) {
     if (strcmp(str, "debug") == 0)   return CMD_DEBUG;
     if (strcmp(str, "no_debug") == 0) return CMD_NODEBUG;
     if (strcmp(str, "pull_log") == 0) return CMD_PULLLOG;
+    if (strcmp(str, "send_steve") == 0) return CMD_STEVE_USB;
+    if (strcmp(str, "remove_steve_job") == 0) return CMD_REMOVE_STEVE;
     return CMD_UNKNOWN;
 };
 
@@ -38,8 +42,6 @@ void gse_init(void){
 void debug_mode_init(void){
     if(debug_mode_mutex == NULL) debug_mode_mutex = xSemaphoreCreateMutex();
 };
-
-
 
 static void debug_mode_set(bool value){
     debug_mode_init();
@@ -62,21 +64,13 @@ bool get_debug_mode(void){
     return value;
 };
 
-void usb_task(void * param){
-    while(1) {
-        tud_task(); 
-        vTaskDelay(1); 
-    }
-}
-
-
 void vDebugTask(void *pvParameters){
     debug_mode_init();
     char buffer[GSE_BUFFER_SIZE];
     int buffer_index = 0;
 
     for(;;){
-        if(tud_cdc_connected() == false){
+        if(safe_tud_cdc_connected() == false){
             vTaskDelay(pdMS_TO_TICKS(GSE_TASK_DELAY_MS)); 
             continue;
         }
@@ -95,6 +89,12 @@ void vDebugTask(void *pvParameters){
                     case CMD_NODEBUG:
                         debug_mode_set(false);
                         get_debug_mode();
+                        break;
+                    case CMD_STEVE_USB:
+                        add_job(&test_steve);
+                        break;
+                    case CMD_REMOVE_STEVE:
+                        delete_job(&test_steve);
                         break;
                     default:
                         break;
