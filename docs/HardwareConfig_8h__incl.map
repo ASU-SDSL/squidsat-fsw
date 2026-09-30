@@ -1,0 +1,5 @@
+<map id="HardwareConfig.h" name="HardwareConfig.h">
+<area shape="rect" id="Node000001" title="Macro definition for all hardware configuration (pin and bus assignment, etc)." alt="" coords="5,5,144,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="15,79,134,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,31,77,65,72,65,72,31"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="HardwareConfig.h" name="HardwareConfig.h">
+<area shape="rect" id="Node000001" title="Macro definition for all hardware configuration (pin and bus assignment, etc)." alt="" coords="20,5,159,31"/>
+<area shape="rect" id="Node000002" href="$i2c__util_8c.html" title="I2C Helper functions &#45; based on Coconut implementation." alt="" coords="5,79,85,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,44,55,80,50,77,73,41"/>
+<area shape="rect" id="Node000003" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="109,79,160,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,41,130,77,125,80,102,44"/>
+</map>

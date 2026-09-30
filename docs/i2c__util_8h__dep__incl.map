@@ -1,0 +1,9 @@
+<map id="i2c_util.h" name="i2c_util.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,183,31"/>
+<area shape="rect" id="Node000002" href="$i2c__util_8c.html" title="I2C Helper functions &#45; based on Coconut implementation." alt="" coords="5,79,85,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,41,63,81,60,76,114,37"/>
+<area shape="rect" id="Node000003" href="$main_8c.html" title=" " alt="" coords="109,79,176,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,44,145,79,140,79,140,44"/>
+<area shape="rect" id="Node000004" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="200,79,251,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,38,214,76,210,80,165,42"/>
+</map>

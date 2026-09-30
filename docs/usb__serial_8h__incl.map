@@ -1,0 +1,11 @@
+<map id="usb_serial.h" name="usb_serial.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="165,5,265,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,101,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,33,93,75,91,71,188,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="125,79,208,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,33,184,69,180,66,205,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="233,79,295,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="225,29,250,66,246,69,221,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="320,79,403,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="239,28,326,70,324,75,237,33"/>
+</map>

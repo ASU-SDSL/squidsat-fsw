@@ -1,0 +1,7 @@
+<map id="rtc.h" name="rtc.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="48,5,99,31"/>
+<area shape="rect" id="Node000002" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="5,79,56,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,44,40,80,35,77,57,41"/>
+<area shape="rect" id="Node000003" href="$timing_8c.html" title="Timing utiltiy functions using the RP2350&#39;s Always On Timer (AON) and an external Real Time Clock (RT..." alt="" coords="80,79,155,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="90,41,112,77,108,80,86,44"/>
+</map>
