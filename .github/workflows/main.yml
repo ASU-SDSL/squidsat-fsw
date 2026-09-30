@@ -58,6 +58,7 @@ jobs:
             echo "No documentation changes"
           else
             git add .
+            git status
             git commit -am "Auto-docs generated"
             git push 
           fi
