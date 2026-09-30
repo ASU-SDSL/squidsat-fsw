@@ -54,7 +54,11 @@ jobs:
       - name: Commit 
         run: |
           git status
-          git add .
-          git commit -am "Auto-docs generated"
-          git push 
+          if [ "$(git diff)" == "" ]; then
+            echo "No documentation changes"
+          else
+            git add .
+            git commit -am "Auto-docs generated"
+            git push 
+          fi
       
