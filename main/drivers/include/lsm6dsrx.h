@@ -17,8 +17,8 @@
 
 
 /**
- * @brief Configures the LSM6 to read the temperature only as of 5/7/26
- * 
+ * @brief Configures the LSM6 to read the temperature only as of 5/7/26 | 7/28/26 will check back to see if true
+ *        or if I forgot to delete a comment
  * @param i2c I2C Instance
  * @return int Status (0 = Success) (1 = Fail)
  */

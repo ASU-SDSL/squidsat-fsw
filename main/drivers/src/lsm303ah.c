@@ -37,7 +37,7 @@ uint8_t lsm3_config(i2c_inst_t *i2c){
 
 }
 
-uint8_t lsm3_get_mag(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t* z_axis){
+uint8_t lsm3_get_mag(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axis){
     uint8_t data[6]; // Dont forget to cast when working with the data as this stores as uint, but IMU calculates signed numbers
 
     if(i2c_read_from_register(i2c, LSM3_ADDR, REG_M_X_L, data, 6)){
@@ -48,7 +48,7 @@ uint8_t lsm3_get_mag(i2c_inst_t *i2c, int32_t* x_axis, int32_t* y_axis, int32_t*
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    // Hard and soft iron calibration NOT completed. Heading formula NOT completed. Optional tilt compensation NOT completed.
+    // TODO: Hard and soft iron calibration NOT completed. Heading formula NOT completed. Optional tilt compensation NOT completed.
     *x_axis = raw_x * MAG_LSB; 
     *y_axis = raw_y * MAG_LSB;
     *z_axis = raw_z * MAG_LSB;
