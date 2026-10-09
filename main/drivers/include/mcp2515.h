@@ -18,20 +18,18 @@
 #define CLK_SPEED   100000
 
 typedef struct{
-    /* data */
     uint32_t    id;
     uint8_t     extended;
     uint8_t     dlc;
-    uint8_t     data[8]
-} can_message; 
+    uint8_t     data[8];
+} can_message_t;
+
+void mcp2515_spi_init(void);
+int mcp2515_init(void);
 
 
-
-void start_spi();
-
-int mcp2515_send(uint32_t data);
-can_message mcp2515_recieve();
-
+uint8_t mcp_read_reg(uint8_t addr);
+void mcp_write_reg(uint8_t addr, uint8_t data);
 
 
 #endif
