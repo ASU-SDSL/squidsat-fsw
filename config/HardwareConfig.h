@@ -1,3 +1,13 @@
+/**
+ * @file HardwareConfig.h
+ * @author Tyler Nielsen
+ * @brief Macro definition for all hardware configuration (pin and bus assignment, etc)
+ * @version 0.1
+ * @date 2026-06-26
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once 
 
 #include "hardware/i2c.h"

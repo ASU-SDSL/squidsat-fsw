@@ -2,8 +2,6 @@
 #define GSE_TASK_H
 
 
-#include <FreeRTOS.h>
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
