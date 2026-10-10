@@ -2,7 +2,7 @@
  * @file lsm6dsrx.h
  * @author Aidan Doyle (Doyle-Squared)
  * @brief Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)
- * @version 0.3
+ * @version 1.1
  * @date 2026-05-07
  * 
  */
@@ -17,16 +17,14 @@
 
 
 /**
- * @brief Configures the LSM6 to read the temperature only as of 5/7/26 | 7/28/26 will check back to see if true
- *        or if I forgot to delete a comment
+ * @brief Configures the LSM6. Can change range of measurements or features enabled
  * @param i2c I2C Instance
  * @return int Status (0 = Success) (1 = Fail)
  */
 uint8_t lsm6_config(i2c_inst_t *i2c);
 
 /**
- * @brief Gets the temperature. Temperature data buffer is split into two integers to avoid costly floating
- * point operations
+ * @brief Gets the temperature.
  * 
  * @param i2c I2C Instance
  * @param temp Pointer to where the calculated temperature in Celcius, will be stored.

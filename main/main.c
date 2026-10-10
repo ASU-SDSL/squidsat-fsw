@@ -45,16 +45,6 @@ void led_task(void *pvParameters)
 */
 
 
-void tempurature_task(void *pvParameters){
-    float tempurature;
-    lsm6_config(i2c0);
-    vTaskDelay(pdMS_TO_TICKS(1)); // LSM6 needs 500 microseconds from power on, to temperature being able to be read
-
-    while(true){
-        lsm6_get_temp(i2c0, &tempurature);
-        printf("Testing for whole temp: %dC", tempurature);
-    }
-}
 
 int main()
 {

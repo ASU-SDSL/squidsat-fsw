@@ -1,8 +1,8 @@
 /**
  * @file lsm6dsrx.c
  * @author Aidan Doyle (Doyle-Squared)
- * @brief 
- * @version 0.3
+ * @brief Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)
+ * @version 1.1
  * @date 2026-05-07
  * 
  * @copyright Copyright (c) 2026
@@ -11,12 +11,12 @@
 #include "lsm6dsrx.h"
 
 // I2C Address
-static const uint8_t LSM6_ADDR = 0x44; //PLACEHOLDER
+static const uint8_t LSM6_ADDR = 0x6B; // PLACEHOLDER ADDRESS!!!!!!!!!!
 
 // Sensor's registers
-static const uint8_t REG_XL_ODR = 0x10; // Accelerometer Output Data Rate (aka refresh rate) and sensitivity
-static const uint8_t REG_G_ODR = 0x11;  // Gyroscope output data rate and sensitivity
-static const uint8_t REG_BDU = 0x12;    // Block Data Update - Can be enabled to prevent writing to a register while reading it
+static const uint8_t REG_XL_ODR = 0x10;     // Accelerometer Output Data Rate (aka refresh rate) and sensitivity
+static const uint8_t REG_G_ODR = 0x11;      // Gyroscope output data rate and sensitivity
+static const uint8_t REG_BDU = 0x12;        // Block Data Update - Can be enabled to prevent writing to a register while reading it
 static const uint8_t REG_WHO_AM_I = 0x0F;     
 
 static const uint8_t REG_TEMP_L = 0x20;
@@ -36,14 +36,13 @@ static const float ACCEL_LSB = 0.061;        // Since the full scale we selected
 
 uint8_t lsm6_config(i2c_inst_t *i2c){
     i2c_util_init();
-    uint8_t identify;                   // Buffer to check that i2c is working via WHO_AM_I register on the lsm6
+    uint8_t identify = 0;                   // Buffer to check that i2c is working via WHO_AM_I register on the lsm6
 
-    if(i2c_read_from_register(i2c, LSM6_ADDR, REG_WHO_AM_I, &identify, 1)){
+    if(i2c_read_from_register(i2c, LSM6_ADDR, REG_WHO_AM_I, &identify, 1) != 0){
         return 1;
     }
-
+    
     if(identify != 0x6B){
-        printf("LSM6 I2C connection not found... \n");
         return 1;
     }
 
@@ -120,7 +119,7 @@ uint8_t lsm6_get_gyro(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_ax
 
     *x_axis = raw_x * GYRO_LSB;                             // CALIBRATION OFFSETS HAVE NOT BEEN APPLIED
     *y_axis = raw_y * GYRO_LSB;
-    *z_axis = raw_z * GYRO_LSB;
+    *z_axis = raw_z * GYRO_LSB;                             // UNITS ARE IN MILIDEGREES. Multiply by 0.001 to get degrees
 
     return 0;
 }
