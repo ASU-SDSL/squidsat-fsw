@@ -18,7 +18,7 @@ void imu_get_accel(void *args){
 
     // Configuring IMU and setting up I2C conntection
     if(lsm6_config(i2c0) == 1){ 
-        log_err("Error reading I2C line...\n");
+        log_error("Error reading I2C line...\n");
     }
 
     // Functions to read the data registers
@@ -27,9 +27,9 @@ void imu_get_accel(void *args){
     lsm6_get_temp(i2c0, &temp);
 
     // Printf used here since I dont think the custom log functions can take variables as of 10/12/26
-    //printf("Testing IMU Accel. X: %f, Y: %f, Z: %f\n", accel_x, accel_y, accel_z);
-    //printf("Testing IMU temp. %fC\n", temp);
-    //printf("Testing IMU Gyro. X: %f, Y: %f, Z: %f\n", (gyro_x*0.001), (gyro_y*0.001), (gyro_z*0.001));    // Multiplying by 1 to turn milidegrees into degrees
+    // printf("Testing IMU Accel. X: %f, Y: %f, Z: %f\n", accel_x, accel_y, accel_z);
+    // printf("Testing IMU temp. %fC\n", temp);
+    // printf("Testing IMU Gyro. X: %f, Y: %f, Z: %f\n\n", (gyro_x*0.001), (gyro_y*0.001), (gyro_z*0.001));    // Multiplying by 1 to turn milidegrees into degrees
 }
 
 jobs_t imu_accel = {
