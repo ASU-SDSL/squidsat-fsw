@@ -2,10 +2,8 @@
  * @file lsm6dsrx.c
  * @author Aidan Doyle (Doyle-Squared)
  * @brief Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)
- * @version 1.1
+ * @version 1.2
  * @date 2026-05-07
- * 
- * @copyright Copyright (c) 2026
  * 
  */
 #include "lsm6dsrx.h"
@@ -19,19 +17,19 @@ static const uint8_t REG_G_ODR = 0x11;      // Gyroscope output data rate and se
 static const uint8_t REG_BDU = 0x12;        // Block Data Update - Can be enabled to prevent writing to a register while reading it
 static const uint8_t REG_WHO_AM_I = 0x0F;     
 
-static const uint8_t REG_TEMP_L = 0x20;
+static const uint8_t REG_TEMP_L = 0x20;     // Temperature Low Register. Techinically only need this, but I dont want to break anything yet as of 10/12/26
 static const uint8_t REG_TEMP_H = 0x21;
-static const uint8_t REG_G_X_L = 0x22;  // Gyroscope X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x27
-static const uint8_t REG_XL_X_L = 0x28; // Accelerometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x2D
+static const uint8_t REG_G_X_L = 0x22;      // Gyroscope X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x27
+static const uint8_t REG_XL_X_L = 0x28;     // Accelerometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x2D
 
 // Commands (Writing to register)
  uint8_t CMD_BDU = 0x84;
- uint8_t CMD_XL_ODR = 0x32;             // Set to 52Hz, +-2g and Low-Pass Filter 2 is enabled
- uint8_t CMD_G_ODR = 0x32;              // Set to 52H, and z+- 125dps
+ uint8_t CMD_XL_ODR = 0x5E;             // Set to 208Hz, +-8g and Low-Pass Filter 2 is enabled
+ uint8_t CMD_G_ODR = 0x4C;              // Set to 104Hz, and +- 1000dps
 
 // Other Constants 
-static const float GYRO_LSB = 4.375;       // Since the full scale we selected for is 4.375 milidegrees/LSB 
-static const float ACCEL_LSB = 0.061;        // Since the full scale we selected for is 0.061m(g)/LSB 
+static const float GYRO_LSB = 35.0;       // Since the full scale we selected for is 4.375 milidegrees/LSB 
+static const float ACCEL_LSB = 0.244;        // Since the full scale we selected for is 0.061m(g)/LSB 
 
 
 uint8_t lsm6_config(i2c_inst_t *i2c){
@@ -74,7 +72,7 @@ uint8_t lsm6_get_temp(i2c_inst_t *i2c, float *temp){
         return 1;
     }
 
-    temp_raw = ((temp_raw_whole << 8) | temp_raw_fraction);
+    temp_raw = ((temp_raw_whole << 8) | temp_raw_fraction);     // Combining to make one float
     *temp = (temp_raw / 256.0) + 25.0;
 
     //Old fixed point arithmetic code. Not too sure if I should delete this, but look how much simpler using floats is
@@ -95,7 +93,7 @@ uint8_t lsm6_get_accel(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_a
         return 1;
     }
 
-    int16_t raw_x = (int16_t)((data[1] << 8) | data[0]);
+    int16_t raw_x = (int16_t)((data[1] << 8) | data[0]);    // Combinging low and High register data
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 

@@ -1,14 +1,14 @@
+#ifndef LSM6DSRX_H
+#define LSM6DSRX_H
+
 /**
  * @file lsm6dsrx.h
  * @author Aidan Doyle (Doyle-Squared)
  * @brief Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)
  * @version 1.1
  * @date 2026-05-07
- * 
+ * Date is the date created, not
  */
-
-#ifndef LSM6DSRX_H
-#define LSM6DSRX_H
 
 #include "i2c_util.h"
 
