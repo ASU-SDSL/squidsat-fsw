@@ -25,7 +25,7 @@ static const uint8_t REG_XL_X_L = 0x28;     // Accelerometer X-Axis Low Register
 // Commands (Writing to register)
  uint8_t CMD_BDU = 0x84;
  uint8_t CMD_XL_ODR = 0x5E;             // Set to 208Hz, +-8g and Low-Pass Filter 2 is enabled
- uint8_t CMD_G_ODR = 0x4C;              // Set to 104Hz, and +- 1000dps
+ uint8_t CMD_G_ODR = 0x4C;              // Set to 104Hz, and +- 1000dps. Low-Pass filter 1 not enabled
 
 // Other Constants 
 static const float GYRO_LSB = 35.0;       // Since the full scale we selected for is 4.375 milidegrees/LSB 

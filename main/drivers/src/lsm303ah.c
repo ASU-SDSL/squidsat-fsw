@@ -13,13 +13,12 @@ static const uint8_t LSM3_ADDR = 0x1E; // PLACEHOLDER
 
 // Sensor's Registers
 static const uint8_t REG_M_ODR = 0x60;
-static const uint8_t REG_M_OFFSET = 0x61;
-
-static const uint8_t REG_M_X_L = 0x68;   // Magnetometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x6D
+static const uint8_t REG_M_OFFSET = 0x61;   // Removes internal data bias from manufacturing process variance
+static const uint8_t REG_M_X_L = 0x68;      // Magnetometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x6D
 
 // Commands (Writing to registers)
-uint8_t CMD_M_ODR = 0x00;
-uint8_t CMD_M_OFFSET = 0x02;
+uint8_t CMD_M_ODR = 0x08;           // Set to 50Hz
+uint8_t CMD_M_OFFSET = 0x02;        // Offset cancelation enabled. Low-Pass filter not enabled
 
 // Other Constants 
 static const int MAG_LSB = 1.5; 
@@ -44,11 +43,11 @@ uint8_t lsm3_get_mag(i2c_inst_t *i2c, float* x_axis, float* y_axis, float* z_axi
         return 1;
     }
 
-    int16_t raw_x = (int16_t)((data[1] << 8) | data[0]);
+    int16_t raw_x = (int16_t)((data[1] << 8) | data[0]);    // Combining Low and High data registers
     int16_t raw_y = (int16_t)((data[3] << 8) | data[2]);
     int16_t raw_z = (int16_t)((data[5] << 8) | data[4]);
 
-    // TODO: Hard and soft iron calibration NOT completed. Heading formula NOT completed. Optional tilt compensation NOT completed.
+    // FOR MVP - Hard and soft iron calibration NOT completed. Heading formula NOT completed. Optional tilt compensation NOT completed.
     *x_axis = raw_x * MAG_LSB; 
     *y_axis = raw_y * MAG_LSB;
     *z_axis = raw_z * MAG_LSB;
