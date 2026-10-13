@@ -106,7 +106,7 @@ Commands end with Enter (`\n` or `\r`), and matching is exact and case-sensitive
 | `no_debug` | Turns debug mode off; new log messages are dropped and the log queue is cleared |
 | `pull_log` | Recognized by the parser but **not implemented** (falls through to `default`) |
 | `send_steve` | Adds the `test_steve` job to STEVE (logs a message every 1000 ticks) |
-| `remove_steve_task` | Removes the `test_steve` job from STEVE |
+| `remove_steve_job` | Removes the `test_steve` job from STEVE |
 
 Unknown commands are silently ignored.
 
