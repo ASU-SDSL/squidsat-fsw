@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['execute_5ftime_0',['execute_time',['../structjobs__t.html#a2db1962498447ec82c4f5f9769a4d7b3',1,'jobs_t']]],
-  ['extended_1',['extended',['../structcan__message.html#a2a13ea3818b09c09129ba81cefd51c8d',1,'can_message']]]
+  ['data_0',['data',['../structLogEntry.html#a04dac134c798fba6e11d1dd93f35295d',1,'LogEntry']]],
+  ['dlc_1',['dlc',['../structcan__message.html#ac962fe5ebd36b54d389b2ad13d1a7684',1,'can_message']]]
 ];

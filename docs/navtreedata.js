@@ -52,7 +52,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "FreeRTOSConfig_8h.html",
-"misc_8c.html"
+"lsm6dsrx_8h.html#a3873cebfd442e37bf92a442000c5f361"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

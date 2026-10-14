@@ -1,28 +1,43 @@
 <map id="log.h" name="log.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="491,5,546,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="613,5,667,31"/>
 <area shape="rect" id="Node000002" href="$can__test_8c.html" title=" " alt="" coords="5,79,93,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="478,27,315,49,106,81,94,83,93,78,105,76,314,44,477,22"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="599,25,387,45,106,81,94,83,93,78,105,76,387,40,599,20"/>
 <area shape="rect" id="Node000003" href="$filesystem_8c.html" title="FatFs implementation for RTOS SMP with resource management." alt="" coords="117,79,219,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="479,30,220,82,219,77,478,25"/>
-<area shape="rect" id="Node000004" href="$gse_8c.html" title=" " alt="" coords="228,152,284,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="477,21,433,24,381,33,329,51,306,64,285,81,272,97,265,116,259,152,254,151,260,115,268,94,281,77,303,59,327,46,380,27,432,18,477,16"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="600,28,238,81,219,84,218,79,237,76,599,22"/>
+<area shape="rect" id="Node000004" href="$gse_8c.html" title=" " alt="" coords="216,152,272,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="599,24,521,30,428,40,341,57,307,68,283,81,268,97,258,116,248,153,243,151,253,114,264,94,280,77,305,63,339,52,427,35,521,24,599,19"/>
 <area shape="rect" id="Node000005" href="$gse__test_8h.html" title=" " alt="" coords="294,79,383,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="480,37,369,81,367,76,478,33"/>
-<area shape="rect" id="Node000007" href="$log_8c.html" title=" " alt="" coords="408,79,461,104"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="496,42,450,80,447,76,493,38"/>
-<area shape="rect" id="Node000008" href="$main_8c.html" title=" " alt="" coords="485,79,552,104"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="521,44,521,79,516,79,516,44"/>
-<area shape="rect" id="Node000009" href="$mcp2515_8c.html" title=" " alt="" coords="576,79,669,104"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="548,36,607,76,604,81,545,41"/>
-<area shape="rect" id="Node000010" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="693,79,744,104"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="560,31,694,78,692,83,558,36"/>
-<area shape="rect" id="Node000011" href="$sensor__job_8c.html" title=" " alt="" coords="769,79,871,104"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="560,26,772,76,771,81,559,32"/>
-<area shape="rect" id="Node000012" href="$steve_8c.html" title=" " alt="" coords="896,79,965,104"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="560,22,704,44,885,76,896,79,895,84,883,81,703,49,559,28"/>
-<area shape="rect" id="Node000013" href="$timing_8c.html" title="Timing utiltiy functions using the RP2350&#39;s Always On Timer (AON) and an external Real Time Clock (RT..." alt="" coords="989,79,1064,104"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="560,21,741,41,978,76,990,78,989,84,977,81,741,46,559,26"/>
-<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="317,115,271,154,268,150,313,111"/>
-<area shape="rect" id="Node000006" href="$gse__test_8c.html" title=" " alt="" coords="308,152,396,177"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="346,117,352,151,347,152,341,118"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="600,32,384,82,383,77,598,26"/>
+<area shape="rect" id="Node000007" href="$imu__job_8h.html" title=" " alt="" coords="590,152,677,177"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="647,44,650,73,649,104,639,152,634,151,644,104,645,73,642,45"/>
+<area shape="rect" id="Node000009" href="$steve_8c.html" title=" " alt="" coords="447,225,516,251"/>
+<area shape="poly" id="edge21_Node000001_Node000009" title=" " alt="" coords="599,21,561,25,520,34,480,52,463,65,449,80,437,104,435,125,449,176,460,203,474,224,470,227,456,205,444,178,430,126,431,102,444,77,460,61,477,47,518,29,560,20,598,16"/>
+<area shape="rect" id="Node000010" href="$log_8c.html" title=" " alt="" coords="581,79,635,104"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="632,44,616,80,611,77,627,42"/>
+<area shape="rect" id="Node000011" href="$lsm303ah_8h.html" title=" " alt="" coords="459,79,557,104"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="608,39,531,81,528,76,606,35"/>
+<area shape="rect" id="Node000013" href="$lsm6dsrx_8h.html" title="Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)." alt="" coords="710,79,805,104"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="672,35,740,76,737,81,669,40"/>
+<area shape="rect" id="Node000015" href="$main_8c.html" title=" " alt="" coords="819,152,885,177"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="682,21,750,38,786,54,818,77,832,95,842,115,853,151,848,152,837,117,828,97,814,81,783,59,749,43,681,26"/>
+<area shape="rect" id="Node000016" href="$mcp2515_8c.html" title=" " alt="" coords="880,79,973,104"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="681,27,881,76,880,81,680,32"/>
+<area shape="rect" id="Node000017" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="997,79,1048,104"/>
+<area shape="poly" id="edge19_Node000001_Node000017" title=" " alt="" coords="682,22,817,43,986,76,998,79,996,84,985,81,816,48,681,27"/>
+<area shape="rect" id="Node000018" href="$sensor__job_8c.html" title=" " alt="" coords="1073,79,1175,104"/>
+<area shape="poly" id="edge20_Node000001_Node000018" title=" " alt="" coords="681,22,1060,76,1073,78,1072,83,1060,81,681,27"/>
+<area shape="rect" id="Node000019" href="$timing_8c.html" title="Timing utiltiy functions using the RP2350&#39;s Always On Timer (AON) and an external Real Time Clock (RT..." alt="" coords="1200,79,1275,104"/>
+<area shape="poly" id="edge22_Node000001_Node000019" title=" " alt="" coords="681,19,899,38,1043,55,1188,76,1200,78,1199,83,1188,81,1042,60,898,44,681,25"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="314,114,261,154,258,150,311,110"/>
+<area shape="rect" id="Node000006" href="$gse__test_8c.html" title=" " alt="" coords="296,152,384,177"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="342,118,342,152,337,152,336,118"/>
+<area shape="rect" id="Node000008" href="$imu__job_8c.html" title=" " alt="" coords="591,225,676,251"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="636,191,636,225,631,225,631,191"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="598,185,507,228,505,223,596,181"/>
+<area shape="rect" id="Node000012" href="$lsm303ah_8c.html" title=" " alt="" coords="459,152,557,177"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="511,118,511,152,505,152,505,118"/>
+<area shape="poly" id="edge14_Node000013_Node000007" title=" " alt="" coords="727,113,655,154,652,149,724,108"/>
+<area shape="rect" id="Node000014" href="$lsm6dsrx_8c.html" title="Accelerometer, Gyroscope, and Tempurature Driver (LSM6DSRX)." alt="" coords="701,152,795,177"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="757,118,752,152,747,152,751,117"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="785,110,838,150,835,154,782,114"/>
 </map>

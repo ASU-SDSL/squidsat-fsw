@@ -25,5 +25,15 @@ var searchData=
   ['log_5fwarning_22',['log_warning',['../log_8h.html#a4e290d4178e6504246f99d468040a7d2',1,'log_warning(const char *msg):&#160;log.c'],['../log_8c.html#a4e290d4178e6504246f99d468040a7d2',1,'log_warning(const char *msg):&#160;log.c']]],
   ['logentry_23',['LogEntry',['../structLogEntry.html',1,'']]],
   ['logging_5fqueue_5flength_24',['LOGGING_QUEUE_LENGTH',['../log_8h.html#a7c296b0ae81a2ca1684190ede0b87f02',1,'log.h']]],
-  ['loglevel_25',['LogLevel',['../log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9',1,'log.h']]]
+  ['loglevel_25',['LogLevel',['../log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9',1,'log.h']]],
+  ['lsm303ah_2ec_26',['lsm303ah.c',['../lsm303ah_8c.html',1,'']]],
+  ['lsm303ah_2eh_27',['lsm303ah.h',['../lsm303ah_8h.html',1,'']]],
+  ['lsm3_5fconfig_28',['lsm3_config',['../lsm303ah_8h.html#a61da7cf1df5165ff64006dc629eaa297',1,'lsm3_config(i2c_inst_t *i2c):&#160;lsm303ah.c'],['../lsm303ah_8c.html#a61da7cf1df5165ff64006dc629eaa297',1,'lsm3_config(i2c_inst_t *i2c):&#160;lsm303ah.c']]],
+  ['lsm3_5fget_5fmag_29',['lsm3_get_mag',['../lsm303ah_8h.html#a797719e3040f5a4242dc7c3b030a1976',1,'lsm3_get_mag(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm303ah.c'],['../lsm303ah_8c.html#a797719e3040f5a4242dc7c3b030a1976',1,'lsm3_get_mag(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm303ah.c']]],
+  ['lsm6_5fconfig_30',['lsm6_config',['../lsm6dsrx_8h.html#a4a023a5f29483c7446596861046dece4',1,'lsm6_config(i2c_inst_t *i2c):&#160;lsm6dsrx.c'],['../lsm6dsrx_8c.html#a4a023a5f29483c7446596861046dece4',1,'lsm6_config(i2c_inst_t *i2c):&#160;lsm6dsrx.c']]],
+  ['lsm6_5fget_5faccel_31',['lsm6_get_accel',['../lsm6dsrx_8h.html#a058d73b57d16136c867b9112cd742762',1,'lsm6_get_accel(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm6dsrx.c'],['../lsm6dsrx_8c.html#a058d73b57d16136c867b9112cd742762',1,'lsm6_get_accel(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm6dsrx.c']]],
+  ['lsm6_5fget_5fgyro_32',['lsm6_get_gyro',['../lsm6dsrx_8h.html#a3873cebfd442e37bf92a442000c5f361',1,'lsm6_get_gyro(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm6dsrx.c'],['../lsm6dsrx_8c.html#a3873cebfd442e37bf92a442000c5f361',1,'lsm6_get_gyro(i2c_inst_t *i2c, float *x_axis, float *y_axis, float *z_axis):&#160;lsm6dsrx.c']]],
+  ['lsm6_5fget_5ftemp_33',['lsm6_get_temp',['../lsm6dsrx_8h.html#a416f1e98741cde5a0375e8483f766e48',1,'lsm6_get_temp(i2c_inst_t *i2c, float *temp):&#160;lsm6dsrx.c'],['../lsm6dsrx_8c.html#a416f1e98741cde5a0375e8483f766e48',1,'lsm6_get_temp(i2c_inst_t *i2c, float *temp):&#160;lsm6dsrx.c']]],
+  ['lsm6dsrx_2ec_34',['lsm6dsrx.c',['../lsm6dsrx_8c.html',1,'']]],
+  ['lsm6dsrx_2eh_35',['lsm6dsrx.h',['../lsm6dsrx_8h.html',1,'']]]
 ];
