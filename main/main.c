@@ -15,6 +15,7 @@
 #include "gse.h"
 #include "usb_serial.h"
 #include "i2c_util.h"
+#include "lsm6dsrx.h"
 #include "log.h"
 
 #include "tusb_config.h"
@@ -42,6 +43,7 @@ void led_task(void *pvParameters)
     }
 }
 */
+
 
 
 int main()
