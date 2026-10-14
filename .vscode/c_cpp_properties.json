@@ -1,18 +1,36 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Pico-SDK (arm-none-eabi-gcc)",
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm",
+
+            // try to use the VSCode extension
+            "configurationProvider": "ms-vscode.cmake-tools",
+
+            // if no extension use cmake metadata output
+            // project needs to be built for this to work 
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+
+            // final fall back to manual setup 
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/main/drivers/include",
-                "${workspaceFolder}/build/**",
-                "${workspaceFolder}/lib/**"
+                "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                "${workspaceFolder}/lib/FreeRTOS-Kernel/portable/GCC/ARM_CM33/non_secure",
+                "${workspaceFolder}/lib/pico-sdk/**",
+                "${workspaceFolder}/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-clang-x64"
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/lib/ff16/**",
+                    "${workspaceFolder}/lib/FreeRTOS-Kernel/**",
+                    "${workspaceFolder}/lib/pico-sdk/**",
+                    "${workspaceFolder}/**"
+                ], 
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4
