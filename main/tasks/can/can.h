@@ -16,10 +16,19 @@
 
 #define CAN_QUEUE_LEN   10
 
+void can_init(void);
 int add_can_transmission();
 int check_can_buff();
 
+int add_can_transmission(const can_message_t *msg);
+int check_can_buff(can_message_t *msg);
 
 void can_task(void *pvParameters);
+
+/**
+ * @brief: 0 = never ran, 1 = waiting for USB, 2 = inside mcp2515_init, 3 = init failed (retrying), 4 = running
+ * */
+
+extern volatile int can_task_state;
 
 #endif

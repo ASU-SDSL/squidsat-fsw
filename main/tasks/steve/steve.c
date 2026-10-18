@@ -28,6 +28,15 @@ void add_job(jobs_t *job){
     }
 
     if(xSemaphoreTake(job_mutex, portMAX_DELAY)){
+
+        // Checking to make sure job hasnt already been added (No duplciates)
+        for(int i = 0; i < global_job_context.job_count; i++){
+            if(global_job_context.jobs[i] == job){
+                xSemaphoreGive(job_mutex);
+                log_warning("Job already scheduled");
+                return;
+            }
+        }
         global_job_context.jobs[global_job_context.job_count] = job; //Put the new job in the next open slot (which equals the job count)
         global_job_context.job_count++; //increment the job count for the next job
 
