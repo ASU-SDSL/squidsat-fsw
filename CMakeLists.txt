@@ -74,6 +74,8 @@ add_executable(${PROJECT_NAME}
     # drivers 
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/lsm6dsrx.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/lsm303ah.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/mcp2515.c
 
     # utilities 
@@ -90,6 +92,8 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job/sensor_job.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/gse_test/gse_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/can_test_job/can_test.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_job/imu_job.c
+
 
     # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
