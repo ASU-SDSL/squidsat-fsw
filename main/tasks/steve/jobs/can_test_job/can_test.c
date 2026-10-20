@@ -1,3 +1,12 @@
+/**
+ * @file can_test.c
+ * @author Koowum Joshi
+ * @brief CAN job to put on Steve Scheduler through the GSE task
+ * 
+ * @version 1.0
+ * @date 10/19/2026
+ */
+
 #include "can_test.h"
 
 void can_test_frame(void *args){
@@ -17,6 +26,6 @@ jobs_t can_job = {
     .args = NULL,
     .func = can_test_frame,
     .name = "CAN_Task_Test",
-    .recurr_time = 1000, // reoccur ever ~1s
+    .recurr_time = 0, // reoccur never
     .execute_time = 0, // execute immediately
 };
