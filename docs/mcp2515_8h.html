@@ -122,12 +122,13 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp2515_8h.htm
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &quot;FreeRTOS.h&quot;</code><br />
 <code>#include &quot;hardware/spi.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="HardwareConfig_8h_source.html">HardwareConfig.h</a>&quot;</code><br />
 <code>#include &quot;hardware/gpio.h&quot;</code><br />
 <code>#include &quot;semphr.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for mcp2515.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="mcp2515_8h__incl.svg" width="599" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="mcp2515_8h__incl.svg" width="100%" height="437"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -143,11 +144,6 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8112c985f7444e82198d7571ce0a9160" id="r_a8112c985f7444e82198d7571ce0a9160"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a8112c985f7444e82198d7571ce0a9160">SPI_PORT</a>&#160;&#160;&#160;spi1</td></tr>
-<tr class="memitem:ade4259fa3cbb71732a4e73c18dcb9b0d" id="r_ade4259fa3cbb71732a4e73c18dcb9b0d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ade4259fa3cbb71732a4e73c18dcb9b0d">SPI_CS</a>&#160;&#160;&#160;13</td></tr>
-<tr class="memitem:a7dbebab5f7dd57885adccf6711b13592" id="r_a7dbebab5f7dd57885adccf6711b13592"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>&#160;&#160;&#160;11</td></tr>
-<tr class="memitem:ab142cc77dfa97010c9d2b616d0992b64" id="r_ab142cc77dfa97010c9d2b616d0992b64"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>&#160;&#160;&#160;12</td></tr>
-<tr class="memitem:a750ca7c9b92cfc9e57272ff3a49db48b" id="r_a750ca7c9b92cfc9e57272ff3a49db48b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a750ca7c9b92cfc9e57272ff3a49db48b">SPI_SCK</a>&#160;&#160;&#160;10</td></tr>
 <tr class="memitem:ac4ae05d621705cef0ec3ed1b8c71305c" id="r_ac4ae05d621705cef0ec3ed1b8c71305c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ac4ae05d621705cef0ec3ed1b8c71305c">CLK_SPEED</a>&#160;&#160;&#160;100000</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
@@ -177,76 +173,6 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define CLK_SPEED&#160;&#160;&#160;100000</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ade4259fa3cbb71732a4e73c18dcb9b0d" name="ade4259fa3cbb71732a4e73c18dcb9b0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade4259fa3cbb71732a4e73c18dcb9b0d">&#9670;&#160;</a></span>SPI_CS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_CS&#160;&#160;&#160;13</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab142cc77dfa97010c9d2b616d0992b64" name="ab142cc77dfa97010c9d2b616d0992b64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab142cc77dfa97010c9d2b616d0992b64">&#9670;&#160;</a></span>SPI_MISO</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_MISO&#160;&#160;&#160;12</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7dbebab5f7dd57885adccf6711b13592" name="a7dbebab5f7dd57885adccf6711b13592"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7dbebab5f7dd57885adccf6711b13592">&#9670;&#160;</a></span>SPI_MOSI</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_MOSI&#160;&#160;&#160;11</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8112c985f7444e82198d7571ce0a9160" name="a8112c985f7444e82198d7571ce0a9160"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8112c985f7444e82198d7571ce0a9160">&#9670;&#160;</a></span>SPI_PORT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_PORT&#160;&#160;&#160;spi1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a750ca7c9b92cfc9e57272ff3a49db48b" name="a750ca7c9b92cfc9e57272ff3a49db48b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a750ca7c9b92cfc9e57272ff3a49db48b">&#9670;&#160;</a></span>SPI_SCK</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_SCK&#160;&#160;&#160;10</td>
         </tr>
       </table>
 </div><div class="memdoc">

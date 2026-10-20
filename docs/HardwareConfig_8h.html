@@ -123,21 +123,27 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('HardwareConfig
 <p>Macro definition for all hardware configuration (pin and bus assignment, etc).  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;hardware/i2c.h&quot;</code><br />
+<code>#include &quot;hardware/spi.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for HardwareConfig.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="HardwareConfig_8h__incl.svg" width="150" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="HardwareConfig_8h__incl.svg" width="272" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="HardwareConfig_8h__dep__incl.svg" width="166" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="HardwareConfig_8h__dep__incl.svg" width="308" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="HardwareConfig_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a8112c985f7444e82198d7571ce0a9160" id="r_a8112c985f7444e82198d7571ce0a9160"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a8112c985f7444e82198d7571ce0a9160">SPI_PORT</a>&#160;&#160;&#160;spi1</td></tr>
+<tr class="memitem:ade4259fa3cbb71732a4e73c18dcb9b0d" id="r_ade4259fa3cbb71732a4e73c18dcb9b0d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ade4259fa3cbb71732a4e73c18dcb9b0d">SPI_CS</a>&#160;&#160;&#160;13</td></tr>
+<tr class="memitem:a7dbebab5f7dd57885adccf6711b13592" id="r_a7dbebab5f7dd57885adccf6711b13592"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>&#160;&#160;&#160;11</td></tr>
+<tr class="memitem:ab142cc77dfa97010c9d2b616d0992b64" id="r_ab142cc77dfa97010c9d2b616d0992b64"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>&#160;&#160;&#160;12</td></tr>
+<tr class="memitem:a750ca7c9b92cfc9e57272ff3a49db48b" id="r_a750ca7c9b92cfc9e57272ff3a49db48b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a750ca7c9b92cfc9e57272ff3a49db48b">SPI_SCK</a>&#160;&#160;&#160;10</td></tr>
 <tr class="memitem:a13ab5492a03325279d7be6d6fe16ee1a" id="r_a13ab5492a03325279d7be6d6fe16ee1a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a13ab5492a03325279d7be6d6fe16ee1a">SPI0_MISO_PIN</a>&#160;&#160;&#160;4</td></tr>
 <tr class="memdesc:a13ab5492a03325279d7be6d6fe16ee1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">SPI 0 Pins.  <br /></td></tr>
 <tr class="memitem:a45feff4725db81dcd8eeea28e984bf5c" id="r_a45feff4725db81dcd8eeea28e984bf5c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a45feff4725db81dcd8eeea28e984bf5c">SPI0_SCLK_PIN</a>&#160;&#160;&#160;6</td></tr>
@@ -152,8 +158,8 @@ Macros</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macro definition for all hardware configuration (pin and bus assignment, etc). </p>
-<dl class="section author"><dt>Author</dt><dd>Tyler Nielsen </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Tyler Nielsen, Koowum Joshi </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.2 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2026-06-26</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2026 </dd></dl>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
@@ -281,6 +287,76 @@ Macros</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define SPI0_SCLK_PIN&#160;&#160;&#160;6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade4259fa3cbb71732a4e73c18dcb9b0d" name="ade4259fa3cbb71732a4e73c18dcb9b0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade4259fa3cbb71732a4e73c18dcb9b0d">&#9670;&#160;</a></span>SPI_CS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SPI_CS&#160;&#160;&#160;13</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab142cc77dfa97010c9d2b616d0992b64" name="ab142cc77dfa97010c9d2b616d0992b64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab142cc77dfa97010c9d2b616d0992b64">&#9670;&#160;</a></span>SPI_MISO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SPI_MISO&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7dbebab5f7dd57885adccf6711b13592" name="a7dbebab5f7dd57885adccf6711b13592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dbebab5f7dd57885adccf6711b13592">&#9670;&#160;</a></span>SPI_MOSI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SPI_MOSI&#160;&#160;&#160;11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8112c985f7444e82198d7571ce0a9160" name="a8112c985f7444e82198d7571ce0a9160"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8112c985f7444e82198d7571ce0a9160">&#9670;&#160;</a></span>SPI_PORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SPI_PORT&#160;&#160;&#160;spi1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a750ca7c9b92cfc9e57272ff3a49db48b" name="a750ca7c9b92cfc9e57272ff3a49db48b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a750ca7c9b92cfc9e57272ff3a49db48b">&#9670;&#160;</a></span>SPI_SCK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SPI_SCK&#160;&#160;&#160;10</td>
         </tr>
       </table>
 </div><div class="memdoc">

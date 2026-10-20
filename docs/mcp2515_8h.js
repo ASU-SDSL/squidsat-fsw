@@ -2,11 +2,6 @@ var mcp2515_8h =
 [
     [ "can_message_t", "structcan__message__t.html", "structcan__message__t" ],
     [ "CLK_SPEED", "mcp2515_8h.html#ac4ae05d621705cef0ec3ed1b8c71305c", null ],
-    [ "SPI_CS", "mcp2515_8h.html#ade4259fa3cbb71732a4e73c18dcb9b0d", null ],
-    [ "SPI_MISO", "mcp2515_8h.html#ab142cc77dfa97010c9d2b616d0992b64", null ],
-    [ "SPI_MOSI", "mcp2515_8h.html#a7dbebab5f7dd57885adccf6711b13592", null ],
-    [ "SPI_PORT", "mcp2515_8h.html#a8112c985f7444e82198d7571ce0a9160", null ],
-    [ "SPI_SCK", "mcp2515_8h.html#a750ca7c9b92cfc9e57272ff3a49db48b", null ],
     [ "mcp2515_init", "mcp2515_8h.html#a7e1e7ea3bc4d57b2799e4b66cac3d0da", null ],
     [ "mcp2515_log_tx_status", "mcp2515_8h.html#a1728a7901584e76853e3b432a70a6406", null ],
     [ "mcp2515_receive", "mcp2515_8h.html#a14d2f6b25f1c08a65f2534e1022928bb", null ],

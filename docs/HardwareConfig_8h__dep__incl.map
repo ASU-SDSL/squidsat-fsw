@@ -1,7 +1,23 @@
 <map id="HardwareConfig.h" name="HardwareConfig.h">
-<area shape="rect" id="Node000001" title="Macro definition for all hardware configuration (pin and bus assignment, etc)." alt="" coords="20,5,159,31"/>
-<area shape="rect" id="Node000002" href="$i2c__util_8c.html" title="I2C Helper functions &#45; based on Coconut implementation." alt="" coords="5,79,85,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,44,55,80,50,77,73,41"/>
-<area shape="rect" id="Node000003" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="109,79,160,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,41,130,77,125,80,102,44"/>
+<area shape="rect" id="Node000001" title="Macro definition for all hardware configuration (pin and bus assignment, etc)." alt="" coords="111,5,249,31"/>
+<area shape="rect" id="Node000002" href="$i2c__util_8c.html" title="I2C Helper functions &#45; based on Coconut implementation." alt="" coords="28,79,108,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,40,88,81,85,76,149,36"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8h.html" title=" " alt="" coords="133,79,227,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,44,183,79,177,79,177,44"/>
+<area shape="rect" id="Node000011" href="$rtc_8c.html" title="Device driver for DS3231 Real Time Clock (RTC)." alt="" coords="252,79,303,104"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="208,37,263,76,260,81,205,41"/>
+<area shape="rect" id="Node000004" href="$can_8h.html" title=" " alt="" coords="102,152,159,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="166,117,141,153,136,150,162,114"/>
+<area shape="rect" id="Node000010" href="$mcp2515_8c.html" title="Driver for MCP2515 CAN Controller Implementation." alt="" coords="184,152,277,177"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="199,114,225,150,220,153,194,117"/>
+<area shape="rect" id="Node000005" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="5,225,61,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="105,188,51,227,48,223,102,183"/>
+<area shape="rect" id="Node000006" href="$can__test_8h.html" title=" " alt="" coords="86,225,175,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="133,191,133,225,128,225,128,191"/>
+<area shape="rect" id="Node000009" href="$main_8c.html" title=" " alt="" coords="200,225,267,251"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="160,183,218,223,215,227,157,187"/>
+<area shape="rect" id="Node000007" href="$can__test_8c.html" title="CAN job to put on Steve Scheduler through the GSE task." alt="" coords="39,299,127,324"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="117,264,93,300,88,297,113,261"/>
+<area shape="rect" id="Node000008" href="$gse_8c.html" title=" " alt="" coords="151,299,207,324"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="148,261,173,297,169,300,144,264"/>
 </map>

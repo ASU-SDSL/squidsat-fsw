@@ -8,7 +8,6 @@ var searchData=
   ['dlc_5',['dlc',['../structcan__message__t.html#a8166da814b3c30efb91dea22d0ce1b50',1,'can_message_t']]],
   ['dlc_5fmask_6',['DLC_MASK',['../mcp2515_8c.html#a9c429df3528dc1d87c8fed042fbf7aa4',1,'mcp2515.c']]],
   ['docs_5fconfig_2emd_7',['docs_config.md',['../docs__config_8md.html',1,'']]],
-  ['docs_5fdrivers_2emd_8',['docs_drivers.md',['../docs__drivers_8md.html',1,'']]],
-  ['docs_5fusb_2emd_9',['docs_usb.md',['../docs__usb_8md.html',1,'']]],
-  ['docs_5futils_2emd_10',['docs_utils.md',['../docs__utils_8md.html',1,'']]]
+  ['docs_5fusb_2emd_8',['docs_usb.md',['../docs__usb_8md.html',1,'']]],
+  ['docs_5futils_2emd_9',['docs_utils.md',['../docs__utils_8md.html',1,'']]]
 ];

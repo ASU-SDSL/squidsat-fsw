@@ -8,5 +8,10 @@ var HardwareConfig_8h =
     [ "RTC_I2C_BUS", "HardwareConfig_8h.html#afafc519a4749db5bbb4956388dbc5aad", null ],
     [ "SPI0_MISO_PIN", "HardwareConfig_8h.html#a13ab5492a03325279d7be6d6fe16ee1a", null ],
     [ "SPI0_MOSI_PIN", "HardwareConfig_8h.html#afcc66eefc6a5b7144f59b35fbef9b0dc", null ],
-    [ "SPI0_SCLK_PIN", "HardwareConfig_8h.html#a45feff4725db81dcd8eeea28e984bf5c", null ]
+    [ "SPI0_SCLK_PIN", "HardwareConfig_8h.html#a45feff4725db81dcd8eeea28e984bf5c", null ],
+    [ "SPI_CS", "HardwareConfig_8h.html#ade4259fa3cbb71732a4e73c18dcb9b0d", null ],
+    [ "SPI_MISO", "HardwareConfig_8h.html#ab142cc77dfa97010c9d2b616d0992b64", null ],
+    [ "SPI_MOSI", "HardwareConfig_8h.html#a7dbebab5f7dd57885adccf6711b13592", null ],
+    [ "SPI_PORT", "HardwareConfig_8h.html#a8112c985f7444e82198d7571ce0a9160", null ],
+    [ "SPI_SCK", "HardwareConfig_8h.html#a750ca7c9b92cfc9e57272ff3a49db48b", null ]
 ];

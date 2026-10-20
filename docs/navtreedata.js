@@ -52,7 +52,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "FreeRTOSConfig_8h.html",
-"log_8c.html#a3e5a9bf12cb4cc27d62b21b37366bf77",
+"index.html#autotoc_md3",
 "tusb__config_8h.html#a9b99a70dc9fc74ecc23108ab18bbebe4"
 ];
 

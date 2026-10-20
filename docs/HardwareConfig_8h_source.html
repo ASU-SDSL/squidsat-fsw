@@ -123,24 +123,33 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('HardwareConfig
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once </span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;hardware/i2c.h&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a13ab5492a03325279d7be6d6fe16ee1a">   16</a></span><span class="preprocessor">#define SPI0_MISO_PIN 4</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a45feff4725db81dcd8eeea28e984bf5c">   17</a></span><span class="preprocessor">#define SPI0_SCLK_PIN 6</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afcc66eefc6a5b7144f59b35fbef9b0dc">   18</a></span><span class="preprocessor">#define SPI0_MOSI_PIN 7</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a0a6c8b4ecca4f35aaa82d33f8a1d9742">   20</a></span><span class="preprocessor">#define I2C0_SDA_PIN 8</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a1e30c459b21b57de018d51644a767929">   21</a></span><span class="preprocessor">#define I2C0_SCL_PIN 9</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afafc519a4749db5bbb4956388dbc5aad">   24</a></span><span class="preprocessor">#define RTC_I2C_BUS i2c0</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afae7af9700135d565788857cd98e7e87">   26</a></span><span class="preprocessor">#define FS_SPI_BUS spi0</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a9a9c830826352c233602b36d8797f1c6">   27</a></span><span class="preprocessor">#define FS_CS_PIN 5</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// mram stopped working died on the breadboard when tried at 20 MHz which is </span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// less than the datasheet, but like that kind of speed isn&#39;t needed. </span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// The trade off here is a higher speed is a less stable bus but reduces the </span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// duration of transactions (critical sections) which should be better for the </span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// scheduler </span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#ae640c22027e7167c4e43b984cb234ded">   33</a></span><span class="preprocessor">#define FS_SPI_BAUDRATE 15000000 </span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;hardware/spi.h&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a8112c985f7444e82198d7571ce0a9160">   18</a></span><span class="preprocessor">#define SPI_PORT    spi1</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#ade4259fa3cbb71732a4e73c18dcb9b0d">   19</a></span><span class="preprocessor">#define SPI_CS      13 </span><span class="comment">// For the OBC PCB - 25</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a7dbebab5f7dd57885adccf6711b13592">   20</a></span><span class="preprocessor">#define SPI_MOSI    11 </span><span class="comment">// For the OBC PCB - 27</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#ab142cc77dfa97010c9d2b616d0992b64">   21</a></span><span class="preprocessor">#define SPI_MISO    12 </span><span class="comment">// For the OBC PCB - 28</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a750ca7c9b92cfc9e57272ff3a49db48b">   22</a></span><span class="preprocessor">#define SPI_SCK     10 </span><span class="comment">// For the OBC PCB - 26</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a13ab5492a03325279d7be6d6fe16ee1a">   26</a></span><span class="preprocessor">#define SPI0_MISO_PIN 4</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a45feff4725db81dcd8eeea28e984bf5c">   27</a></span><span class="preprocessor">#define SPI0_SCLK_PIN 6</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afcc66eefc6a5b7144f59b35fbef9b0dc">   28</a></span><span class="preprocessor">#define SPI0_MOSI_PIN 7</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a0a6c8b4ecca4f35aaa82d33f8a1d9742">   30</a></span><span class="preprocessor">#define I2C0_SDA_PIN 8</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a1e30c459b21b57de018d51644a767929">   31</a></span><span class="preprocessor">#define I2C0_SCL_PIN 9</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afafc519a4749db5bbb4956388dbc5aad">   34</a></span><span class="preprocessor">#define RTC_I2C_BUS i2c0</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#afae7af9700135d565788857cd98e7e87">   36</a></span><span class="preprocessor">#define FS_SPI_BUS spi0</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#a9a9c830826352c233602b36d8797f1c6">   37</a></span><span class="preprocessor">#define FS_CS_PIN 5</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// mram stopped working died on the breadboard when tried at 20 MHz which is </span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">// less than the datasheet, but like that kind of speed isn&#39;t needed. </span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">// The trade off here is a higher speed is a less stable bus but reduces the </span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">// duration of transactions (critical sections) which should be better for the </span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">// scheduler </span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="HardwareConfig_8h.html#ae640c22027e7167c4e43b984cb234ded">   43</a></span><span class="preprocessor">#define FS_SPI_BAUDRATE 15000000 </span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
