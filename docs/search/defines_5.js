@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['led_5fpin_0',['LED_PIN',['../sensor__job_8c.html#ab4553be4db9860d940f81d7447173b2f',1,'sensor_job.c']]],
-  ['log_5finfof_1',['log_infof',['../log_8h.html#ae0ffa01259b75365f8c54ac3e6bdeb49',1,'log.h']]],
-  ['logging_5fqueue_5flength_2',['LOGGING_QUEUE_LENGTH',['../log_8h.html#a7c296b0ae81a2ca1684190ede0b87f02',1,'log.h']]]
+  ['hold_5fms_0',['HOLD_MS',['../sensor__job_8c.html#a23607d96b55baed8cdb74c7c9226d188',1,'sensor_job.c']]],
+  ['hold_5fms_5fonoff_1',['HOLD_MS_onoff',['../sensor__job_8c.html#a9ba475f818a28829bfd3d75a597a5389',1,'sensor_job.c']]]
 ];

@@ -43,7 +43,7 @@ var NAVTREE =
         [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", null ]
+        [ "Macros", "globals_defs.html", "globals_defs" ]
       ] ]
     ] ]
   ] ]
@@ -52,7 +52,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "FreeRTOSConfig_8h.html",
-"lsm6dsrx_8h.html#a3873cebfd442e37bf92a442000c5f361"
+"log_8c.html#a3e5a9bf12cb4cc27d62b21b37366bf77",
+"tusb__config_8h.html#a9b99a70dc9fc74ecc23108ab18bbebe4"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

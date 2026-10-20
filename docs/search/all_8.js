@@ -10,7 +10,7 @@ var searchData=
   ['i2c_5fwrite_5fto_5fregister_7',['i2c_write_to_register',['../i2c__util_8h.html#a73f9c3581b5d48d5db9c6c445034a970',1,'i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes):&#160;i2c_util.c'],['../i2c__util_8c.html#a73f9c3581b5d48d5db9c6c445034a970',1,'i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes):&#160;i2c_util.c']]],
   ['i2cspeed_8',['I2CSpeed',['../i2c__util_8c.html#a0493314206f073a3715d6400e7164a44',1,'i2c_util.c']]],
   ['i2ctimeout_5fus_9',['I2CTimeout_us',['../i2c__util_8c.html#a1a4e84e5e2ca93867e231d03e8778d05',1,'i2c_util.c']]],
-  ['id_10',['id',['../structcan__message.html#aff3b1d4fbb73d5411e8324242aa32d9f',1,'can_message']]],
+  ['id_10',['id',['../structcan__message__t.html#ac53faf01a2ca89a8860703d13619f718',1,'can_message_t']]],
   ['imu_5faccel_11',['imu_accel',['../imu__job_8c.html#a128eeea15cf64908b380916d21cad08d',1,'imu_accel:&#160;imu_job.c'],['../imu__job_8h.html#a128eeea15cf64908b380916d21cad08d',1,'imu_accel:&#160;imu_job.c']]],
   ['imu_5fget_5faccel_12',['imu_get_accel',['../imu__job_8c.html#a9de611d1332236ef2858125cff0b73e4',1,'imu_get_accel(void *args):&#160;imu_job.c'],['../imu__job_8h.html#a9de611d1332236ef2858125cff0b73e4',1,'imu_get_accel(void *args):&#160;imu_job.c']]],
   ['imu_5fjob_2ec_13',['imu_job.c',['../imu__job_8c.html',1,'']]],

@@ -150,6 +150,10 @@ Macros</h2></td></tr>
 <tr class="memitem:a7c296b0ae81a2ca1684190ede0b87f02" id="r_a7c296b0ae81a2ca1684190ede0b87f02"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7c296b0ae81a2ca1684190ede0b87f02">LOGGING_QUEUE_LENGTH</a>&#160;&#160;&#160;16</td></tr>
 <tr class="memitem:a879456c3b8e2853f7044d764e9c180d4" id="r_a879456c3b8e2853f7044d764e9c180d4"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a879456c3b8e2853f7044d764e9c180d4">MAX_PACKET_SIZE</a>&#160;&#160;&#160;256</td></tr>
 <tr class="memitem:ae0ffa01259b75365f8c54ac3e6bdeb49" id="r_ae0ffa01259b75365f8c54ac3e6bdeb49"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ae0ffa01259b75365f8c54ac3e6bdeb49">log_infof</a>(fmt, ...)</td></tr>
+<tr class="memdesc:ae0ffa01259b75365f8c54ac3e6bdeb49"><td class="mdescLeft">&#160;</td><td class="mdescRight">These are similar to the log levels described above, except that these are for brief messages, not intended to be stored on the filesystem for downlinking. Intended functionality is to be utilized for debugging mainly for quick testing.  <br /></td></tr>
+<tr class="memitem:af924716c0646e10525bc3dcfb182cdd5" id="r_af924716c0646e10525bc3dcfb182cdd5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af924716c0646e10525bc3dcfb182cdd5">log_errorf</a>(fmt, ...)</td></tr>
+<tr class="memitem:ab84fd5e4003c8efea1c78c0b01a4841c" id="r_ab84fd5e4003c8efea1c78c0b01a4841c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ab84fd5e4003c8efea1c78c0b01a4841c">log_warningf</a>(fmt, ...)</td></tr>
+<tr class="memitem:aa1bea0a6ef195ecf583d862afe9cfb61" id="r_aa1bea0a6ef195ecf583d862afe9cfb61"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aa1bea0a6ef195ecf583d862afe9cfb61">log_mission_criticalf</a>(fmt, ...)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -169,6 +173,28 @@ Functions</h2></td></tr>
 <tr class="memitem:a3e5a9bf12cb4cc27d62b21b37366bf77" id="r_a3e5a9bf12cb4cc27d62b21b37366bf77"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3e5a9bf12cb4cc27d62b21b37366bf77">log_mission_critical</a> (const char *msg)</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="af924716c0646e10525bc3dcfb182cdd5" name="af924716c0646e10525bc3dcfb182cdd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af924716c0646e10525bc3dcfb182cdd5">&#9670;&#160;</a></span>log_errorf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define log_errorf</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{ printf(<span class="stringliteral">&quot;[ERROR] [%s: %d]&quot;</span> fmt <span class="stringliteral">&quot;\n&quot;</span>, __FILE__, __LINE__, ##__VA_ARGS__); }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ae0ffa01259b75365f8c54ac3e6bdeb49" name="ae0ffa01259b75365f8c54ac3e6bdeb49"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae0ffa01259b75365f8c54ac3e6bdeb49">&#9670;&#160;</a></span>log_infof</h2>
 
@@ -187,8 +213,53 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ <span class="keywordtype">char</span> buf[256]; snprintf(buf, <span class="keyword">sizeof</span>(buf), fmt, __VA_ARGS__); <a class="code hl_function" href="#a00ab4d4c0b970dca7ecbce08c912d828">log_info</a>(buf); }</div>
-<div class="ttc" id="alog_8h_html_a00ab4d4c0b970dca7ecbce08c912d828"><div class="ttname"><a href="#a00ab4d4c0b970dca7ecbce08c912d828">log_info</a></div><div class="ttdeci">void log_info(const char *msg)</div><div class="ttdef"><b>Definition</b> log.c:84</div></div>
+<b>Value:</b><div class="fragment"><div class="line">{ printf(<span class="stringliteral">&quot;[INFO] [%s:%d] &quot;</span> fmt <span class="stringliteral">&quot;\n&quot;</span>, __FILE__, __LINE__, ##__VA_ARGS__); }</div>
+</div><!-- fragment -->
+<p>These are similar to the log levels described above, except that these are for brief messages, not intended to be stored on the filesystem for downlinking. Intended functionality is to be utilized for debugging mainly for quick testing. </p>
+
+</div>
+</div>
+<a id="aa1bea0a6ef195ecf583d862afe9cfb61" name="aa1bea0a6ef195ecf583d862afe9cfb61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1bea0a6ef195ecf583d862afe9cfb61">&#9670;&#160;</a></span>log_mission_criticalf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define log_mission_criticalf</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{ printf(<span class="stringliteral">&quot;[MISSION_CRIT] [%s: %d]&quot;</span> fmt <span class="stringliteral">&quot;\n&quot;</span>, __FILE__, __LINE__, ##__VA_ARGS__); }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ab84fd5e4003c8efea1c78c0b01a4841c" name="ab84fd5e4003c8efea1c78c0b01a4841c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab84fd5e4003c8efea1c78c0b01a4841c">&#9670;&#160;</a></span>log_warningf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define log_warningf</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{ printf(<span class="stringliteral">&quot;[WARNING] [%s: %d]&quot;</span> fmt <span class="stringliteral">&quot;\n&quot;</span>, __FILE__, __LINE__, ##__VA_ARGS__); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -300,7 +371,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>-&mdash; Logging Functions -&mdash; -&mdash; Initialization -&mdash; This is called at the beginning of <a class="el" href="main_8c.html">main.c</a>. It is used to init all the mutex(s) and queue(s) that are necessary for the logging functionality to work. </p>
+<p>-&mdash; Logging Functions -&mdash; -&mdash; Initialization -&mdash; Is called at the beginning of <a class="el" href="main_8c.html">main.c</a>. It is used to init all the mutex(s) and queue(s) that are necessary for the logging functionality to work. </p>
 
 </div>
 </div>

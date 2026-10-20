@@ -119,18 +119,71 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('can__test_8c.h
   <div class="headertitle"><div class="title">can_test.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &quot;FreeRTOS.h&quot;</code><br />
-<code>#include &quot;task.h&quot;</code><br />
-<code>#include &quot;pico/stdlib.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="log_8h_source.html">log.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="mcp2515_8h_source.html">mcp2515.h</a>&quot;</code><br />
+
+<p>CAN job to put on Steve Scheduler through the GSE task.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="can__test_8h_source.html">can_test.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for can_test.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="can__test_8c__incl.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="can__test_8c__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
-</div></div><!-- contents -->
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a3cc9247230bbe7fa162bbd1bdd63e6ba" id="r_a3cc9247230bbe7fa162bbd1bdd63e6ba"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3cc9247230bbe7fa162bbd1bdd63e6ba">can_test_frame</a> (void *args)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a6c1e963fabb35b90ae4d4c009c8a09ed" id="r_a6c1e963fabb35b90ae4d4c009c8a09ed"><td class="memItemLeft"><a class="el" href="structjobs__t.html">jobs_t</a>&#160;</td><td class="memItemRight"><a class="el" href="#a6c1e963fabb35b90ae4d4c009c8a09ed">can_job</a></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>CAN job to put on Steve Scheduler through the GSE task. </p>
+<dl class="section author"><dt>Author</dt><dd>Koowum Joshi </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/19/2026 </dd></dl>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a3cc9247230bbe7fa162bbd1bdd63e6ba" name="a3cc9247230bbe7fa162bbd1bdd63e6ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cc9247230bbe7fa162bbd1bdd63e6ba">&#9670;&#160;</a></span>can_test_frame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void can_test_frame </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>args</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="a6c1e963fabb35b90ae4d4c009c8a09ed" name="a6c1e963fabb35b90ae4d4c009c8a09ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c1e963fabb35b90ae4d4c009c8a09ed">&#9670;&#160;</a></span>can_job</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structjobs__t.html">jobs_t</a> can_job</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">               = {</div>
+<div class="line">    .args = NULL,</div>
+<div class="line">    .func = <a class="code hl_function" href="#a3cc9247230bbe7fa162bbd1bdd63e6ba">can_test_frame</a>,</div>
+<div class="line">    .name = <span class="stringliteral">&quot;CAN_Task_Test&quot;</span>,</div>
+<div class="line">    .recurr_time = 0, </div>
+<div class="line">    .execute_time = 0, </div>
+<div class="line">}</div>
+<div class="ttc" id="acan__test_8c_html_a3cc9247230bbe7fa162bbd1bdd63e6ba"><div class="ttname"><a href="#a3cc9247230bbe7fa162bbd1bdd63e6ba">can_test_frame</a></div><div class="ttdeci">void can_test_frame(void *args)</div><div class="ttdef"><b>Definition</b> can_test.c:12</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
@@ -143,7 +196,7 @@ Include dependency graph for can_test.c:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_5c982d53a68cdbcd421152b4020263a9.html">main</a></li><li class="navelem"><a href="dir_76dd8867a16d204aa2db31affc56d971.html">tasks</a></li><li class="navelem"><a href="dir_02827ccc7b72f3bad8bf1b1b61599fd2.html">can</a></li><li class="navelem"><a href="can__test_8c.html">can_test.c</a></li>
+    <li class="navelem"><a href="dir_5c982d53a68cdbcd421152b4020263a9.html">main</a></li><li class="navelem"><a href="dir_76dd8867a16d204aa2db31affc56d971.html">tasks</a></li><li class="navelem"><a href="dir_43eaeccdd6b29c571d9022b0dcb8cd4e.html">steve</a></li><li class="navelem"><a href="dir_0b0cd054621bf98679e798cf173a51bc.html">jobs</a></li><li class="navelem"><a href="dir_2fb7388af3eb486769591416d900e3e2.html">can_test_job</a></li><li class="navelem"><a href="can__test_8c.html">can_test.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

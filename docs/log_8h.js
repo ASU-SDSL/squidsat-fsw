@@ -1,7 +1,10 @@
 var log_8h =
 [
     [ "LogEntry", "structLogEntry.html", "structLogEntry" ],
+    [ "log_errorf", "log_8h.html#af924716c0646e10525bc3dcfb182cdd5", null ],
     [ "log_infof", "log_8h.html#ae0ffa01259b75365f8c54ac3e6bdeb49", null ],
+    [ "log_mission_criticalf", "log_8h.html#aa1bea0a6ef195ecf583d862afe9cfb61", null ],
+    [ "log_warningf", "log_8h.html#ab84fd5e4003c8efea1c78c0b01a4841c", null ],
     [ "LOGGING_QUEUE_LENGTH", "log_8h.html#a7c296b0ae81a2ca1684190ede0b87f02", null ],
     [ "MAX_PACKET_SIZE", "log_8h.html#a879456c3b8e2853f7044d764e9c180d4", null ],
     [ "LogLevel", "log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9", [

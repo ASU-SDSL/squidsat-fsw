@@ -1,5 +1,5 @@
 <map id="log.c" name="log.c">
-<area shape="rect" id="Node000001" title=" " alt="" coords="626,5,679,31"/>
+<area shape="rect" id="Node000001" title="Logging implemented on the pico with Dual Coring." alt="" coords="626,5,679,31"/>
 <area shape="rect" id="Node000002" href="$log_8h.html" title=" " alt="" coords="392,79,447,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="627,30,461,80,459,75,625,25"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,225,76,251"/>

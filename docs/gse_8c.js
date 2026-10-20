@@ -6,6 +6,9 @@ var gse_8c =
       [ "CMD_PULLLOG", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153af0877299a3e9eb4089da7a910819db30", null ],
       [ "CMD_STEVE_USB", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153afa7dda0af8e0570a8314ca4a8a9837d8", null ],
       [ "CMD_REMOVE_STEVE", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153a5e96b010f9c96465799182a0fb3cddab", null ],
+      [ "CMD_SEND_CAN_FRAME", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ae7433b728eb514b9b3b74b6c4ec1ed5c", null ],
+      [ "CMD_DELETE_CAN_FRAME", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ae4b9ce7ba529b0477f485e4e6980bd1b", null ],
+      [ "CMD_CAN_STATE", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ad47c4ffa04039ec3bc089805f07e46d8", null ],
       [ "CMD_UNKNOWN", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7", null ]
     ] ],
     [ "debug_mode_init", "gse_8c.html#a7774e5422bf13ed3a8e5248c281e194e", null ],

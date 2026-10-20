@@ -124,10 +124,11 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gse_8c.html','
 <code>#include &quot;<a class="el" href="steve_8h_source.html">steve.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="usb__serial_8h_source.html">usb_serial.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gse__test_8h_source.html">steve/jobs/gse_test/gse_test.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="can__test_8h_source.html">steve/jobs/can_test_job/can_test.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for gse.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="gse_8c__incl.svg" width="100%" height="558"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="gse_8c__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -139,7 +140,11 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a2afce0a47a93eee73a314d53e4890153afa7dda0af8e0570a8314ca4a8a9837d8">CMD_STEVE_USB</a>
 , <br />
 &#160;&#160;<a class="el" href="#a2afce0a47a93eee73a314d53e4890153a5e96b010f9c96465799182a0fb3cddab">CMD_REMOVE_STEVE</a>
-, <a class="el" href="#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7">CMD_UNKNOWN</a>
+, <a class="el" href="#a2afce0a47a93eee73a314d53e4890153ae7433b728eb514b9b3b74b6c4ec1ed5c">CMD_SEND_CAN_FRAME</a>
+, <a class="el" href="#a2afce0a47a93eee73a314d53e4890153ae4b9ce7ba529b0477f485e4e6980bd1b">CMD_DELETE_CAN_FRAME</a>
+, <a class="el" href="#a2afce0a47a93eee73a314d53e4890153ad47c4ffa04039ec3bc089805f07e46d8">CMD_CAN_STATE</a>
+, <br />
+&#160;&#160;<a class="el" href="#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7">CMD_UNKNOWN</a>
 <br />
  }</td></tr>
 </table><table class="memberdecls">
@@ -168,6 +173,9 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153af0877299a3e9eb4089da7a910819db30" name="a2afce0a47a93eee73a314d53e4890153af0877299a3e9eb4089da7a910819db30"></a>CMD_PULLLOG&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153afa7dda0af8e0570a8314ca4a8a9837d8" name="a2afce0a47a93eee73a314d53e4890153afa7dda0af8e0570a8314ca4a8a9837d8"></a>CMD_STEVE_USB&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153a5e96b010f9c96465799182a0fb3cddab" name="a2afce0a47a93eee73a314d53e4890153a5e96b010f9c96465799182a0fb3cddab"></a>CMD_REMOVE_STEVE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153ae7433b728eb514b9b3b74b6c4ec1ed5c" name="a2afce0a47a93eee73a314d53e4890153ae7433b728eb514b9b3b74b6c4ec1ed5c"></a>CMD_SEND_CAN_FRAME&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153ae4b9ce7ba529b0477f485e4e6980bd1b" name="a2afce0a47a93eee73a314d53e4890153ae4b9ce7ba529b0477f485e4e6980bd1b"></a>CMD_DELETE_CAN_FRAME&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153ad47c4ffa04039ec3bc089805f07e46d8" name="a2afce0a47a93eee73a314d53e4890153ad47c4ffa04039ec3bc089805f07e46d8"></a>CMD_CAN_STATE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7" name="a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7"></a>CMD_UNKNOWN&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
