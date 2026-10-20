@@ -14,7 +14,6 @@
 #include "mcp2515.h"
 #include "log.h"
 
-#include "hardware/spi.h"
 #include "hardware/gpio.h"
 
 #include "FreeRTOS.h"
@@ -144,7 +143,7 @@ static void mcp_reset(void){
     uint8_t cmd = MCP2515_RESET;
     if(xSemaphoreTake(spi_transmit_semphr, portMAX_DELAY)){
         cs_pull_down();
-        spi_write_blocking(spi1, &cmd, 1);
+        spi_write_blocking(SPI_PORT, &cmd, 1);
         cs_pull_up();
 
         vTaskDelay(pdMS_TO_TICKS(10));
@@ -164,8 +163,8 @@ uint8_t mcp_read_reg(uint8_t addr){
     uint8_t val = 0;
     if(xSemaphoreTake(spi_transmit_semphr, portMAX_DELAY)){
         cs_pull_down();
-        spi_write_blocking(spi1, rx_buf_packet, 2);
-        spi_read_blocking(spi1, 0x00, &val, 1);
+        spi_write_blocking(SPI_PORT, rx_buf_packet, 2);
+        spi_read_blocking(SPI_PORT, 0x00, &val, 1);
         cs_pull_up();
 
         xSemaphoreGive(spi_transmit_semphr);
@@ -240,7 +239,7 @@ void mcp2515_log_tx_status(void){
  */
 
 void mcp2515_spi_init(void){
-    spi_init(spi1, CLK_SPEED); // MCP --> Pico communication speed over SPI, NOT CAN speed
+    spi_init(SPI_PORT, CLK_SPEED); // MCP --> Pico communication speed over SPI, NOT CAN speed
     spi_set_format(SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
     gpio_set_function(SPI_SCK, GPIO_FUNC_SPI);
     gpio_set_function(SPI_MISO, GPIO_FUNC_SPI);
@@ -269,7 +268,7 @@ int mcp2515_init(void){
     uint8_t ctrl = mcp_read_quiet(CANCTRL), stat = mcp_read_quiet(CANSTAT);
     log_infof("MCP after reset: CANCTRL=0x%02X (exp 0x87) CANSTAT=0x%02X (exp 0x80)", ctrl, stat);
     if(ctrl != 0x87 || (stat & MODE_MASK) != 0x80){
-        log_error("MCP2515 not answering on SPI: check wiring, RST tied high, 3V/GND");
+        // log_error("MCP2515 not answering on SPI: check wiring, RST tied high, 3V/GND");
         return 0;
     }
 
