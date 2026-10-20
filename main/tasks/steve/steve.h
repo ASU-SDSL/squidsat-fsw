@@ -8,7 +8,7 @@
 
 typedef void (*job_function)(void *args);
 
-typedef struct {
+typedef struct { 
     TickType_t recurr_time; //tracks if the job is recurring or not
     TickType_t execute_time; //the time at which the job should be executed
     char name[20]; //name of the job
