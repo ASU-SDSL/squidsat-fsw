@@ -11,6 +11,7 @@ if [ -f "$PICO_FILE" ]; then
     if picotool load "$PICO_FILE" -f --verify; then
         echo "Deployment successful and verified for RP2040!"
         picotool reboot
+        picotool info -a
     else
         echo "Deployment failed or verification mismatch!"
         exit 1
@@ -22,6 +23,7 @@ elif [ -f "$PICO2_FILE" ]; then
     if picotool load "$PICO2_FILE" -f --verify; then
         echo "Deployment successful and verified for RP2350!"
         picotool reboot
+        picotool info -a
     else
         echo "Deployment failed or verification mismatch!"
         exit 1

@@ -11,8 +11,6 @@
 #include <semphr.h>
 #include "gse.h"
 
-
-
 /** ---- Global Variables ---- */
 #define LOGGING_QUEUE_LENGTH    16
 #define MAX_PACKET_SIZE         256 // bytes
@@ -48,7 +46,7 @@ typedef struct {
 
 
 /** ---- Initialization ----
-    This is called at the beginning of main.c. It is used to init all the mutex(s)
+    Is called at the beginning of main.c. It is used to init all the mutex(s)
     and queue(s) that are necessary for the logging functionality to work.
 */
 void log_init                   (void);
@@ -97,8 +95,15 @@ void log_error                  (const char* msg);
 void log_warning                (const char* msg);
 void log_mission_critical       (const char* msg);
 
-// temp
-#define log_infof(fmt, ...) { char buf[256]; snprintf(buf, sizeof(buf), fmt, __VA_ARGS__); log_info(buf); }
-
+/**
+ * @brief These are similar to the log levels described above, except that these are for
+ *        brief messages, not intended to be stored on the filesystem for downlinking.
+ *        Intended functionality is to be utilized for debugging mainly for quick testing.
+ * 
+ */
+#define log_infof(fmt, ...)                 { printf("[INFO] [%s:%d] " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); }
+#define log_errorf(fmt, ...)                { printf("[ERROR] [%s: %d]" fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); }
+#define log_warningf(fmt, ...)              { printf("[WARNING] [%s: %d]" fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); }
+#define log_mission_criticalf(fmt, ...)     { printf("[MISSION_CRIT] [%s: %d]" fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); }
 
 #endif // LOG_H

@@ -17,6 +17,7 @@
 #include "i2c_util.h"
 #include "lsm6dsrx.h"
 #include "log.h"
+#include "can.h"
 
 #include "tusb_config.h"
 #include "tusb.h"
@@ -50,9 +51,11 @@ int main()
 {
     // __asm volatile ("nop"); // for debugger if desired - not used by default
     // stdio_init_all();
+
     usb_serial_init(); 
     gse_init();
-    i2c_util_init(); 
+    i2c_util_init();
+    can_init();
 
     // uint8_t ts_res = timing_init(); 
 
@@ -80,7 +83,10 @@ int main()
 
     ok = xTaskCreateAffinitySet(log_task, "LOGGING", 2048, NULL, tskIDLE_PRIORITY, (1 << 1), NULL);
     configASSERT(ok == pdPASS);
-    
+
+    ok = xTaskCreate(can_task, "CAN", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    configASSERT(ok == pdPASS);
+
     vTaskStartScheduler();
 
     while (1) {}
