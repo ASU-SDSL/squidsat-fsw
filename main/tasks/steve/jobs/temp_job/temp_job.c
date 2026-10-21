@@ -1,19 +1,20 @@
-
-// Get temperature from onboard temp sensor every 1s. Die is on adc input sensor
-// 4 for RP2350A. 
-
 #include "pico/stdlib.h"
 #include "temp_job.h"
 #include "FreeRTOS.h"
 #include "log.h"
 #include "task.h"
 #include "hardware/adc.h"
+#include "hardware/watchdog.h"
 
 /**
  * @authors: Brett Schwartz
  * @breif: Onboard Temperature Job for Steve Scheduler
  * @version: 1.0
  * @date: 2026-10-13
+ * 
+ * Gathers onboard temperature in celsius from ADC input sensor once per second,
+ * and triggers shutdown once temperature reaches critical levels. 
+ * 
  */
 
 #define TEMP_SENSOR_ADC_INPUT 4
@@ -43,20 +44,34 @@ void adc_setup(void){
  * @breif: Function to recieve and calculate onboard temp.
  * 
  * This function increments its run count as it is recurring,
- * reselects the temp adc input incase another job changed it,
- * reads the raw input from adc, converts to volts and then to
- * celsius, and logs the output.
+ * reselects the ADC input incase another job changed it,
+ * reads the raw input from ADC, converts to volts and then to
+ * celsius, and logs the temperature as well as triggering a 
+ * pico reset if the temperature reaches critical levels.
  * 
  * @param args Any extra arguments passed through and unused.
  */
 void read_temp_job_recurring(void *args){
     (void)args;
     run_count++;
+
     adc_select_input(TEMP_SENSOR_ADC_INPUT);
     raw_value = adc_read();
+    
     volts = raw_value * (3.3f / (1 << 12));
     temp = 27.0 - (volts - 0.706) / 0.001721;
-    log_infof("Onboard temp: %f", temp);
+    
+    if (temp <= 60 && temp >= 10) {
+        log_infof("Temperature within operational range. Onboard temp: %f", temp);
+    }
+    else if (temp <= 85 && temp >= 20) {
+        log_infof("(Warning) Temperature nearing critical levels. Onboard temp: %f", temp);
+    }    
+    else {
+        log_infof("Temperature exceeding critical levels, shutting down. Onboard temp: %f", temp);
+        watchdog_reboot(0,0,0);
+    }
+
 };
 
 /**

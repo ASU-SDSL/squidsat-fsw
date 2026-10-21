@@ -107,6 +107,8 @@ Commands end with Enter (`\n` or `\r`), and matching is exact and case-sensitive
 | `pull_log` | Recognized by the parser but **not implemented** (falls through to `default`) |
 | `send_steve` | Adds the `test_steve` job to STEVE (logs a message every 1000 ticks) |
 | `remove_steve_job` | Removes the `test_steve` job from STEVE |
+| `temp` | Adds `read_temp_recurring` job to STEVE (logs onboard temp per second) |
+| `remove_temp` | Removes `read_temp_recurring` job from STEVE |
 
 Unknown commands are silently ignored.
 
