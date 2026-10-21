@@ -61,10 +61,10 @@ void read_temp_job_recurring(void *args){
     volts = raw_value * (3.3f / (1 << 12));
     temp = 27.0 - (volts - 0.706) / 0.001721;
     
-    if (temp <= 60 && temp >= 10) {
+    if (temp < 60 && temp > -10) {
         log_infof("Temperature within operational range. Onboard temp: %f", temp);
     }
-    else if (temp <= 85 && temp >= 20) {
+    else if (temp < 85 && temp > -20) {
         log_infof("(Warning) Temperature nearing critical levels. Onboard temp: %f", temp);
     }    
     else {
