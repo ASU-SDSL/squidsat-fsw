@@ -68,8 +68,9 @@ void read_temp_job_recurring(void *args){
         log_infof("(Warning) Temperature nearing critical levels. Onboard temp: %f", temp);
     }    
     else {
-        log_infof("Temperature exceeding critical levels, shutting down. Onboard temp: %f", temp);
+        log_infof("Temperature exceeding critical levels, shutting down and sleeping for 10 seconds. Onboard temp: %f", temp);
         watchdog_reboot(0,0,0);
+        sleep_ms(10000);
     }
 
 };
