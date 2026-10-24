@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['hold_5fms_0',['HOLD_MS',['../sensor__job_8c.html#a23607d96b55baed8cdb74c7c9226d188',1,'sensor_job.c']]],
-  ['hold_5fms_5fonoff_1',['HOLD_MS_onoff',['../sensor__job_8c.html#a9ba475f818a28829bfd3d75a597a5389',1,'sensor_job.c']]]
+  ['gse_5fbuffer_5fsize_0',['GSE_BUFFER_SIZE',['../gse_8h.html#aa5945cfb199b5f2c48851c6e64933963',1,'gse.h']]],
+  ['gse_5ftask_5fdelay_5fms_1',['GSE_TASK_DELAY_MS',['../gse_8h.html#a2cd9d17c8394070fc45f0a494002cf6f',1,'gse.h']]],
+  ['gse_5ftask_5fpriority_2',['GSE_TASK_PRIORITY',['../gse_8h.html#ab0251e933dd10a008cc7130ee1f971a3',1,'gse.h']]],
+  ['gse_5ftask_5fstack_5fsize_3',['GSE_TASK_STACK_SIZE',['../gse_8h.html#a7ebacbb7b9afac0ceeb04d1c5647037a',1,'gse.h']]],
+  ['gyro_5flsb_4',['GYRO_LSB',['../lsm6dsrx_8c.html#aafe4f845cce9572f0c76b9cbcf8d788b',1,'lsm6dsrx.c']]]
 ];
