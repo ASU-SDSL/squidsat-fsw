@@ -9,12 +9,12 @@
 #include "lsm303ah.h"
 
 // I2C Address
-static const uint8_t LSM3_ADDR = 0x1E; // PLACEHOLDER
+#define LSM3_ADDR 0x1E // PLACEHOLDER
 
 // Sensor's Registers
-static const uint8_t REG_M_ODR = 0x60;
-static const uint8_t REG_M_OFFSET = 0x61;   // Removes internal data bias from manufacturing process variance
-static const uint8_t REG_M_X_L = 0x68;      // Magnetometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x6D
+#define REG_M_ODR 0x60
+#define REG_M_OFFSET 0x61   // Removes internal data bias from manufacturing process variance
+#define REG_M_X_L 0x68      // Magnetometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x6D
 
 // Commands (Writing to registers)
 uint8_t CMD_M_ODR = 0x08;           // Set to 50Hz
