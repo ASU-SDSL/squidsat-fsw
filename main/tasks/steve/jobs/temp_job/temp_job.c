@@ -2,11 +2,12 @@
 #include "temp_job.h"
 #include "FreeRTOS.h"
 #include "log.h"
-#include "task.h"
+#include "steve_time.h"
 #include "hardware/adc.h"
 #include "hardware/watchdog.h"
 
 /**
+ * @file temp_job.c
  * @authors: Brett Schwartz
  * @breif: Onboard Temperature Job for Steve Scheduler
  * @version: 1.0
@@ -18,13 +19,9 @@
  */
 
 #define TEMP_SENSOR_ADC_INPUT 4
-#define INTERVAL_MS 1000
 
 static bool temp_sensor_state = false;
 static uint32_t run_count = 0;
-uint16_t raw_value = 0;
-float volts = 0;
-float temp = 0;
 
 /**
  * @breif: Function to initilize ADC temperature sensor
@@ -52,6 +49,10 @@ void adc_setup(void){
  * @param args Any extra arguments passed through and unused.
  */
 void read_temp_job_recurring(void *args){
+    uint16_t raw_value = 0;
+    float volts = 0;
+    float temp = 0;
+
     (void)args;
     run_count++;
 
@@ -88,7 +89,7 @@ void read_temp_job_recurring(void *args){
  */
 jobs_t read_temp_recurring = {
     .func = read_temp_job_recurring,
-    .recurr_time = pdMS_TO_TICKS(INTERVAL_MS),
+    .recurr_time = seconds_to_ticks(1),
     .execute_time = 0,
     .name = "Temp per sec",
     .args = NULL,
