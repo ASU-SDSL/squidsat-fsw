@@ -1,3 +1,12 @@
+/**
+ * @file log.c
+ * @author Koowum Joshi
+ * @brief Logging implemented on the pico with Dual Coring
+ * @version 1.1
+ * 
+ * @date 10/19/2026
+ */
+
 #include "log.h"
 #include "FreeRTOS.h"
 #include "semphr.h"

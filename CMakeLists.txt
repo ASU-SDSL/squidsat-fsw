@@ -74,6 +74,8 @@ add_executable(${PROJECT_NAME}
     # drivers 
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/i2c_util.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/rtc.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/lsm6dsrx.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/lsm303ah.c
     ${CMAKE_CURRENT_LIST_DIR}/main/drivers/src/mcp2515.c
 
     # utilities 
@@ -84,9 +86,14 @@ add_executable(${PROJECT_NAME}
     # tasks 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/steve.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can/can.c
+    
+    # jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job/sensor_job.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/temp_job/temp_job.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/gse_test/gse_test.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/can_test_job/can_test.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_job/imu_job.c
 
 
     # usb 
@@ -107,7 +114,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/main/tasks/usb_serial
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs
-
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can
 )
 
 # add FatFs library 
@@ -130,6 +137,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_spi
     hardware_adc
 
+    
     FatFs
 )
 

@@ -1,8 +1,8 @@
 /**
  * @file HardwareConfig.h
- * @author Tyler Nielsen
+ * @author Tyler Nielsen, Koowum Joshi
  * @brief Macro definition for all hardware configuration (pin and bus assignment, etc)
- * @version 0.1
+ * @version 0.2
  * @date 2026-06-26
  * 
  * @copyright Copyright (c) 2026
@@ -11,6 +11,16 @@
 #pragma once 
 
 #include "hardware/i2c.h"
+#include "hardware/spi.h"
+
+
+//// SPI 1 Pins - Used for Can Communication
+#define SPI_PORT    spi1
+#define SPI_CS      13 // For the OBC PCB - 25
+#define SPI_MOSI    11 // For the OBC PCB - 27
+#define SPI_MISO    12 // For the OBC PCB - 28
+#define SPI_SCK     10 // For the OBC PCB - 26
+
 
 /// SPI 0 Pins 
 #define SPI0_MISO_PIN 4
