@@ -94,3 +94,49 @@ else
     echo "Aborting..."
     exit 1
 fi
+
+# ------ Checking Flash Memory ------
+
+echo "Checking remaining flash memory."
+if [ "$PICO_VERSION" == "pico" ]; then
+    echo "Checking for RP2040..."
+
+    TOTAL_FLASH=2097152;
+    ELF_FILE="${build_path}/freertos_rp2040.elf"
+    if [ ! -f "$ELF_FILE" ]; then
+        echo "Error: ELF File not found at $ELF_FILE"
+    fi
+    
+    read -r text data <<< $(arm-none-eabi-size "$ELF_FILE" | awk 'NR==2 {print $1, $2}')
+    USED_FLASH=$((text + data))
+    REMAINING_FLASH=$((TOTAL_FLASH-USED_FLASH))
+    PERC_USED=$(echo "scale=2; ($USED_FLASH / $TOTAL_FLASH) * 100" | bc)
+
+    echo "Total Flash available: $TOTAL_FLASH bytes (2.00mb)"
+    echo "Used Flash space: $USED_FLASH bytes ($((USED_FLASH / 1024)) KB)"
+    echo "Remaining Flash space: $REMAINING_FLASH bytes ($((REMAINING_FLASH / 1024)) KB)"
+    echo "Percentage used: $PERC_USED%"
+
+elif [ "$PICO_VERSION" == "pico2" ]; then
+    echo "Checking for RP2350..."
+    
+    TOTAL_FLASH=4194304;
+    ELF_FILE="${build_path}/freertos_rp2350.elf"
+    if [ ! -f "$ELF_FILE" ]; then
+        echo "Error: ELF File not found at $ELF_FILE"
+    fi
+    
+    read -r text data <<< $(arm-none-eabi-size "$ELF_FILE" | awk 'NR==2 {print $1, $2}')
+    USED_FLASH=$((text + data))
+    REMAINING_FLASH=$((TOTAL_FLASH-USED_FLASH))
+    PERC_USED=$(echo "scale=2; ($USED_FLASH / $TOTAL_FLASH) * 100" | bc)
+
+    echo "Total Flash available: $TOTAL_FLASH bytes (4.00mb)"
+    echo "Used Flash space: $USED_FLASH bytes ($((USED_FLASH / 1024)) KB)"
+    echo "Remaining Flash space: $REMAINING_FLASH bytes ($((REMAINING_FLASH / 1024)) KB)"
+    echo "Percentage used: $PERC_USED"
+else
+    echo "Unknown microcontroller"
+    echo "Aborting..."
+    exit 1
+fi
