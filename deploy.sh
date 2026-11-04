@@ -2,6 +2,21 @@
 PICO_FILE="build/freertos_rp2040.uf2"
 PICO2_FILE="build/freertos_rp2350.uf2"
 
+
+# ------ Flash Storage Usage Function ------
+
+print_flash_usage() {
+    local info start end used
+    info=$(picotool info "$1" 2>/dev/null) || { echo "Couldn't read binary info from $1"; return; }
+    start=$(awk '/binary start:/ {print $3; exit}' <<< "$info")
+    end=$(awk '/binary end:/ {print $3; exit}' <<< "$info")
+    if [ -z "$start" ] || [ -z "$end" ]; then
+        echo "No binary start/end in $1"; return
+    fi
+    used=$(( end - start ))
+    awk -v u="$used" 'BEGIN { printf "Program size: %d bytes (%.1f KB)\n", u, u/1024 }'
+}
+
 # ------ Reboot Pico into BOOTSEL ------
 picotool reboot -f -u 2>/dev/null
 sleep 3
@@ -10,8 +25,8 @@ sleep 3
 if [ -f "$PICO_FILE" ]; then
     if picotool load "$PICO_FILE" -f --verify; then
         echo "Deployment successful and verified for RP2040!"
+        print_flash_usage "$PICO_FILE"
         picotool reboot
-        picotool info -a
     else
         echo "Deployment failed or verification mismatch!"
         exit 1
@@ -22,8 +37,8 @@ if [ -f "$PICO_FILE" ]; then
 elif [ -f "$PICO2_FILE" ]; then
     if picotool load "$PICO2_FILE" -f --verify; then
         echo "Deployment successful and verified for RP2350!"
+        print_flash_usage "$PICO2_FILE"
         picotool reboot
-        picotool info -a
     else
         echo "Deployment failed or verification mismatch!"
         exit 1

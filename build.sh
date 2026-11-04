@@ -94,3 +94,25 @@ else
     echo "Aborting..."
     exit 1
 fi
+
+# ------ Size Report ------
+if [ "$PICO_VERSION" == "pico" ]; then
+    ELF_FILE="$BUILD_DIR/freertos_rp2040.elf"
+    FLASH_SIZE=$((2 * 1024 * 1024))   # Pico: 2 MB
+    RAM_SIZE=$((264 * 1024))
+else
+    ELF_FILE="$BUILD_DIR/freertos_rp2350.elf"
+    FLASH_SIZE=$((4 * 1024 * 1024))   # 32 Mbit MRAM: 4 MB
+    RAM_SIZE=$((520 * 1024))
+fi
+
+if [ -f "$ELF_FILE" ]; then
+    echo "------ Size Report ------"
+    arm-none-eabi-size "$ELF_FILE" | awk -v fs="$FLASH_SIZE" -v rs="$RAM_SIZE" 'NR==2 {
+        flash = $1 + $2; ram = $2 + $3
+        printf "Flash: %7d bytes (%6.1f KB)  %5.2f%% of %d KB\n", flash, flash/1024, 100*flash/fs, fs/1024
+        printf "RAM:   %7d bytes (%6.1f KB)  %5.2f%% of %d KB\n", ram,   ram/1024,   100*ram/rs,   rs/1024
+    }'
+else
+    echo "No ELF found at $ELF_FILE, skipping size report"
+fi

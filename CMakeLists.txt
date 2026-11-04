@@ -87,6 +87,8 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/gse/gse.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/steve.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can/can.c
+
+    ${CMAKE_CURRENT_LIST_DIR}/lib/isotp-c/isotp.c
     
     # jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job/sensor_job.c
@@ -114,6 +116,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can
+    ${CMAKE_CURRENT_LIST_DIR}/lib/isotp-c
 )
 
 # add FatFs library 
