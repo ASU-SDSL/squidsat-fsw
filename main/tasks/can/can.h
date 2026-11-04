@@ -13,6 +13,10 @@
 #include "log.h"
 #include "mcp2515.h"
 
+#include "isotp_user.h"
+#include "isotp.h"
+#include "isotp_defines.h"
+
 #define CAN_QUEUE_LEN   10
 
 void can_init(void);

@@ -26,6 +26,6 @@ jobs_t can_job = {
     .args = NULL,
     .func = can_test_frame,
     .name = "CAN_Task_Test",
-    .recurr_time = 0, // reoccur never
+    .recurr_time = 1000, // reoccur never
     .execute_time = 0, // execute immediately
 };
