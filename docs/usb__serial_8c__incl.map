@@ -1,23 +1,23 @@
 <map id="usb_serial.c" name="usb_serial.c">
-<area shape="rect" id="Node000001" title="USB stack management with RTOS SMP safety and driver integration into the Pico SDK&#39;s stdio stack." alt="" coords="317,5,416,31"/>
-<area shape="rect" id="Node000002" href="$usb__serial_8h.html" title=" " alt="" coords="189,79,289,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,33,273,74,271,69,345,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,101,177"/>
-<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="318,30,242,49,201,63,161,81,114,112,76,144,73,140,111,107,159,76,199,59,240,44,316,25"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="125,152,208,177"/>
-<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="317,23,282,28,245,38,209,55,179,80,172,93,167,108,166,138,160,138,162,107,167,91,175,77,206,51,243,33,281,23,317,18"/>
-<area shape="rect" id="Node000007" href="$tusb__config_8h.html" title="TinyUSB Config." alt="" coords="313,79,421,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="369,31,369,65,364,65,364,31"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="445,79,507,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="386,28,448,69,445,73,383,33"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="532,79,633,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="402,28,536,72,534,77,401,33"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="657,79,796,104"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="417,26,656,73,655,79,416,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="210,107,97,149,95,145,208,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="229,106,190,144,186,140,225,102"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="233,152,295,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="245,103,258,138,253,140,240,105"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="320,152,403,177"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="260,102,331,143,328,147,257,106"/>
+<area shape="rect" id="Node000001" title="USB stack management with RTOS SMP safety and driver integration into the Pico SDK&#39;s stdio stack." alt="" coords="314,5,413,33"/>
+<area shape="rect" id="Node000002" href="$usb__serial_8h.html" title=" " alt="" coords="186,81,285,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,32,273,76,270,71,338,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,101,184"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="312,30,239,51,198,65,158,83,113,114,77,148,73,144,110,110,156,79,196,60,237,46,317,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="124,157,206,184"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="311,23,279,30,241,40,206,57,176,83,169,96,165,111,163,143,158,140,159,110,164,94,172,79,203,53,239,35,278,25,316,21"/>
+<area shape="rect" id="Node000007" href="$tusb__config_8h.html" title="TinyUSB Config." alt="" coords="310,81,417,109"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="365,31,366,67,361,64,362,36"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="441,81,502,109"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="384,31,443,72,437,72,382,36"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="527,81,627,109"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="402,31,527,75,522,76,402,36"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="651,81,788,109"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="413,28,643,76,638,78,413,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="204,112,100,153,98,148,202,107"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="225,108,189,148,186,143,221,110"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="230,157,292,184"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="242,107,254,143,249,141,239,111"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="316,157,398,184"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="258,107,325,148,320,148,257,112"/>
 </map>

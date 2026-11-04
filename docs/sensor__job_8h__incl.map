@@ -1,11 +1,11 @@
 <map id="sensor_job.h" name="sensor_job.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="111,5,215,31"/>
-<area shape="rect" id="Node000002" href="$steve_8h.html" title=" " alt="" coords="127,79,198,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,31,165,65,160,65,160,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,101,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,106,84,147,81,142,144,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="125,152,200,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="165,104,165,138,160,138,160,104"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="224,152,307,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="181,102,239,142,236,146,178,106"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="109,5,213,33"/>
+<area shape="rect" id="Node000002" href="$steve_8h.html" title=" " alt="" coords="126,81,196,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,31,164,66,158,64,160,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,101,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,109,86,150,83,145,139,110"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="124,157,198,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="163,107,163,142,159,140,159,111"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="222,157,303,184"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="180,107,235,147,229,148,178,112"/>
 </map>

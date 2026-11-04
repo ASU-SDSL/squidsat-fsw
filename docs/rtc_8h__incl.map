@@ -1,9 +1,9 @@
 <map id="rtc.h" name="rtc.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="134,5,185,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,76,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,33,73,74,71,69,139,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="100,79,219,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,31,162,65,157,65,157,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="242,79,391,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,28,280,71,278,75,184,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="133,5,183,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,76,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,34,75,75,72,71,134,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,81,216,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,32,160,67,155,64,156,36"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="241,81,389,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="184,30,276,73,271,75,183,35"/>
 </map>

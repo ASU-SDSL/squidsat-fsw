@@ -31,5 +31,7 @@ var searchData=
   ['include_5fxtaskgetschedulerstate_28',['INCLUDE_xTaskGetSchedulerState',['../FreeRTOSConfig_8h.html#a9ed60ede556830584e6bfd4a3ab4f9de',1,'FreeRTOSConfig.h']]],
   ['include_5fxtaskresumefromisr_29',['INCLUDE_xTaskResumeFromISR',['../FreeRTOSConfig_8h.html#a85e3dae9f3daa26f24e679cb6793811e',1,'FreeRTOSConfig.h']]],
   ['include_5fxtimerpendfunctioncall_30',['INCLUDE_xTimerPendFunctionCall',['../FreeRTOSConfig_8h.html#a4b4336acd61a8e513ca2376be84326b5',1,'FreeRTOSConfig.h']]],
-  ['it_20works_31',['It Works',['../dir_76dd8867a16d204aa2db31affc56d971.html#autotoc_md8',1,'How It Works'],['../dir_76dd8867a16d204aa2db31affc56d971.html#autotoc_md17',1,'How It Works']]]
+  ['isotp_5fuser_5fget_5fms_31',['isotp_user_get_ms',['../can_8c.html#a78f9b853b0904d27d12f1a76303c92fb',1,'can.c']]],
+  ['isotp_5fuser_5fsend_5fcan_32',['isotp_user_send_can',['../can_8c.html#a1443c22c029ba979ab39e47c47037f33',1,'can.c']]],
+  ['it_20works_33',['It Works',['../dir_76dd8867a16d204aa2db31affc56d971.html#autotoc_md8',1,'How It Works'],['../dir_76dd8867a16d204aa2db31affc56d971.html#autotoc_md17',1,'How It Works']]]
 ];
