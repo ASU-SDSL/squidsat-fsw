@@ -24,6 +24,16 @@ void can_init(void){
     can_rx_queue = xQueueCreate(CAN_QUEUE_LEN, sizeof(can_message_t));
     configASSERT(can_tx_queue != NULL && can_rx_queue != NULL);
 }
+/* user implemented, send can message. should return ISOTP_RET_OK when success.
+*/
+int  isotp_user_send_can(const uint32_t arbitration_id,
+                         const uint8_t* data, const uint8_t size);
+
+/* user implemented, get millisecond */
+uint32_t isotp_user_get_ms(void){
+    return (uint32_t) (to_ms_since_boot(get_absolute_time()));
+}
+
 
 /**
  * @brief Queue a CAN frame for transmission. Safe to call from any task (e.g. STEVE jobs).
