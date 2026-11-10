@@ -9,18 +9,18 @@
 #include "lsm6dsrx.h"
 
 // I2C Address
-static const uint8_t LSM6_ADDR = 0x6B; // PLACEHOLDER ADDRESS!!!!!!!!!!
+#define LSM6_ADDR 0x6B // PLACEHOLDER ADDRESS!!!!!!!!!!
 
 // Sensor's registers
-static const uint8_t REG_XL_ODR = 0x10;     // Accelerometer Output Data Rate (aka refresh rate) and sensitivity
-static const uint8_t REG_G_ODR = 0x11;      // Gyroscope output data rate and sensitivity
-static const uint8_t REG_BDU = 0x12;        // Block Data Update - Can be enabled to prevent writing to a register while reading it
-static const uint8_t REG_WHO_AM_I = 0x0F;     
+#define REG_XL_ODR 0x10     // Accelerometer Output Data Rate (aka refresh rate) and sensitivity
+#define REG_G_ODR 0x11      // Gyroscope output data rate and sensitivity
+#define REG_BDU 0x12        // Block Data Update - Can be enabled to prevent writing to a register while reading it
+#define REG_WHO_AM_I 0x0F     
 
-static const uint8_t REG_TEMP_L = 0x20;     // Temperature Low Register. Techinically only need this, but I dont want to break anything yet as of 10/12/26
-static const uint8_t REG_TEMP_H = 0x21;
-static const uint8_t REG_G_X_L = 0x22;      // Gyroscope X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x27
-static const uint8_t REG_XL_X_L = 0x28;     // Accelerometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x2D
+#define REG_TEMP_L 0x20     // Temperature Low Register. Techinically only need this, but I dont want to break anything yet as of 10/12/26
+#define REG_TEMP_H 0x21
+#define REG_G_X_L 0x22      // Gyroscope X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x27
+#define REG_XL_X_L 0x28     // Accelerometer X-Axis Low Register. Only one needed if you read 6 bytes consecutively. Registers go up to 0x2D
 
 // Commands (Writing to register)
  uint8_t CMD_BDU = 0x84;
@@ -28,8 +28,8 @@ static const uint8_t REG_XL_X_L = 0x28;     // Accelerometer X-Axis Low Register
  uint8_t CMD_G_ODR = 0x4C;              // Set to 104Hz, and +- 1000dps. Low-Pass filter 1 not enabled
 
 // Other Constants 
-static const float GYRO_LSB = 35.0;       // Since the full scale we selected for is 4.375 milidegrees/LSB 
-static const float ACCEL_LSB = 0.244;        // Since the full scale we selected for is 0.061m(g)/LSB 
+#define GYRO_LSB 35.0       // Since the full scale we selected for is 4.375 milidegrees/LSB 
+#define ACCEL_LSB 0.244        // Since the full scale we selected for is 0.061m(g)/LSB 
 
 
 uint8_t lsm6_config(i2c_inst_t *i2c){
