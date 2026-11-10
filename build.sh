@@ -5,6 +5,26 @@ PICO_VERSION="pico2" ;
 PICO_FILE="build/freertos_rp2040.uf2" ;
 PICO2_FILE="build/freertos_rp2350.uf2" ;
 DEBUG_MODE=0
+VENV_DIR=".venv"
+
+cd "$(dirname "$0")" || exit 1
+
+# ------ building protobuf/isotp ------
+PY="$PWD/$VENV_DIR/bin/python3"
+
+if [ ! -f lib/nanopb/requirements.txt ]; then
+    echo "nanopb submodule missing - run: git submodule update --init"
+    exit 1
+fi
+if [ ! -x "$PY" ]; then
+    echo "Creating Python venv for nanopb..."
+    python3 -m venv "$VENV_DIR" || exit 1
+fi
+
+if ! "$PY" -c "import google.protobuf, grpc_tools" 2>/dev/null; then
+    echo "Installing nanopb generator requirements..."
+    "$PY" -m pip install -q -r lib/nanopb/requirements.txt || exit 1
+fi
 
 # ------ Flag Catching ------
 
@@ -13,7 +33,7 @@ while getopts "p:d" opt; do
         p) PICO_VERSION="$OPTARG"
            echo "$PICO_VERSION" ;;
         d) DEBUG_MODE=1
-           echo "Debug Build" ;; # Need to get this working
+           echo "Debug Build" ;;
     esac
 done
 
@@ -56,7 +76,8 @@ if [ "$PICO_VERSION" == "pico" ]; then
     cmake -S . -B "$BUILD_DIR" \
     -DPICO_BOARD=pico \
     -DPICO_PLATFORM=rp2040 \
-    -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
+    -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+    -DPython3_EXECUTABLE="$PY"
 
     err=$?
     if [ $err -ne 0 ]; then
@@ -75,7 +96,8 @@ elif [ "$PICO_VERSION" == "pico2" ]; then
     cmake -S . -B "$BUILD_DIR" \
     -DPICO_BOARD=pico2 \
     -DPICO_PLATFORM=rp2350 \
-    -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
+    -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+    -DPython3_EXECUTABLE="$PY"
 
     err=$?
     if [ $err -ne 0 ]; then
