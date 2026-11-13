@@ -86,15 +86,6 @@ void can_init(void){
 
     configASSERT(can_tx_queue && can_rx_queue && isotp_tx_queue && isotp_rx_queue);
 }
-/* user implemented, send can message. should return ISOTP_RET_OK when success.
-*/
-int  isotp_user_send_can(const uint32_t arbitration_id,
-                         const uint8_t* data, const uint8_t size);
-
-/* user implemented, get millisecond */
-uint32_t isotp_user_get_ms(void){
-    return (uint32_t) (to_ms_since_boot(get_absolute_time()));
-}
 
 
 /**
@@ -222,6 +213,7 @@ void can_task(void *pvParameters){
         if(tx_link.send_status == ISOTP_SEND_STATUS_ERROR){
             log_infof("ISO-TP send failed, result=%d", tx_link.send_protocol_result);
             tx_link.send_status = ISOTP_SEND_STATUS_IDLE;
+            xQueueReset(can_tx_queue);
         }
         if(tx_link.send_status != ISOTP_SEND_STATUS_INPROGRESS &&
            xQueueReceive(isotp_tx_queue, &msg_out, 0) == pdTRUE){
@@ -236,6 +228,18 @@ void can_task(void *pvParameters){
 
         // ---- ISO-TP receive: a complete message arrived ----
         if(isotp_receive(&rx_link, msg_in.data, sizeof msg_in.data, &msg_in.len) == ISOTP_RET_OK){
+            LinkMessage dbg = LinkMessage_init_zero;
+            pb_istream_t s = pb_istream_from_buffer(msg_in.data, msg_in.len);
+            if(pb_decode(&s, LinkMessage_fields, &dbg)){
+                log_infof("CAN RX %u B: node %lu -> %lu seq=%lu type=%d prio=%lu uptime=%lu",
+                          msg_in.len,
+                          (unsigned long)dbg.node_id, (unsigned long)dbg.target_node,
+                          (unsigned long)dbg.seq, (int)dbg.type,
+                          (unsigned long)dbg.priority, (unsigned long)dbg.uptime_ms);
+            } else {
+                log_infof("CAN RX %u B: protobuf decode failed: %s", msg_in.len, PB_GET_ERROR(&s));
+            }
+
             if(xQueueSend(isotp_rx_queue, &msg_in, 0) != pdTRUE){
                 log_warning("CAN: message RX queue full, LinkMessage dropped");
             }

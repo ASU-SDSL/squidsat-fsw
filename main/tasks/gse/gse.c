@@ -104,7 +104,7 @@ void vDebugTask(void *pvParameters){
                         delete_job(&test_steve);
                         break;
                     case CMD_SEND_CAN_FRAME:
-                        log_info("Attempting to send CAN Frame (LED BLINK)");
+                        log_info("Attempting to send CAN Frame (HEARTBEAT TEST)");
                         add_job(&can_job);
                         break;
                     case CMD_DELETE_CAN_FRAME:
