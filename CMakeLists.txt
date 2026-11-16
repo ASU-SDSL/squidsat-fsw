@@ -92,6 +92,7 @@ add_executable(${PROJECT_NAME}
     
     # jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job/sensor_job.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/temp_job/temp_job.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/gse_test/gse_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/can_test_job/can_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_job/imu_job.c
@@ -137,7 +138,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_gpio
     hardware_i2c
     hardware_spi
-    
+    hardware_adc
     FatFs
 )
 
