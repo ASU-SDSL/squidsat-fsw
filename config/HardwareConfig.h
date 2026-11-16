@@ -41,3 +41,5 @@
 // duration of transactions (critical sections) which should be better for the 
 // scheduler 
 #define FS_SPI_BAUDRATE 15000000 
+
+#define TEMP_SENSOR_ADC_INPUT 4
