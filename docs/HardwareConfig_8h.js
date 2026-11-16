@@ -13,5 +13,6 @@ var HardwareConfig_8h =
     [ "SPI_MISO", "HardwareConfig_8h.html#ab142cc77dfa97010c9d2b616d0992b64", null ],
     [ "SPI_MOSI", "HardwareConfig_8h.html#a7dbebab5f7dd57885adccf6711b13592", null ],
     [ "SPI_PORT", "HardwareConfig_8h.html#a8112c985f7444e82198d7571ce0a9160", null ],
-    [ "SPI_SCK", "HardwareConfig_8h.html#a750ca7c9b92cfc9e57272ff3a49db48b", null ]
+    [ "SPI_SCK", "HardwareConfig_8h.html#a750ca7c9b92cfc9e57272ff3a49db48b", null ],
+    [ "TEMP_SENSOR_ADC_INPUT", "HardwareConfig_8h.html#a124b3d929a9eca434dfe157edb4a7121", null ]
 ];

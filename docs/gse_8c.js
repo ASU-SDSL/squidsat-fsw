@@ -9,6 +9,8 @@ var gse_8c =
       [ "CMD_SEND_CAN_FRAME", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ae7433b728eb514b9b3b74b6c4ec1ed5c", null ],
       [ "CMD_DELETE_CAN_FRAME", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ae4b9ce7ba529b0477f485e4e6980bd1b", null ],
       [ "CMD_CAN_STATE", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ad47c4ffa04039ec3bc089805f07e46d8", null ],
+      [ "CMD_TEMP", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153a9f214d990208c7f6c0457c5effa185e5", null ],
+      [ "CMD_REMOVE_TEMP", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153ac67148a38b1a1e25114e1f4898ec41d9", null ],
       [ "CMD_UNKNOWN", "gse_8c.html#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7", null ]
     ] ],
     [ "debug_mode_init", "gse_8c.html#a7774e5422bf13ed3a8e5248c281e194e", null ],

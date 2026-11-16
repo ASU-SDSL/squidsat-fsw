@@ -130,10 +130,10 @@ Directories</h2></td></tr>
 <tr class="memdesc:dir_2f993bb66adef0a42a272032e84b5ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">TinyUSB Integration. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Tasks</h1>
 <p>Overview of every FreeRTOS task in the OBC flight software thus far.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Task Summary</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -151,12 +151,12 @@ Task Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Misc  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone"><span class="tt">misc/</span>  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 STEVE Scheduler (<span class="tt">steve/</span>)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Purpose</h3>
 <p>STEVE is a cooperative job scheduler that runs inside a single FreeRTOS task (<span class="tt">SCHED</span>). Instead of creating a FreeRTOS task for every periodic or one-off action, modules register lightweight <b>jobs</b> (a function pointer plus timing info), and STEVE runs each one when its scheduled tick arrives.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 How It Works</h3>
 <ul>
 <li><span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span> is the entry point created in <span class="tt"><a class="el" href="main_8c.html">main.c</a></span>. It calls <span class="tt"><a class="el" href="steve_8c.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init()</a></span> (resets the job count and creates <span class="tt">job_mutex</span>), runs any job setup (<span class="tt"><a class="el" href="sensor__job_8c.html#ac4703fb2180cef6e9c87637e5c837c88">sensor_setup()</a></span>), and then enters <span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler()</a></span>, which never returns.</li>
@@ -172,7 +172,7 @@ How It Works</h3>
 <li>Deleting shifts every later job one slot left, so array order (insertion order) is preserved. Array position acts as the tie-break priority when several jobs are due on the same tick.</li>
 <li>All times are in FreeRTOS ticks. With <span class="tt"><a class="el" href="FreeRTOSConfig_8h.html#a2f0258dd1e3b877e5bc013be54c2db6a">configTICK_RATE_HZ</a> = 1000</span>, one tick is 1 ms.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 The <span class="tt">jobs_t</span> Struct</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -188,7 +188,7 @@ The <span class="tt">jobs_t</span> Struct</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">args</span>  </td><td class="markdownTableBodyNone"><span class="tt">void *</span>  </td><td class="markdownTableBodyNone">Argument passed to <span class="tt">func</span> (may be <span class="tt">NULL</span>)  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 Public API</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -202,7 +202,7 @@ Public API</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler(void)</a></span>  </td><td class="markdownTableBodyNone">Main scheduling loop (called by <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task</a></span>, does not return)  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Adding a Job</h3>
 <ol type="1">
 <li>Write the job function with the signature <span class="tt">void my_job(void *args)</span>. Keep it short and non-blocking, because it runs inside the scheduler task.</li>
@@ -218,7 +218,7 @@ Adding a Job</h3>
 </div><!-- fragment --></li>
 <li>Register it with <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job</a>(&amp;my_job_def);</span>, either in <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span> before <span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler()</a></span>, or from another task after the scheduler has started.</li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 Jobs (<span class="tt">steve/jobs/</span>)</h3>
 <p><span class="tt"><a class="el" href="sensor__job_8c.html">sensor_job.c</a></span> currently holds LED test jobs on <span class="tt">PICO_DEFAULT_LED_PIN</span>:</p>
 <table class="markdownTable">
@@ -235,7 +235,7 @@ Jobs (<span class="tt">steve/jobs/</span>)</h3>
 </table>
 <p>These are currently commented out in <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span>. <span class="tt"><a class="el" href="sensor__job_8c.html#ac4703fb2180cef6e9c87637e5c837c88">sensor_setup()</a></span> configures the LED GPIO.</p>
 <p>A GSE test job, <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> in <span class="tt"><a class="el" href="gse_8c.html">gse/gse.c</a></span>, logs a message every 1000 ticks. It can be added and removed over serial with <span class="tt">send_steve</span> and <span class="tt">remove_steve_task</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Thread / Core Safety</h3>
 <ul>
 <li><span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span>, <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span> and the search in <span class="tt">find_ready_job()</span> take <span class="tt">job_mutex</span>, so jobs can be added or removed from other tasks on either core (for example, the GSE task).</li>
@@ -243,12 +243,12 @@ Thread / Core Safety</h3>
 <li><span class="tt"><a class="el" href="steve_8c.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init()</a></span> must run before any call to <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span> or <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span>, or <span class="tt">job_mutex</span> is <span class="tt">NULL</span>.</li>
 <li>Job functions run with the mutex <b>released</b>, so a job may call <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span> or <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span> itself.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 GSE / Debug (<span class="tt">gse/</span>)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 Purpose</h3>
 <p>The GSE (Ground Support Equipment) task is the text command interface over USB serial. It reads lines typed into a serial monitor, parses them into commands, and acts on them. It also owns the global <b>debug mode</b> flag, which gates whether the logging system records and prints anything.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Serial Commands</h3>
 <p>Commands end with Enter (<span class="tt">\n</span> or <span class="tt">\r</span>), and matching is exact and case-sensitive.</p>
 <table class="markdownTable">
@@ -263,10 +263,14 @@ Serial Commands</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">send_steve</span>  </td><td class="markdownTableBodyNone">Adds the <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> job to STEVE (logs a message every 1000 ticks)  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">remove_steve_task</span>  </td><td class="markdownTableBodyNone">Removes the <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> job from STEVE  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">remove_steve_job</span>  </td><td class="markdownTableBodyNone">Removes the <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> job from STEVE  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="temp__job_8c.html#a24d61a35b72d7299eb6b5f48e71a571b">temp</a></span>  </td><td class="markdownTableBodyNone">Adds <span class="tt"><a class="el" href="temp__job_8c.html#a3f7540e9bb5a8b169ad20568068a8fd6">read_temp_recurring</a></span> job to STEVE (logs onboard temp per second)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">remove_temp</span>  </td><td class="markdownTableBodyNone">Removes <span class="tt"><a class="el" href="temp__job_8c.html#a3f7540e9bb5a8b169ad20568068a8fd6">read_temp_recurring</a></span> job from STEVE  </td></tr>
 </table>
 <p>Unknown commands are silently ignored.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 How It Works</h3>
 <ul>
 <li><b>Startup:</b> <span class="tt"><a class="el" href="gse_8c.html#a162d6540a83cdfe7eba32822b014c3d7">gse_init()</a></span> is called in <span class="tt"><a class="el" href="main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main()</a></span> before the scheduler starts. It creates the debug mode mutex (<span class="tt"><a class="el" href="gse_8c.html#a7774e5422bf13ed3a8e5248c281e194e">debug_mode_init()</a></span>) and initializes logging (<span class="tt"><a class="el" href="log_8h.html#a2508fad025e49f9746b6c178dce6917e">log_init()</a></span>).</li>
@@ -285,7 +289,7 @@ How It Works</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 Public API</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -299,7 +303,7 @@ Public API</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="gse_8c.html#a2f0405ab3f8f58d837adffd9b7526e93">get_debug_mode(void)</a></span>  </td><td class="markdownTableBodyNone">Thread-safe read of the debug mode flag  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Adding a Command</h3>
 <ol type="1">
 <li>Add a value to the <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153">Command</a></span> enum (before <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7">CMD_UNKNOWN</a></span>).</li>
