@@ -18,7 +18,7 @@
 
 #define CAN_QUEUE_LEN           10
 #define CAN_ISOTP_MAX_LEN       256
-#define CAN_ISOTP_QUEUE_LEN     4       
+#define CAN_ISOTP_QUEUE_LEN     10       
 
 #define OBC_ADDR                0x01
 #define EPS_ADDR                0x02

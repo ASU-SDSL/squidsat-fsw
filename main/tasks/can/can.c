@@ -1,10 +1,10 @@
 /**
  * @file can.c
  * @author Koowum Joshi
- * @brief Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever
+ * @brief Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO-TP and NanoPB
  * @date 10/19/2026
  * 
- * @version 1.0
+ * @version 1.1
  */
 
 
