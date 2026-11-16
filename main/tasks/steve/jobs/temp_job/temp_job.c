@@ -5,6 +5,7 @@
 #include "task.h"
 #include "hardware/adc.h"
 #include "hardware/watchdog.h"
+#include "HardwareConfig.h"
 
 /**
  * @authors: Brett Schwartz
@@ -17,7 +18,6 @@
  * 
  */
 
-#define TEMP_SENSOR_ADC_INPUT 4
 #define INTERVAL_MS 1000
 
 static bool temp_sensor_state = false;
@@ -69,8 +69,8 @@ void read_temp_job_recurring(void *args){
     }    
     else {
         log_infof("Temperature exceeding critical levels, shutting down and sleeping for 10 seconds. Onboard temp: %f", temp);
-        watchdog_reboot(0,0,0);
-        sleep_ms(10000);
+        // watchdog_reboot(0,0,0);
+        // sleep_ms(10000);
     }
 
 };
