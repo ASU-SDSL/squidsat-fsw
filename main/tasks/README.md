@@ -10,7 +10,7 @@ Overview of every FreeRTOS task in the OBC flight software thus far.
 | Scheduler (STEVE) | `SCHED` | `steve/` | `tskIDLE_PRIORITY` | 2048 | Any |
 | GSE / Debug | `DEBUG` | `gse/` | `tskIDLE_PRIORITY` | 2048 | Any |
 | Logging | `LOGGING` | `utilities/src/log.c` | `tskIDLE_PRIORITY` | 2048 | 1 |
-| CAN | TODO | `can/` | TODO | TODO | TODO |
+| CAN | `CAN` | `can/` | `tskIDLE_PRIORITY` | 2048 | Any |
 | Misc | TODO | `misc/` | TODO | TODO | TODO |
 
 ### STEVE Scheduler (`steve/`)
@@ -83,6 +83,8 @@ These are currently commented out in `scheduler_task()`. `sensor_setup()` config
 
 A GSE test job, `test_steve` in `gse/gse.c`, logs a message every 1000 ticks. It can be added and removed over serial with `send_steve` and `remove_steve_task`.
 
+`can_test_job/can_test.c` defines `can_job`, a recurring (1000 ticks) heartbeat test. Each run builds a `LinkMessage` (`type = HEARTBEAT`, `priority = 6`, `node_id = OBC_ADDR`, `target_node = EPS_ADDR`, incrementing `seq`, `uptime_ms`) and queues it with `send_link_message()`. It is added and removed over serial with `send_can_frame` and `remove_can_frame`.
+
 #### Thread / Core Safety
 
 - `add_job()`, `delete_job()` and the search in `find_ready_job()` take `job_mutex`, so jobs can be added or removed from other tasks on either core (for example, the GSE task).
@@ -109,6 +111,9 @@ Commands end with Enter (`\n` or `\r`), and matching is exact and case-sensitive
 | `remove_steve_job` | Removes the `test_steve` job from STEVE |
 | `temp` | Adds `read_temp_recurring` job to STEVE (logs onboard temp per second) |
 | `remove_temp` | Removes `read_temp_recurring` job from STEVE |
+| `send_can_frame` | Adds the `can_job` heartbeat to STEVE (sends one `LinkMessage` to the EPS every 1000 ticks) |
+| `remove_can_frame` | Removes the `can_job` heartbeat from STEVE |
+| `can_state` | Logs `can_task_state`; once the MCP2515 has started init, also logs `TXB0CTRL`, `TEC`, `REC` and `EFLG` |
 
 Unknown commands are silently ignored.
 
@@ -141,3 +146,75 @@ Unknown commands are silently ignored.
 2. Add a `strcmp` line in `parse_command()` mapping the typed string to it.
 3. Add a `case` in the `switch` in `vDebugTask`, ending with `break;`.
 4. Add a row to the command table above.
+
+### CAN (`can/`)
+
+#### Purpose
+
+The CAN task owns the MCP2515 CAN controller (SPI) and carries OBC ↔ EPS ↔ DANT traffic. Messages are `LinkMessage` protobufs (`link.proto`, encoded with nanopb) sent over ISO-TP (`lib/isotp-c`), so payloads longer than one 8-byte CAN frame are split and reassembled automatically. It is compatible with the EPS's Zephyr `can_link` library (`sdsl-can`).
+
+#### How It Works
+
+- **Startup:** `can_init()` is called in `main()` before the scheduler starts. It creates four queues (raw frame TX/RX and ISO-TP message TX/RX) and initializes two ISO-TP links: `tx_link` for messages we send and `rx_link` for messages we receive.
+- **Task loop (`can_task`):**
+  1. Waits for a serial host (`safe_tud_cdc_connected()`) so init logs are not lost.
+  2. Calls `mcp2515_init()` every second until it succeeds (reset, 125 kbit/s bit timing, normal mode).
+  3. Every tick it then:
+     - Drains received frames from the MCP2515 and routes them by CAN ID: flow control for our sends goes to `tx_link`, data from the EPS goes to `rx_link`, and anything else is logged and ignored.
+     - Sends queued frames one at a time, waiting for each to be ACKed before loading the next.
+     - Starts the next queued `LinkMessage` when `tx_link` is idle, and polls both links for consecutive frames and timeouts.
+     - When `rx_link` completes a message, logs its decoded fields and pushes it to the receive queue for `check_link_message()`.
+  - If an ISO-TP send fails, the frame TX queue is cleared so stale frames from the failed transfer are not sent later.
+- **Bus settings:** 125 kbit/s with an MCP2515 16 MHz crystal (`CNF1 = 0x03`, `CNF2 = 0xB5`, `CNF3 = 0x01`), matching the EPS overlay. SPI to the MCP2515 runs at 100 kHz on `spi1` (pins in `config/HardwareConfig.h`).
+
+#### Addressing
+
+All traffic uses 29-bit extended IDs: a traffic-class base, then the destination node in bits 15:8 and the source node in bits 7:0. With `OBC_ADDR = 0x01` and `EPS_ADDR = 0x02`:
+
+| Traffic | CAN ID | Direction |
+|---------|--------|-----------|
+| Data OBC → EPS | `0x18CE0201` | sent by `tx_link` |
+| Flow control EPS → OBC | `0x18CF0102` | received by `tx_link` |
+| Data EPS → OBC | `0x18CE0102` | received by `rx_link` |
+| Flow control OBC → EPS | `0x18CF0201` | sent by `rx_link` |
+
+`OBC_ADDR` and `EPS_ADDR` live in `can.h` and must match the EPS's `node_id` / `peer_id` build config.
+
+#### Task State (`can_state`)
+
+| `can_task_state` | Meaning |
+|------------------|---------|
+| `1` | Waiting for a USB serial connection |
+| `2` | Initializing the MCP2515 |
+| `3` | MCP2515 init failed, retrying in 1 s |
+| `4` | Running |
+
+#### Public API
+
+| Function | Description |
+|----------|-------------|
+| `can_init(void)` | Creates the queues and ISO-TP links; call once from `main()` |
+| `can_task(void *)` | FreeRTOS task entry point (created as `CAN` in `main.c`) |
+| `send_link_message(const LinkMessage *msg)` | Encodes a `LinkMessage` and queues it for ISO-TP transmission; returns `0` or `-1` (encode failed / queue full) |
+| `check_link_message(LinkMessage *msg)` | Non-blocking; returns `1` with a decoded message, `0` if none, `-1` on decode failure |
+| `add_can_transmission(const can_message_t *msg)` | Queues one raw CAN frame (no ISO-TP); waits up to 10 ms for space |
+| `check_can_buff(can_message_t *msg)` | Non-blocking read of the raw frame RX queue |
+
+#### Configuration
+
+| Setting | Location | Value |
+|---------|----------|-------|
+| `CAN_QUEUE_LEN` | `can.h` | 10 raw frames per queue |
+| `CAN_ISOTP_MAX_LEN` | `can.h` | 256-byte max ISO-TP message |
+| `CAN_ISOTP_QUEUE_LEN` | `can.h` | 10 messages per ISO-TP queue |
+| `ISO_TP_DEFAULT_BLOCK_SIZE` | `lib/isotp-c/isotp_config.h` | 8 frames per flow-control block (receive side) |
+| `ISO_TP_DEFAULT_ST_MIN` | `lib/isotp-c/isotp_config.h` | 5 ms gap requested between consecutive frames |
+| `ISO_TP_DEFAULT_RESPONSE_TIMEOUT` | `lib/isotp-c/isotp_config.h` | 100 ms flow-control / consecutive-frame timeout |
+
+#### Sending a Message
+
+1. Fill a `LinkMessage` starting from `LinkMessage_init_zero`.
+2. Call `send_link_message(&msg);` from any task or STEVE job. It copies the message, so the struct can be reused immediately.
+3. Read replies with `check_link_message()` in a job or task loop.
+
+Messages of 7 bytes or less go as a single frame. Longer ones send a first frame, wait for the EPS's flow control, then send consecutive frames. `ISO-TP send failed, result=-2` in the log means no flow control arrived within 100 ms.
