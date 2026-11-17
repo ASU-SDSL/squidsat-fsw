@@ -7,6 +7,7 @@
 #include "sensor_job/sensor_job.h"
 #include "imu_job/imu_job.h"
 #include "temp_job/temp_job.h"
+#include "imu_3x_job/imu_3x_job.h"
 
 /**
  * @authors: Koowum Joshi, Quan Le
@@ -122,6 +123,7 @@ void scheduler_task(void *pvParameters){
     // add_job(&led_blinking_onoff); 
     // add_job(&led_blinking_fast_blink); 
     // add_job(&imu_accel);
+    add_job(&imu_3x_mag);
     // add_job(read_temp_recurring);
 
     adc_setup();
