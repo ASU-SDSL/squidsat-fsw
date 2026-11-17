@@ -4,6 +4,7 @@ var searchData=
   ['i2c_5futil_5finit_1',['i2c_util_init',['../i2c__util_8h.html#aba12b3d631f2aa1b43343c8cea3bcb68',1,'i2c_util_init():&#160;i2c_util.c'],['../i2c__util_8c.html#aba12b3d631f2aa1b43343c8cea3bcb68',1,'i2c_util_init():&#160;i2c_util.c']]],
   ['i2c_5fwrite_5fto_5fregister_2',['i2c_write_to_register',['../i2c__util_8h.html#a73f9c3581b5d48d5db9c6c445034a970',1,'i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes):&#160;i2c_util.c'],['../i2c__util_8c.html#a73f9c3581b5d48d5db9c6c445034a970',1,'i2c_write_to_register(i2c_inst_t *i2c, const uint8_t addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes):&#160;i2c_util.c']]],
   ['imu_5fget_5faccel_3',['imu_get_accel',['../imu__job_8c.html#a9de611d1332236ef2858125cff0b73e4',1,'imu_get_accel(void *args):&#160;imu_job.c'],['../imu__job_8h.html#a9de611d1332236ef2858125cff0b73e4',1,'imu_get_accel(void *args):&#160;imu_job.c']]],
-  ['isotp_5fuser_5fget_5fms_4',['isotp_user_get_ms',['../can_8c.html#a78f9b853b0904d27d12f1a76303c92fb',1,'can.c']]],
-  ['isotp_5fuser_5fsend_5fcan_5',['isotp_user_send_can',['../can_8c.html#a1443c22c029ba979ab39e47c47037f33',1,'can.c']]]
+  ['isotp_5fuser_5fdebug_4',['isotp_user_debug',['../can_8c.html#a10a2cbca08f2a2cdb740cd4ad51358be',1,'can.c']]],
+  ['isotp_5fuser_5fget_5fms_5',['isotp_user_get_ms',['../can_8c.html#a78f9b853b0904d27d12f1a76303c92fb',1,'can.c']]],
+  ['isotp_5fuser_5fsend_5fcan_6',['isotp_user_send_can',['../can_8c.html#a1443c22c029ba979ab39e47c47037f33',1,'can.c']]]
 ];

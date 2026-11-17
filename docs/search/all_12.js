@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['usb_20stdio_0',['Fixing USB stdio',['../dir_2f993bb66adef0a42a272032e84b5ad4.html#autotoc_md24',1,'']]],
+  ['usb_20stdio_0',['Fixing USB stdio',['../dir_2f993bb66adef0a42a272032e84b5ad4.html#autotoc_md32',1,'']]],
   ['usb_5fdescriptors_2ec_1',['usb_descriptors.c',['../usb__descriptors_8c.html',1,'']]],
   ['usb_5fh_2',['USB_H',['../usb__serial_8h.html#a6f8edbd92a4177faf4519f3ad0450d3d',1,'usb_serial.h']]],
   ['usb_5fmutex_3',['usb_mutex',['../usb__serial_8c.html#a2936d4f4cf37469123adcca7c55f5cb5',1,'usb_mutex:&#160;usb_serial.c'],['../usb__serial_8h.html#a2936d4f4cf37469123adcca7c55f5cb5',1,'usb_mutex:&#160;usb_serial.c']]],

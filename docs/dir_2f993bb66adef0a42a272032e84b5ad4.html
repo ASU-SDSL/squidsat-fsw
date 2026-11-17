@@ -135,30 +135,30 @@ Files</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TinyUSB Integration. </p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 TinyUSB with FreeRTOS SMP</h1>
 <p>This is a dump overview of the stuff that went into getting this to work to make sure it doesn't get forgotten.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 The Problem</h2>
 <p>The root of the problem is that although Raspberry Pi and the Pico SDK are set up to be somewhat compatible with FreeRTOS SMP, TinyUSB just isn't, it's only setup to be compatible with non-SMP FreeRTOS. The TinyUSB stack can call the callbacks to get it to work, if they are left as interrupts at anytime with no protection for SMP. This means that we can't just use the TinyUSB FreeRTOS config settting, but instead need to use the Pico config setting and do our own port into FreeRTOS SMP. This is once of the reasons the TinyUSB backend in any RTOS is often it's own task.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Moving the TinyUSB execution</h2>
 <p>The first thing to fix the problems to disable the Pico SDK's USB stack and use the <span class="tt">tiny_usb</span> and <span class="tt">tinyusb_board</span> libraries directly. Also to define our own <span class="tt"><a class="el" href="tusb__config_8h.html" title="TinyUSB Config.">tusb_config.h</a></span>. This then allowed for <span class="tt">tusb_init()</span> and <span class="tt">tusb_task()</span> to be called in a dedicated FreeRTOS task (tied to Core 0) with mutex protection on every TinyUSB call after tusb_init(). (see Arduino-Pico's implementation for reference because a lot of the stack size and other decisions are ripped directly from it).</p>
 <p>The <span class="tt"><a class="el" href="usb__descriptors_8c.html">usb_descriptors.c</a></span> to get this to work - which is really just TinyUSB callbacks and definitions to identify the device is mostly the same as the default Pico SDK one but without the pico/stdio_usb.h include. I change it a bit more later for Picotool so the final version is fairly different.</p>
 <p>USB CDC is the serial input/output, and with this setup calls to <span class="tt">tud_cdc...</span> start to work properly again.</p>
 <p><b>This does fix the crashing on output problem but doesn't link the new updated TinyUSB to stdio</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Fixing USB stdio</h2>
 <p>Without using the Pico SDK stdio init, printf and other stdio don't do anything because there are no registered drivers for them to call. Turns out the way the Pico SDK links stdio to hardware is by having a list of registered drivers that it uses for input and output calls. To get stdio to use our new drivers again we need to use <span class="tt">stdio_set_driver_enabled</span> which the Pico SDK says shouldn't be considered stable, but is in pico-playground, so it should be fine but <b>should be considered carefully for any upgrade of the used SDK</b>. I think they are going to keep supporting it but I couldn't find much official statement on it. Regardless this function registers a new driver with the stdio which connects the normal C stdio with the new, core-safe, driver implementation.</p>
 <p><b>At this point stdio works and everything for usb input/output should work other than Picotool</b></p>
 <p><b>Any stdio functions and any USB functions now won't work and shouldn't be used until after the USB Task is started.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Fixing Picotool</h2>
 <p><b>This part diverges a decent bit from the SDK so any updates to the Pico SDK or Picotool might break it, but probably not</b> To fix Picotool the preprocessor conditional parts of <span class="tt"><a class="el" href="usb__descriptors_8c.html">usb_descriptors.c</a></span> needed to get mangled because I didn't want to risk pulling in code unexpectedly by using the built-in macros. This means with this setup Picotool can't be turned off. But all that really needed to get done was making sure any part of the code that was only compiled if <span class="tt">PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE</span> was set was compiled. The exception here is <span class="tt">.bcdUSB = 0x0210</span> because that's only for Windows compatibility and I didn't want to do the other stuff for that - <b>with this setup Windows systems can't use Picotool</b>.</p>
 <p>The big part of this is in <span class="tt">picotool-interface.c</span> which is selected functions and definitions from the Pico SDK's <span class="tt">stdio_usb.h</span> and <span class="tt">reset_interface.c</span> to avoid pulling in extra stuff from the Pico SDK's USB backend and stuff that we don't need for this project. It essentially creates a new USB interface driver for the reset and registers it with TinyUSB. <br  />
 </p>
 <p><b>With all that it should work for everything we are using it for. Although a caveat is that the reset interface implementation is just what is needed to get the current <span class="tt">deploy.sh</span> to work so it may not be compatible with every Picotool command.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Good Resources for this I referenced</h2>
 <p>Using <span class="tt">lsusb</span> to get info on the USB interface</p>
 <p>General CDC and TinyUSB Stuff:</p><ul>

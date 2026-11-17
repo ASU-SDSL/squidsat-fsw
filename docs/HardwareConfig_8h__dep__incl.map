@@ -12,7 +12,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="163,120,140,158,136,155,159,124"/>
 <area shape="rect" id="Node000010" href="$mcp2515_8c.html" title="Driver for MCP2515 CAN Controller Implementation." alt="" coords="182,157,274,184"/>
 <area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="196,119,222,156,216,156,195,124"/>
-<area shape="rect" id="Node000005" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="5,232,61,260"/>
+<area shape="rect" id="Node000005" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO&#45;TP and Na..." alt="" coords="5,232,61,260"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="99,197,52,234,48,230,101,192"/>
 <area shape="rect" id="Node000006" href="$can__test_8h.html" title=" " alt="" coords="85,232,173,260"/>
 <area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="130,198,132,233,126,231,128,202"/>

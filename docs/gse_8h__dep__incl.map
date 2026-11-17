@@ -44,7 +44,7 @@
 <area shape="poly" id="edge31_Node000006_Node000023" title=" " alt="" coords="837,96,873,101,913,112,952,129,986,155,999,173,1006,194,1011,234,1007,231,1001,196,994,176,982,159,949,134,911,117,872,106,837,101"/>
 <area shape="poly" id="edge32_Node000006_Node000024" title=" " alt="" coords="837,104,1048,157,1043,158,836,109"/>
 <area shape="poly" id="edge36_Node000006_Node000025" title=" " alt="" coords="836,96,1053,114,1196,131,1340,154,1353,159,1348,159,1340,159,1195,137,1053,120,837,101"/>
-<area shape="rect" id="Node000008" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="520,232,576,260"/>
+<area shape="rect" id="Node000008" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO&#45;TP and Na..." alt="" coords="520,232,576,260"/>
 <area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="656,191,575,234,573,229,651,193"/>
 <area shape="rect" id="Node000009" href="$can__test_8h.html" title=" " alt="" coords="650,232,739,260"/>
 <area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="696,198,697,234,692,230,692,202"/>

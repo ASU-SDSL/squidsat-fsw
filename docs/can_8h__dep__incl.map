@@ -1,6 +1,6 @@
 <map id="can.h" name="can.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="101,5,157,33"/>
-<area shape="rect" id="Node000002" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="5,81,61,109"/>
+<area shape="rect" id="Node000002" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO&#45;TP and Na..." alt="" coords="5,81,61,109"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,45,52,82,48,79,101,40"/>
 <area shape="rect" id="Node000003" href="$can__test_8h.html" title=" " alt="" coords="85,81,173,109"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,47,132,81,126,80,128,51"/>

@@ -34,11 +34,12 @@ var searchData=
   ['mcp2515_5fwrite_31',['MCP2515_WRITE',['../mcp2515_8c.html#adb0717e20672f5ed1c003c0c4f9af923',1,'mcp2515.c']]],
   ['mcp_5fread_5freg_32',['mcp_read_reg',['../mcp2515_8h.html#a6f03ac5b0f1c8f3453f9bd00ce54c77c',1,'mcp_read_reg(uint8_t addr):&#160;mcp2515.c'],['../mcp2515_8c.html#a6f03ac5b0f1c8f3453f9bd00ce54c77c',1,'mcp_read_reg(uint8_t addr):&#160;mcp2515.c']]],
   ['mcp_5fwrite_5freg_33',['mcp_write_reg',['../mcp2515_8h.html#a5e78f5953712a1eb8d4114d0302609f7',1,'mcp2515.h']]],
-  ['misc_2ec_34',['misc.c',['../misc_8c.html',1,'']]],
-  ['misc_2eh_35',['misc.h',['../misc_8h.html',1,'']]],
-  ['mkfs_5fworking_5fbuffer_5flen_36',['MKFS_WORKING_BUFFER_LEN',['../filesystem_8c.html#a2e9075f71e07c62fe7db233c0fe1ce9a',1,'filesystem.c']]],
-  ['mode_5floopback_37',['MODE_LOOPBACK',['../mcp2515_8c.html#af45bc9b0ed8edccc1c6c237d83d8ec8d',1,'mcp2515.c']]],
-  ['mode_5fmask_38',['MODE_MASK',['../mcp2515_8c.html#aba2b187200eec47c5fc32655e296783d',1,'mcp2515.c']]],
-  ['mode_5fnormal_39',['MODE_NORMAL',['../mcp2515_8c.html#a199e55c829920c767a3f1f42a6a7c1d8',1,'mcp2515.c']]],
-  ['moving_20the_20tinyusb_20execution_40',['Moving the TinyUSB execution',['../dir_2f993bb66adef0a42a272032e84b5ad4.html#autotoc_md23',1,'']]]
+  ['message_34',['Sending a Message',['../dir_76dd8867a16d204aa2db31affc56d971.html#autotoc_md28',1,'']]],
+  ['misc_2ec_35',['misc.c',['../misc_8c.html',1,'']]],
+  ['misc_2eh_36',['misc.h',['../misc_8h.html',1,'']]],
+  ['mkfs_5fworking_5fbuffer_5flen_37',['MKFS_WORKING_BUFFER_LEN',['../filesystem_8c.html#a2e9075f71e07c62fe7db233c0fe1ce9a',1,'filesystem.c']]],
+  ['mode_5floopback_38',['MODE_LOOPBACK',['../mcp2515_8c.html#af45bc9b0ed8edccc1c6c237d83d8ec8d',1,'mcp2515.c']]],
+  ['mode_5fmask_39',['MODE_MASK',['../mcp2515_8c.html#aba2b187200eec47c5fc32655e296783d',1,'mcp2515.c']]],
+  ['mode_5fnormal_40',['MODE_NORMAL',['../mcp2515_8c.html#a199e55c829920c767a3f1f42a6a7c1d8',1,'mcp2515.c']]],
+  ['moving_20the_20tinyusb_20execution_41',['Moving the TinyUSB execution',['../dir_2f993bb66adef0a42a272032e84b5ad4.html#autotoc_md31',1,'']]]
 ];

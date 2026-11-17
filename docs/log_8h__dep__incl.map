@@ -32,7 +32,7 @@
 <area shape="poly" id="edge28_Node000001_Node000023" title=" " alt="" coords="841,36,942,81,936,80,840,41"/>
 <area shape="rect" id="Node000024" href="$timing_8c.html" title="Timing utiltiy functions using the RP2350&#39;s Always On Timer (AON) and an external Real Time Clock (RT..." alt="" coords="1457,81,1532,109"/>
 <area shape="poly" id="edge32_Node000001_Node000024" title=" " alt="" coords="841,20,1095,38,1266,55,1439,78,1459,84,1454,84,1438,84,1265,60,1094,43,842,25"/>
-<area shape="rect" id="Node000003" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="5,157,61,184"/>
+<area shape="rect" id="Node000003" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO&#45;TP and Na..." alt="" coords="5,157,61,184"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,120,55,158,52,154,115,115"/>
 <area shape="rect" id="Node000004" href="$can__test_8h.html" title=" " alt="" coords="85,157,173,184"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="142,122,135,157,130,155,139,126"/>

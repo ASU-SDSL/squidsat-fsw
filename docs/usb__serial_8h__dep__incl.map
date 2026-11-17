@@ -1,6 +1,6 @@
 <map id="usb_serial.h" name="usb_serial.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="105,5,204,33"/>
-<area shape="rect" id="Node000002" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever." alt="" coords="5,81,61,109"/>
+<area shape="rect" id="Node000002" href="$can_8c.html" title="Can Implementation through MCP2515 Can Controller and TJA1050 CAN Tranciever. Utilizing ISO&#45;TP and Na..." alt="" coords="5,81,61,109"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,44,56,83,53,78,118,39"/>
 <area shape="rect" id="Node000003" href="$gse_8c.html" title=" " alt="" coords="85,81,141,109"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="142,46,122,82,118,79,137,48"/>

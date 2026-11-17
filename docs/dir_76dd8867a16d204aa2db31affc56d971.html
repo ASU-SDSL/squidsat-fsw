@@ -147,7 +147,7 @@ Task Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Logging  </td><td class="markdownTableBodyNone"><span class="tt">LOGGING</span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="log_8c.html" title="Logging implemented on the pico with Dual Coring.">utilities/src/log.c</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">tskIDLE_PRIORITY</span>  </td><td class="markdownTableBodyNone">2048  </td><td class="markdownTableBodyNone">1  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">CAN  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone"><span class="tt">can/</span>  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td></tr>
+<td class="markdownTableBodyNone">CAN  </td><td class="markdownTableBodyNone"><span class="tt">CAN</span>  </td><td class="markdownTableBodyNone"><span class="tt">can/</span>  </td><td class="markdownTableBodyNone"><span class="tt">tskIDLE_PRIORITY</span>  </td><td class="markdownTableBodyNone">2048  </td><td class="markdownTableBodyNone">Any  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Misc  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone"><span class="tt">misc/</span>  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td></tr>
 </table>
@@ -235,6 +235,7 @@ Jobs (<span class="tt">steve/jobs/</span>)</h3>
 </table>
 <p>These are currently commented out in <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span>. <span class="tt"><a class="el" href="sensor__job_8c.html#ac4703fb2180cef6e9c87637e5c837c88">sensor_setup()</a></span> configures the LED GPIO.</p>
 <p>A GSE test job, <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> in <span class="tt"><a class="el" href="gse_8c.html">gse/gse.c</a></span>, logs a message every 1000 ticks. It can be added and removed over serial with <span class="tt">send_steve</span> and <span class="tt">remove_steve_task</span>.</p>
+<p><span class="tt"><a class="el" href="can__test_8c.html" title="CAN job to put on Steve Scheduler through the GSE task.">can_test_job/can_test.c</a></span> defines <span class="tt"><a class="el" href="can__test_8c.html#a6c1e963fabb35b90ae4d4c009c8a09ed">can_job</a></span>, a recurring (1000 ticks) heartbeat test. Each run builds a <span class="tt">LinkMessage</span> (<span class="tt">type = HEARTBEAT</span>, <span class="tt">priority = 6</span>, <span class="tt">node_id = <a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a></span>, <span class="tt">target_node = <a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a></span>, incrementing <span class="tt">seq</span>, <span class="tt">uptime_ms</span>) and queues it with <span class="tt"><a class="el" href="can_8c.html#ae05bc5062237be4666e283adb446c44b">send_link_message()</a></span>. It is added and removed over serial with <span class="tt">send_can_frame</span> and <span class="tt">remove_can_frame</span>.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Thread / Core Safety</h3>
 <ul>
@@ -268,6 +269,12 @@ Serial Commands</h3>
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="temp__job_8c.html#a24d61a35b72d7299eb6b5f48e71a571b">temp</a></span>  </td><td class="markdownTableBodyNone">Adds <span class="tt"><a class="el" href="temp__job_8c.html#a3f7540e9bb5a8b169ad20568068a8fd6">read_temp_recurring</a></span> job to STEVE (logs onboard temp per second)  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">remove_temp</span>  </td><td class="markdownTableBodyNone">Removes <span class="tt"><a class="el" href="temp__job_8c.html#a3f7540e9bb5a8b169ad20568068a8fd6">read_temp_recurring</a></span> job from STEVE  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">send_can_frame</span>  </td><td class="markdownTableBodyNone">Adds the <span class="tt"><a class="el" href="can__test_8c.html#a6c1e963fabb35b90ae4d4c009c8a09ed">can_job</a></span> heartbeat to STEVE (sends one <span class="tt">LinkMessage</span> to the EPS every 1000 ticks)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">remove_can_frame</span>  </td><td class="markdownTableBodyNone">Removes the <span class="tt"><a class="el" href="can__test_8c.html#a6c1e963fabb35b90ae4d4c009c8a09ed">can_job</a></span> heartbeat from STEVE  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">can_state</span>  </td><td class="markdownTableBodyNone">Logs <span class="tt"><a class="el" href="can_8c.html#a43090933dbce05589d3d801948db9dc7">can_task_state</a></span>; once the MCP2515 has started init, also logs <span class="tt"><a class="el" href="mcp2515_8c.html#a1fad0ac1e916f491e1e35af8edbe943d">TXB0CTRL</a></span>, <span class="tt"><a class="el" href="mcp2515_8c.html#ab6649bb2c894c33a96354ff3c7f7c019">TEC</a></span>, <span class="tt"><a class="el" href="mcp2515_8c.html#a8ef3693e46c397a26e50de7d35901e23">REC</a></span> and <span class="tt"><a class="el" href="mcp2515_8c.html#a4d52d72b236db7f5b1ba49ad49dda2c4">EFLG</a></span>  </td></tr>
 </table>
 <p>Unknown commands are silently ignored.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
@@ -309,8 +316,108 @@ Adding a Command</h3>
 <li>Add a value to the <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153">Command</a></span> enum (before <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7">CMD_UNKNOWN</a></span>).</li>
 <li>Add a <span class="tt">strcmp</span> line in <span class="tt">parse_command()</span> mapping the typed string to it.</li>
 <li>Add a <span class="tt">case</span> in the <span class="tt">switch</span> in <span class="tt"><a class="el" href="gse_8c.html#a79370ce305f220181b760df66797c193">vDebugTask</a></span>, ending with <span class="tt">break;</span>.</li>
-<li>Add a row to the command table above. </li>
+<li>Add a row to the command table above.</li>
 </ol>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+CAN (<span class="tt">can/</span>)</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+Purpose</h3>
+<p>The CAN task owns the MCP2515 CAN controller (SPI) and carries OBC ↔ EPS ↔ DANT traffic. Messages are <span class="tt">LinkMessage</span> protobufs (<span class="tt">link.proto</span>, encoded with nanopb) sent over ISO-TP (<span class="tt">lib/isotp-c</span>), so payloads longer than one 8-byte CAN frame are split and reassembled automatically. It is compatible with the EPS's Zephyr <span class="tt">can_link</span> library (<span class="tt">sdsl-can</span>).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+How It Works</h3>
+<ul>
+<li><b>Startup:</b> <span class="tt"><a class="el" href="can_8c.html#ac7781a37ca14c5bf42c4fe9de1f4daa8" title="Initializes the tx/rx buffer and confirms that the queues are operating properly.">can_init()</a></span> is called in <span class="tt"><a class="el" href="main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main()</a></span> before the scheduler starts. It creates four queues (raw frame TX/RX and ISO-TP message TX/RX) and initializes two ISO-TP links: <span class="tt">tx_link</span> for messages we send and <span class="tt">rx_link</span> for messages we receive.</li>
+<li><b>Task loop (<span class="tt"><a class="el" href="can_8c.html#a4b6a795d4523cbd2936c64a9de113859" title="FreeRTOS task that owns the MCP2515.">can_task</a></span>):</b><ol type="1">
+<li>Waits for a serial host (<span class="tt"><a class="el" href="usb__serial_8c.html#a201a9c300680f01689f9e6ae949c49d7" title="Thread safe tud_cdc_connected() wrapper. See TinyUSB docs.">safe_tud_cdc_connected()</a></span>) so init logs are not lost.</li>
+<li>Calls <span class="tt"><a class="el" href="mcp2515_8h.html#a7e1e7ea3bc4d57b2799e4b66cac3d0da" title="Bring up the MCP2515: reset it, verify SPI comms, set 50 kbit/s bit timing, open both RX buffers to a...">mcp2515_init()</a></span> every second until it succeeds (reset, 125 kbit/s bit timing, normal mode).</li>
+<li>Every tick it then:<ul>
+<li>Drains received frames from the MCP2515 and routes them by CAN ID: flow control for our sends goes to <span class="tt">tx_link</span>, data from the EPS goes to <span class="tt">rx_link</span>, and anything else is logged and ignored.</li>
+<li>Sends queued frames one at a time, waiting for each to be ACKed before loading the next.</li>
+<li>Starts the next queued <span class="tt">LinkMessage</span> when <span class="tt">tx_link</span> is idle, and polls both links for consecutive frames and timeouts.</li>
+<li>When <span class="tt">rx_link</span> completes a message, logs its decoded fields and pushes it to the receive queue for <span class="tt"><a class="el" href="can_8c.html#a163c6c735db0b706375653e1bc7934f5">check_link_message()</a></span>.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>If an ISO-TP send fails, the frame TX queue is cleared so stale frames from the failed transfer are not sent later.</li>
+</ul>
+</li>
+<li><b>Bus settings:</b> 125 kbit/s with an MCP2515 16 MHz crystal (<span class="tt"><a class="el" href="mcp2515_8c.html#a216a9b75d5eb3568ff460ec9bf150082">CNF1</a> = 0x03</span>, <span class="tt"><a class="el" href="mcp2515_8c.html#a29a8420f0a45f54cc83117edc884cf89">CNF2</a> = 0xB5</span>, <span class="tt"><a class="el" href="mcp2515_8c.html#ab590f2b528f9a14639807321d15f8f66">CNF3</a> = 0x01</span>), matching the EPS overlay. SPI to the MCP2515 runs at 100 kHz on <span class="tt">spi1</span> (pins in <span class="tt"><a class="el" href="HardwareConfig_8h.html" title="Macro definition for all hardware configuration (pin and bus assignment, etc).">config/HardwareConfig.h</a></span>).</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+Addressing</h3>
+<p>All traffic uses 29-bit extended IDs: a traffic-class base, then the destination node in bits 15:8 and the source node in bits 7:0. With <span class="tt"><a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a> = 0x01</span> and <span class="tt"><a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a> = 0x02</span>:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Traffic  </th><th class="markdownTableHeadNone">CAN ID  </th><th class="markdownTableHeadNone">Direction  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Data OBC → EPS  </td><td class="markdownTableBodyNone"><span class="tt">0x18CE0201</span>  </td><td class="markdownTableBodyNone">sent by <span class="tt">tx_link</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Flow control EPS → OBC  </td><td class="markdownTableBodyNone"><span class="tt">0x18CF0102</span>  </td><td class="markdownTableBodyNone">received by <span class="tt">tx_link</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Data EPS → OBC  </td><td class="markdownTableBodyNone"><span class="tt">0x18CE0102</span>  </td><td class="markdownTableBodyNone">received by <span class="tt">rx_link</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Flow control OBC → EPS  </td><td class="markdownTableBodyNone"><span class="tt">0x18CF0201</span>  </td><td class="markdownTableBodyNone">sent by <span class="tt">rx_link</span>  </td></tr>
+</table>
+<p><span class="tt"><a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a></span> and <span class="tt"><a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a></span> live in <span class="tt"><a class="el" href="can_8h.html">can.h</a></span> and must match the EPS's <span class="tt">node_id</span> / <span class="tt">peer_id</span> build config.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+Task State (<span class="tt">can_state</span>)</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"><span class="tt"><a class="el" href="can_8c.html#a43090933dbce05589d3d801948db9dc7">can_task_state</a></span>  </th><th class="markdownTableHeadNone">Meaning  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">1</span>  </td><td class="markdownTableBodyNone">Waiting for a USB serial connection  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">2</span>  </td><td class="markdownTableBodyNone">Initializing the MCP2515  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">3</span>  </td><td class="markdownTableBodyNone">MCP2515 init failed, retrying in 1 s  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">4</span>  </td><td class="markdownTableBodyNone">Running  </td></tr>
+</table>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+Public API</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Function  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#ac7781a37ca14c5bf42c4fe9de1f4daa8" title="Initializes the tx/rx buffer and confirms that the queues are operating properly.">can_init(void)</a></span>  </td><td class="markdownTableBodyNone">Creates the queues and ISO-TP links; call once from <span class="tt"><a class="el" href="main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main()</a></span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#a4b6a795d4523cbd2936c64a9de113859" title="FreeRTOS task that owns the MCP2515.">can_task(void *)</a></span>  </td><td class="markdownTableBodyNone">FreeRTOS task entry point (created as <span class="tt">CAN</span> in <span class="tt"><a class="el" href="main_8c.html">main.c</a></span>)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#ae05bc5062237be4666e283adb446c44b">send_link_message(const LinkMessage *msg)</a></span>  </td><td class="markdownTableBodyNone">Encodes a <span class="tt">LinkMessage</span> and queues it for ISO-TP transmission; returns <span class="tt">0</span> or <span class="tt">-1</span> (encode failed / queue full)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#a163c6c735db0b706375653e1bc7934f5">check_link_message(LinkMessage *msg)</a></span>  </td><td class="markdownTableBodyNone">Non-blocking; returns <span class="tt">1</span> with a decoded message, <span class="tt">0</span> if none, <span class="tt">-1</span> on decode failure  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#a18090513457174649bf4d80e88d08c61" title="Queue a CAN frame for transmission. Safe to call from any task (e.g. STEVE jobs). The frame is copied...">add_can_transmission(const can_message_t *msg)</a></span>  </td><td class="markdownTableBodyNone">Queues one raw CAN frame (no ISO-TP); waits up to 10 ms for space  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#a2fc3694b850ff54ccf4116da497a72c5" title="Take the oldest received CAN frame out of the RX queue, if there is one. Non-blocking: returns immedi...">check_can_buff(can_message_t *msg)</a></span>  </td><td class="markdownTableBodyNone">Non-blocking read of the raw frame RX queue  </td></tr>
+</table>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+Configuration</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Setting  </th><th class="markdownTableHeadNone">Location  </th><th class="markdownTableHeadNone">Value  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html#ae66f605ccd156451eb7cb3eab36e09d9">CAN_QUEUE_LEN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html">can.h</a></span>  </td><td class="markdownTableBodyNone">10 raw frames per queue  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html#aa4e50248d407849b9cddb8560e911908">CAN_ISOTP_MAX_LEN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html">can.h</a></span>  </td><td class="markdownTableBodyNone">256-byte max ISO-TP message  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html#af9482e14f22f140a1360c23bc721b2c5">CAN_ISOTP_QUEUE_LEN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8h.html">can.h</a></span>  </td><td class="markdownTableBodyNone">10 messages per ISO-TP queue  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">ISO_TP_DEFAULT_BLOCK_SIZE</span>  </td><td class="markdownTableBodyNone"><span class="tt">lib/isotp-c/isotp_config.h</span>  </td><td class="markdownTableBodyNone">8 frames per flow-control block (receive side)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">ISO_TP_DEFAULT_ST_MIN</span>  </td><td class="markdownTableBodyNone"><span class="tt">lib/isotp-c/isotp_config.h</span>  </td><td class="markdownTableBodyNone">5 ms gap requested between consecutive frames  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">ISO_TP_DEFAULT_RESPONSE_TIMEOUT</span>  </td><td class="markdownTableBodyNone"><span class="tt">lib/isotp-c/isotp_config.h</span>  </td><td class="markdownTableBodyNone">100 ms flow-control / consecutive-frame timeout  </td></tr>
+</table>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+Sending a Message</h3>
+<ol type="1">
+<li>Fill a <span class="tt">LinkMessage</span> starting from <span class="tt">LinkMessage_init_zero</span>.</li>
+<li>Call <span class="tt"><a class="el" href="can_8c.html#ae05bc5062237be4666e283adb446c44b">send_link_message</a>(&amp;msg);</span> from any task or STEVE job. It copies the message, so the struct can be reused immediately.</li>
+<li>Read replies with <span class="tt"><a class="el" href="can_8c.html#a163c6c735db0b706375653e1bc7934f5">check_link_message()</a></span> in a job or task loop.</li>
+</ol>
+<p>Messages of 7 bytes or less go as a single frame. Longer ones send a first frame, wait for the EPS's flow control, then send consecutive frames. <span class="tt">ISO-TP send failed, result=-2</span> in the log means no flow control arrived within 100 ms. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

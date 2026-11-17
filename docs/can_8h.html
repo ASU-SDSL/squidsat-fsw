@@ -126,9 +126,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('can_8h.html','
 <code>#include &quot;pico/stdlib.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="log_8h_source.html">log.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mcp2515_8h_source.html">mcp2515.h</a>&quot;</code><br />
-<code>#include &quot;isotp_user.h&quot;</code><br />
 <code>#include &quot;isotp.h&quot;</code><br />
-<code>#include &quot;isotp_defines.h&quot;</code><br />
+<code>#include &quot;link.pb.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for can.h:</div>
 <div class="dyncontent">
@@ -145,6 +144,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ae66f605ccd156451eb7cb3eab36e09d9" id="r_ae66f605ccd156451eb7cb3eab36e09d9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ae66f605ccd156451eb7cb3eab36e09d9">CAN_QUEUE_LEN</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memitem:aa4e50248d407849b9cddb8560e911908" id="r_aa4e50248d407849b9cddb8560e911908"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aa4e50248d407849b9cddb8560e911908">CAN_ISOTP_MAX_LEN</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memitem:af9482e14f22f140a1360c23bc721b2c5" id="r_af9482e14f22f140a1360c23bc721b2c5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af9482e14f22f140a1360c23bc721b2c5">CAN_ISOTP_QUEUE_LEN</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memitem:ae7435a1ddc755e30b67e55a7a99125c9" id="r_ae7435a1ddc755e30b67e55a7a99125c9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="memitem:a8e3441b232ba1b94b78d84b04223bb4c" id="r_a8e3441b232ba1b94b78d84b04223bb4c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a>&#160;&#160;&#160;0x02</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -156,6 +159,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:a18090513457174649bf4d80e88d08c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue a CAN frame for transmission. Safe to call from any task (e.g. STEVE jobs). The frame is copied into the TX queue; can_task sends it when the MCP2515 is free. Waits up to 10 ms for space if the queue is full.  <br /></td></tr>
 <tr class="memitem:a2fc3694b850ff54ccf4116da497a72c5" id="r_a2fc3694b850ff54ccf4116da497a72c5"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a2fc3694b850ff54ccf4116da497a72c5">check_can_buff</a> (<a class="el" href="structcan__message__t.html">can_message_t</a> *msg)</td></tr>
 <tr class="memdesc:a2fc3694b850ff54ccf4116da497a72c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take the oldest received CAN frame out of the RX queue, if there is one. Non-blocking: returns immediately when nothing has been received.  <br /></td></tr>
+<tr class="memitem:ae05bc5062237be4666e283adb446c44b" id="r_ae05bc5062237be4666e283adb446c44b"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#ae05bc5062237be4666e283adb446c44b">send_link_message</a> (const LinkMessage *msg)</td></tr>
+<tr class="memitem:a163c6c735db0b706375653e1bc7934f5" id="r_a163c6c735db0b706375653e1bc7934f5"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a163c6c735db0b706375653e1bc7934f5">check_link_message</a> (LinkMessage *msg)</td></tr>
 <tr class="memitem:a4b6a795d4523cbd2936c64a9de113859" id="r_a4b6a795d4523cbd2936c64a9de113859"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4b6a795d4523cbd2936c64a9de113859">can_task</a> (void *pvParameters)</td></tr>
 <tr class="memdesc:a4b6a795d4523cbd2936c64a9de113859"><td class="mdescLeft">&#160;</td><td class="mdescRight">FreeRTOS task that owns the MCP2515.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -164,6 +169,34 @@ Variables</h2></td></tr>
 <tr class="memitem:a43090933dbce05589d3d801948db9dc7" id="r_a43090933dbce05589d3d801948db9dc7"><td class="memItemLeft">volatile int&#160;</td><td class="memItemRight"><a class="el" href="#a43090933dbce05589d3d801948db9dc7">can_task_state</a></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="aa4e50248d407849b9cddb8560e911908" name="aa4e50248d407849b9cddb8560e911908"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e50248d407849b9cddb8560e911908">&#9670;&#160;</a></span>CAN_ISOTP_MAX_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CAN_ISOTP_MAX_LEN&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af9482e14f22f140a1360c23bc721b2c5" name="af9482e14f22f140a1360c23bc721b2c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9482e14f22f140a1360c23bc721b2c5">&#9670;&#160;</a></span>CAN_ISOTP_QUEUE_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CAN_ISOTP_QUEUE_LEN&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae66f605ccd156451eb7cb3eab36e09d9" name="ae66f605ccd156451eb7cb3eab36e09d9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae66f605ccd156451eb7cb3eab36e09d9">&#9670;&#160;</a></span>CAN_QUEUE_LEN</h2>
 
@@ -172,6 +205,34 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define CAN_QUEUE_LEN&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8e3441b232ba1b94b78d84b04223bb4c" name="a8e3441b232ba1b94b78d84b04223bb4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e3441b232ba1b94b78d84b04223bb4c">&#9670;&#160;</a></span>EPS_ADDR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EPS_ADDR&#160;&#160;&#160;0x02</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7435a1ddc755e30b67e55a7a99125c9" name="ae7435a1ddc755e30b67e55a7a99125c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7435a1ddc755e30b67e55a7a99125c9">&#9670;&#160;</a></span>OBC_ADDR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define OBC_ADDR&#160;&#160;&#160;0x01</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -306,6 +367,40 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 if a frame was copied into msg, 0 if the RX queue was empty </dd></dl>
+
+</div>
+</div>
+<a id="a163c6c735db0b706375653e1bc7934f5" name="a163c6c735db0b706375653e1bc7934f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a163c6c735db0b706375653e1bc7934f5">&#9670;&#160;</a></span>check_link_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int check_link_message </td>
+          <td>(</td>
+          <td class="paramtype">LinkMessage *</td>          <td class="paramname"><span class="paramname"><em>msg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae05bc5062237be4666e283adb446c44b" name="ae05bc5062237be4666e283adb446c44b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae05bc5062237be4666e283adb446c44b">&#9670;&#160;</a></span>send_link_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int send_link_message </td>
+          <td>(</td>
+          <td class="paramtype">const LinkMessage *</td>          <td class="paramname"><span class="paramname"><em>msg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
