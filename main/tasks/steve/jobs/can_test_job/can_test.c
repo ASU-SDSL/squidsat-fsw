@@ -11,15 +11,21 @@
 
 void can_test_frame(void *args){
     (void) args;
-    can_message_t m = {
-        .id = 0x18CE0102,   // DATA traffic-class base 0x18CE0000 | target 0x01 (STM32) | source 0x02 (OBC)        
-        .extended = 1,
-        .dlc      = 8,
-        .data     = {0x01,        // ISO-TP header: single frame, 1 payload byte
-                    0x01,        // payload: led_test's blink command
-                    0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC},  // padding
-    };
-    add_can_transmission(&m);
+    static uint32_t seq = 0;
+
+    LinkMessage msg = LinkMessage_init_zero;
+    msg.priority    = 6;                                   // low priority test traffic
+    msg.node_id     = OBC_ADDR;                            // 0x01, us
+    msg.target_node = EPS_ADDR;                            // 0x02, STM32
+    msg.seq         = seq++;
+    msg.uptime_ms   = to_ms_since_boot(get_absolute_time());
+    msg.type        = LinkMessage_MsgType_HEARTBEAT;
+
+    if(send_link_message(&msg) != 0){
+        log_warning("can_test: LinkMessage not queued");
+    }
+
+    log_info("CAN_TEST SUCESSFULLY SENT");
 }
 
 jobs_t can_job = {
