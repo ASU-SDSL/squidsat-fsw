@@ -96,6 +96,7 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/gse_test/gse_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/can_test_job/can_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_job/imu_job.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_3x_job/imu_3x_job.c
 
 
     # usb 
