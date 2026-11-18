@@ -67,6 +67,24 @@ set(PICO_DEOPTIMIZED_DEBUG 1)
 # set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
 
+# ── nanopb: generate link.pb.c/.h from link.proto at build time ──────────────
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+set(NANOPB_DIR   ${CMAKE_CURRENT_LIST_DIR}/lib/nanopb)
+set(PROTO_SRC    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can/link.proto)
+set(PROTO_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/proto)
+
+add_custom_command(
+    OUTPUT  ${PROTO_OUTDIR}/link.pb.c ${PROTO_OUTDIR}/link.pb.h
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROTO_OUTDIR}
+    COMMAND ${Python3_EXECUTABLE} ${NANOPB_DIR}/generator/nanopb_generator.py
+            -I ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can
+            -D ${PROTO_OUTDIR}
+            ${PROTO_SRC}
+    DEPENDS ${PROTO_SRC}
+    COMMENT "Generating link.pb.c/.h with nanopb"
+)
+
 # ── Application ───────────────────────────────────────────────────────────────
 add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/main/main.c
@@ -92,10 +110,19 @@ add_executable(${PROJECT_NAME}
     
     # jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/sensor_job/sensor_job.c
+    ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/temp_job/temp_job.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/gse_test/gse_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/can_test_job/can_test.c
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs/imu_job/imu_job.c
 
+    # protobuf
+    ${PROTO_OUTDIR}/link.pb.c
+    ${NANOPB_DIR}/pb_encode.c
+    ${NANOPB_DIR}/pb_decode.c
+    ${NANOPB_DIR}/pb_common.c
+
+    #isotp
+    ${CMAKE_CURRENT_LIST_DIR}/lib/isotp-c/isotp.c
 
     # usb 
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/usb_serial/usb_serial.c
@@ -117,6 +144,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/steve/jobs
     ${CMAKE_CURRENT_LIST_DIR}/main/tasks/can
     ${CMAKE_CURRENT_LIST_DIR}/lib/isotp-c
+
+    ${PROTO_OUTDIR}
+    ${NANOPB_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/lib/isotp-c
 )
 
 # add FatFs library 
@@ -137,7 +168,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_gpio
     hardware_i2c
     hardware_spi
-    
+    hardware_adc
     FatFs
 )
 

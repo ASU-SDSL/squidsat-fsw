@@ -244,6 +244,7 @@ void mcp2515_spi_init(void){
     gpio_set_function(SPI_SCK, GPIO_FUNC_SPI);
     gpio_set_function(SPI_MISO, GPIO_FUNC_SPI);
     gpio_set_function(SPI_MOSI, GPIO_FUNC_SPI);
+    gpio_pull_up(SPI_MISO);
 
 
     gpio_init(SPI_CS); // Init Chip select
@@ -273,7 +274,7 @@ int mcp2515_init(void){
     }
 
     // this is setting the bit rate to 50 kbps (matching what we have on Zephyr)
-    mcp_write_quiet(CNF1, 0x09);
+    mcp_write_quiet(CNF1, 0x03);
     mcp_write_quiet(CNF2, 0xB5);
     mcp_write_quiet(CNF3, 0x01);
     mcp_write_quiet(RXB0CTRL, 0x60);
@@ -282,7 +283,7 @@ int mcp2515_init(void){
     // Confirming that everything was initialized correctly
     uint8_t c1 = mcp_read_quiet(CNF1), c2 = mcp_read_quiet(CNF2), c3 = mcp_read_quiet(CNF3);
     log_infof("MCP CNF1=0x%02X CNF2=0x%02X CNF3=0x%02X (exp 09 B5 01)", c1, c2, c3);
-    if(c1 != 0x09 || c2 != 0xB5 || c3 != 0x01){
+    if(c1 != 0x03 || c2 != 0xB5 || c3 != 0x01){
         log_error("MCP2515 CNF readback mismatch");
         return 0;
     }
@@ -292,7 +293,7 @@ int mcp2515_init(void){
     for(int i = 0; i < 10; i++){
         stat = mcp_read_quiet(CANSTAT);
         if((stat & MODE_MASK) == MODE_NORMAL){
-            log_info("MCP2515 in normal mode, 50 kbit/s");
+            log_info("MCP2515 in normal mode, 125 kbit/s");
             return 1;
         }
         vTaskDelay(pdMS_TO_TICKS(1));
@@ -334,7 +335,8 @@ int mcp2515_send(const can_message_t *m){
         //               plus 2 more ID bits (the chip's register layout puts them in odd spots)
         //   tx[3] EID8: the next 8 bits
         //   tx[4] EID0: the last (lowest) 8 bits
-        // Example: 0x18CE0102 -> SIDH=0xC6, SIDL=0x0A, EID8=0x01, EID0=0x02        tx[1] = (uint8_t)(m->id >> 21);
+        // Example: 0x18CE0102 -> SIDH=0xC6, SIDL=0x0A, EID8=0x01, EID0=0x02        
+        tx[1] = (uint8_t)(m->id >> 21);
         tx[2] = (uint8_t)((((m->id >> 18) & 0x07) << 5) | SIDL_EXIDE | ((m->id >> 16) & 0x03));
         tx[3] = (uint8_t)(m->id >> 8);
         tx[4] = (uint8_t)(m->id);

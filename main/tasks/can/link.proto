@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+message LinkMessage {
+	enum MsgType {
+		HEARTBEAT = 0;
+		STATUS = 1;
+	}
+
+    // CAN-style Priority (0 is highest, 7 is lowest)
+    // This mirrors the 3-bit priority field in J1939/CAN extended frames
+    uint32 priority = 1;
+
+	uint32 node_id = 2;
+	uint32 seq = 3;
+	uint32 uptime_ms = 4;
+	MsgType type = 5;
+	uint32 target_node = 6;
+}

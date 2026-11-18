@@ -4,6 +4,7 @@
 #include "usb_serial.h"
 #include "steve/jobs/gse_test/gse_test.h"
 #include "steve/jobs/can_test_job/can_test.h"
+#include "steve/jobs/temp_job/temp_job.h"
 
 typedef enum {
     CMD_DEBUG,
@@ -14,6 +15,8 @@ typedef enum {
     CMD_SEND_CAN_FRAME,
     CMD_DELETE_CAN_FRAME,
     CMD_CAN_STATE,
+    CMD_TEMP,
+    CMD_REMOVE_TEMP,
     CMD_UNKNOWN
 } Command;
 
@@ -36,6 +39,8 @@ static Command parse_command(const char* str) {
     if(strcmp(str, "send_can_frame") == 0) return CMD_SEND_CAN_FRAME;
     if(strcmp(str, "remove_can_frame") == 0) return CMD_DELETE_CAN_FRAME;
     if(strcmp(str, "can_state") == 0) return CMD_CAN_STATE;
+    if (strcmp(str, "temp") == 0) return CMD_TEMP;
+    if (strcmp(str, "remove_temp") == 0) return CMD_REMOVE_TEMP;
     return CMD_UNKNOWN;
 };
 
@@ -104,7 +109,7 @@ void vDebugTask(void *pvParameters){
                         delete_job(&test_steve);
                         break;
                     case CMD_SEND_CAN_FRAME:
-                        log_info("Attempting to send CAN Frame (LED BLINK)");
+                        log_info("Attempting to send CAN Frame (HEARTBEAT TEST)");
                         add_job(&can_job);
                         break;
                     case CMD_DELETE_CAN_FRAME:
@@ -113,6 +118,12 @@ void vDebugTask(void *pvParameters){
                     case CMD_CAN_STATE:
                         log_infof("can_task_state=%d ------------------------------------------", can_task_state);
                         if(can_task_state >= 3) mcp2515_log_tx_status();   // SPI mutex exists by now
+                        break;
+                    case CMD_TEMP:
+                        add_job(&read_temp_recurring);
+                        break;
+                    case CMD_REMOVE_TEMP:
+                        delete_job(&read_temp_recurring);
                         break;
                     default:
                         break;

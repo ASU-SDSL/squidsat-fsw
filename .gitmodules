@@ -7,6 +7,9 @@
 [submodule "lib/pico-sdk"]
 	path = lib/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
+[submodule "lib/nanopb"]
+	path = lib/nanopb
+	url = https://github.com/nanopb/nanopb.git
 [submodule "lib/isotp-c"]
 	path = lib/isotp-c
 	url = https://github.com/lishen2/isotp-c.git
