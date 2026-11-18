@@ -1,53 +1,85 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <can.h>
 
-static bool payload_active;
-static uint32_t payload_started_ms;
-static uint32_t payload_run_ms;
 
-static void turn_on_payload(void)
+int can_dant_to_obc(const LinkMessage *msg)
 {
-    //start payload
-}
-
-static uint16_t read_payload_data(void)
-{
+    if (msg == NULL) {
+        printf("DANT to OBC: missing message\n");
+        return -1;
+    }
+    int result = send_link_message(msg);  //send message
     
+    printf("DANT to OBC: message received\n");
+    return result;
 }
 
-static void payload_downlink(uint16_t sample)
+int can_obc_to_payload(const LinkMessage *msg)
 {
-    //downlink
-}
-
-static void store_payload_info(uint16_t sample)
-{
-   // save to mram
-}
-
-void payload_start(uint32_t now_ms, uint32_t run_ms)
-{
-    if (payload_active) {
-        return;
+    if (msg == NULL) {
+        printf("OBC to payload: missing message\n");
+        return -1;
     }
 
-    turn_on_payload();
-    payload_started_ms = now_ms;
-    payload_run_ms = run_ms;
-    payload_active = true;
+    int result = send_link_message(msg);  //send message
+
+    if (send_link_message(msg) != 0) {
+        printf("OBC to payload: send failed\n");
+        return -1;
+    }
+
+    printf("OBC to payload\n");
+    return result;
+}
+
+int can_payload_to_obc(const LinkMessage *msg)
+{
+    if (msg == NULL) {
+        printf("Payload to OBC: missing message\n");
+        return -1;
+    }
+    int result = send_link_message(msg);  //send message
+
+    printf("Payload to OBC: message received\n");
+
+    return result;
 }
 
 
-void payload_interface(uint32_t now_ms)
+int can_obc_to_dant(const LinkMessage *msg)
 {
-    if (!payload_active || (uint32_t)(now_ms - payload_started_ms) < payload_run_ms) {
-        return;
+    if (msg == NULL) {//check if message is missing
+        printf("OBC to DANT: missing message\n"); 
+        return -1;
     }
 
-    uint16_t sample = read_payload_data();
+    int result = send_link_message(msg);  //send message
 
-    payload_downlink(sample);
-    store_payload_info(sample);
-    payload_active = false;
+    if (result != 0) {//check if the message sucessfuly sent
+        printf("OBC to DANT: send failed\n"); 
+        return -1;
+    }
+
+    printf("OBC to DANT: message queued\n");
+    
+    return result;  
+}
+
+
+void start_payload(){
+    //need payload info
+}
+
+void payload_status(){
+    //need payload info
+}
+
+void store_mram(){
+    //write file to mram 
+}
+
+void payload_interface(){
+
 }
