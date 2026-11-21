@@ -125,6 +125,24 @@ Clone</h1>
 <p>After cloning the repo, initialize the submodules:</p>
 <div class="fragment"><div class="line">git submodule update --init --recursive</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Python Virtual Environment (<span class="tt">.venv</span>)</h1>
+<p>The build generates the C protobuf code for CAN messages (<span class="tt">link.pb.c</span> / <span class="tt">link.pb.h</span> from <span class="tt">main/tasks/can/link.proto</span>) with the nanopb generator, which is a Python script. To keep its Python packages separate from your system Python, <span class="tt">build.sh</span> runs it from a project-local virtual environment in <span class="tt">.venv/</span>.</p>
+<p>You do not need to create or activate it yourself. On every run, <span class="tt">build.sh</span>:</p>
+<ol type="1">
+<li>Checks that the nanopb submodule is present (<span class="tt">lib/nanopb/requirements.txt</span>). If it is missing, it stops and tells you to run <span class="tt">git submodule update --init</span>.</li>
+<li>Creates <span class="tt">.venv/</span> with <span class="tt">python3 -m venv .venv</span> if it does not exist yet.</li>
+<li>Checks that the generator's packages import (<span class="tt">google.protobuf</span>, <span class="tt">grpc_tools</span>). If not, it installs <span class="tt">lib/nanopb/requirements.txt</span> (<span class="tt">protobuf</span> and <span class="tt">grpcio-tools</span>) into the venv.</li>
+<li>Passes <span class="tt">.venv/bin/python3</span> to CMake with <span class="tt">-DPython3_EXECUTABLE</span>, so the generator always runs with the venv's Python.</li>
+</ol>
+<p>The first build after cloning therefore takes a little longer while the venv is created and the packages download. Later builds skip both steps.</p>
+<p><b>Requirements:</b> <span class="tt">python3</span> must be on your <span class="tt">PATH</span> with the <span class="tt">venv</span> module available. On Debian/Ubuntu, install it with <span class="tt">sudo apt install python3-venv</span>. macOS's Python already includes it.</p>
+<p><b>Notes:</b></p>
+<ul>
+<li><span class="tt">.venv/</span> is listed in <span class="tt">.gitignore</span>. Never commit it; each machine creates its own.</li>
+<li>If you run <span class="tt">cmake</span> yourself instead of <span class="tt">build.sh</span>, pass the venv's Python, e.g. <span class="tt">-DPython3_EXECUTABLE=$PWD/.venv/bin/python3</span>, or CMake will use your system Python, which may not have the packages.</li>
+<li>If the venv breaks (for example after upgrading Python), delete it with <span class="tt">rm -rf .venv</span> and run <span class="tt">build.sh</span> again to recreate it.</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Build</h1>
 <p>Use <span class="tt">build.sh</span> to create/configure the <span class="tt">build/</span> directory and compile the firmware for the Pico version you want:</p>
 <div class="fragment"><div class="line">./build.sh -p pico</div>
@@ -137,12 +155,12 @@ Build</h1>
 </ul>
 <p>To build in debug mode, add <span class="tt">-d</span>:</p>
 <div class="fragment"><div class="line">./build.sh -p pico2 -d</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Deploy</h1>
 <p>After the build finishes, flash the Pico with:</p>
 <div class="fragment"><div class="line">./deploy.sh</div>
 </div><!-- fragment --><p>The first time you flash a pico, you will have to do the traditional drag and drop the uf2 file. This is due to the fact that we need to get usb initialized on the pico.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Onboarding Tips</h1>
 <p>Every subdirectory under main has a README pertaining to said subdirectory which is where your first questions can likely be answered. You should spend some time reading around the codebase to understand the general layout and interactions before trying to implement code right away. Depending on first task, do not try to understand everything at once but focus on what surrounds your task and gain a foothold. A good resource for developing with pico can be found <a href="https://pip-assets.raspberrypi.com/categories/609-microcontroller-boards/documents/RP-009085-KB-4-raspberry-pi-pico-c-sdk.pdf">here</a>, this document is huge so I'd recommend using ctrl+f to try and find what you need, or google your question and then ctrl+f whatever you find there. The SDSL software onboarding drive folder itself can be found <a href="https://drive.google.com/drive/folders/1eDmDWeWhAOqVWXUOmBbYNyWdQSxA6mLc?usp=drive_link">here</a>. In general, it is always best to ask other SDSL members as they have more domain knowledge and can likely answer if not guide you to where to find the answer.</p>
 <hr  />

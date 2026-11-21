@@ -53,7 +53,7 @@ var NAVTREEINDEX =
 [
 "FreeRTOSConfig_8h.html",
 "i2c__util_8c.html#a1a4e84e5e2ca93867e231d03e8778d05",
-"structcan__isotp__msg__t.html#af4f3a8e7fb79aed14dd6193347ca0b4f"
+"structcan__isotp__msg__t.html#aa8e0f7ce9363c0e57b589a6b5f37505c"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

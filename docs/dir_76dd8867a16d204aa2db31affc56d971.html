@@ -130,10 +130,10 @@ Directories</h2></td></tr>
 <tr class="memdesc:dir_2f993bb66adef0a42a272032e84b5ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">TinyUSB Integration. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Tasks</h1>
 <p>Overview of every FreeRTOS task in the OBC flight software thus far.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Task Summary</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -151,12 +151,12 @@ Task Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Misc  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone"><span class="tt">misc/</span>  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td><td class="markdownTableBodyNone">TODO  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 STEVE Scheduler (<span class="tt">steve/</span>)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Purpose</h3>
 <p>STEVE is a cooperative job scheduler that runs inside a single FreeRTOS task (<span class="tt">SCHED</span>). Instead of creating a FreeRTOS task for every periodic or one-off action, modules register lightweight <b>jobs</b> (a function pointer plus timing info), and STEVE runs each one when its scheduled tick arrives.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 How It Works</h3>
 <ul>
 <li><span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span> is the entry point created in <span class="tt"><a class="el" href="main_8c.html">main.c</a></span>. It calls <span class="tt"><a class="el" href="steve_8c.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init()</a></span> (resets the job count and creates <span class="tt">job_mutex</span>), runs any job setup (<span class="tt"><a class="el" href="sensor__job_8c.html#ac4703fb2180cef6e9c87637e5c837c88">sensor_setup()</a></span>), and then enters <span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler()</a></span>, which never returns.</li>
@@ -172,7 +172,7 @@ How It Works</h3>
 <li>Deleting shifts every later job one slot left, so array order (insertion order) is preserved. Array position acts as the tie-break priority when several jobs are due on the same tick.</li>
 <li>All times are in FreeRTOS ticks. With <span class="tt"><a class="el" href="FreeRTOSConfig_8h.html#a2f0258dd1e3b877e5bc013be54c2db6a">configTICK_RATE_HZ</a> = 1000</span>, one tick is 1 ms.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 The <span class="tt">jobs_t</span> Struct</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -188,7 +188,7 @@ The <span class="tt">jobs_t</span> Struct</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">args</span>  </td><td class="markdownTableBodyNone"><span class="tt">void *</span>  </td><td class="markdownTableBodyNone">Argument passed to <span class="tt">func</span> (may be <span class="tt">NULL</span>)  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Public API</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -202,7 +202,7 @@ Public API</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler(void)</a></span>  </td><td class="markdownTableBodyNone">Main scheduling loop (called by <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task</a></span>, does not return)  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 Adding a Job</h3>
 <ol type="1">
 <li>Write the job function with the signature <span class="tt">void my_job(void *args)</span>. Keep it short and non-blocking, because it runs inside the scheduler task.</li>
@@ -218,7 +218,7 @@ Adding a Job</h3>
 </div><!-- fragment --></li>
 <li>Register it with <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job</a>(&amp;my_job_def);</span>, either in <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span> before <span class="tt"><a class="el" href="steve_8c.html#ae92267ba5f5cc65363c95a5b188cb90d">run_scheduler()</a></span>, or from another task after the scheduler has started.</li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Jobs (<span class="tt">steve/jobs/</span>)</h3>
 <p><span class="tt"><a class="el" href="sensor__job_8c.html">sensor_job.c</a></span> currently holds LED test jobs on <span class="tt">PICO_DEFAULT_LED_PIN</span>:</p>
 <table class="markdownTable">
@@ -236,7 +236,7 @@ Jobs (<span class="tt">steve/jobs/</span>)</h3>
 <p>These are currently commented out in <span class="tt"><a class="el" href="steve_8c.html#ad07d9404fccf684f1acbc04740963f50">scheduler_task()</a></span>. <span class="tt"><a class="el" href="sensor__job_8c.html#ac4703fb2180cef6e9c87637e5c837c88">sensor_setup()</a></span> configures the LED GPIO.</p>
 <p>A GSE test job, <span class="tt"><a class="el" href="gse__test_8c.html#abbdad3367cd395402ff19472cf664992">test_steve</a></span> in <span class="tt"><a class="el" href="gse_8c.html">gse/gse.c</a></span>, logs a message every 1000 ticks. It can be added and removed over serial with <span class="tt">send_steve</span> and <span class="tt">remove_steve_task</span>.</p>
 <p><span class="tt"><a class="el" href="can__test_8c.html" title="CAN job to put on Steve Scheduler through the GSE task.">can_test_job/can_test.c</a></span> defines <span class="tt"><a class="el" href="can__test_8c.html#a6c1e963fabb35b90ae4d4c009c8a09ed">can_job</a></span>, a recurring (1000 ticks) heartbeat test. Each run builds a <span class="tt">LinkMessage</span> (<span class="tt">type = HEARTBEAT</span>, <span class="tt">priority = 6</span>, <span class="tt">node_id = <a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a></span>, <span class="tt">target_node = <a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a></span>, incrementing <span class="tt">seq</span>, <span class="tt">uptime_ms</span>) and queues it with <span class="tt"><a class="el" href="can_8c.html#ae05bc5062237be4666e283adb446c44b">send_link_message()</a></span>. It is added and removed over serial with <span class="tt">send_can_frame</span> and <span class="tt">remove_can_frame</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Thread / Core Safety</h3>
 <ul>
 <li><span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span>, <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span> and the search in <span class="tt">find_ready_job()</span> take <span class="tt">job_mutex</span>, so jobs can be added or removed from other tasks on either core (for example, the GSE task).</li>
@@ -244,12 +244,12 @@ Thread / Core Safety</h3>
 <li><span class="tt"><a class="el" href="steve_8c.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init()</a></span> must run before any call to <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span> or <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span>, or <span class="tt">job_mutex</span> is <span class="tt">NULL</span>.</li>
 <li>Job functions run with the mutex <b>released</b>, so a job may call <span class="tt"><a class="el" href="steve_8c.html#a5a66e2c715a3d2050710f91a93f6c587">add_job()</a></span> or <span class="tt"><a class="el" href="steve_8c.html#abbef0116fe613646cab4cca2c79138b5">delete_job()</a></span> itself.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 GSE / Debug (<span class="tt">gse/</span>)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Purpose</h3>
 <p>The GSE (Ground Support Equipment) task is the text command interface over USB serial. It reads lines typed into a serial monitor, parses them into commands, and acts on them. It also owns the global <b>debug mode</b> flag, which gates whether the logging system records and prints anything.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Serial Commands</h3>
 <p>Commands end with Enter (<span class="tt">\n</span> or <span class="tt">\r</span>), and matching is exact and case-sensitive.</p>
 <table class="markdownTable">
@@ -277,7 +277,7 @@ Serial Commands</h3>
 <td class="markdownTableBodyNone"><span class="tt">can_state</span>  </td><td class="markdownTableBodyNone">Logs <span class="tt"><a class="el" href="can_8c.html#a43090933dbce05589d3d801948db9dc7">can_task_state</a></span>; once the MCP2515 has started init, also logs <span class="tt"><a class="el" href="mcp2515_8c.html#a1fad0ac1e916f491e1e35af8edbe943d">TXB0CTRL</a></span>, <span class="tt"><a class="el" href="mcp2515_8c.html#ab6649bb2c894c33a96354ff3c7f7c019">TEC</a></span>, <span class="tt"><a class="el" href="mcp2515_8c.html#a8ef3693e46c397a26e50de7d35901e23">REC</a></span> and <span class="tt"><a class="el" href="mcp2515_8c.html#a4d52d72b236db7f5b1ba49ad49dda2c4">EFLG</a></span>  </td></tr>
 </table>
 <p>Unknown commands are silently ignored.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 How It Works</h3>
 <ul>
 <li><b>Startup:</b> <span class="tt"><a class="el" href="gse_8c.html#a162d6540a83cdfe7eba32822b014c3d7">gse_init()</a></span> is called in <span class="tt"><a class="el" href="main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main()</a></span> before the scheduler starts. It creates the debug mode mutex (<span class="tt"><a class="el" href="gse_8c.html#a7774e5422bf13ed3a8e5248c281e194e">debug_mode_init()</a></span>) and initializes logging (<span class="tt"><a class="el" href="log_8h.html#a2508fad025e49f9746b6c178dce6917e">log_init()</a></span>).</li>
@@ -296,7 +296,7 @@ How It Works</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Public API</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -310,7 +310,7 @@ Public API</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="gse_8c.html#a2f0405ab3f8f58d837adffd9b7526e93">get_debug_mode(void)</a></span>  </td><td class="markdownTableBodyNone">Thread-safe read of the debug mode flag  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Adding a Command</h3>
 <ol type="1">
 <li>Add a value to the <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153">Command</a></span> enum (before <span class="tt"><a class="el" href="gse_8c.html#a2afce0a47a93eee73a314d53e4890153a59c51f88aeda3ea6351f01c9c70b9ac7">CMD_UNKNOWN</a></span>).</li>
@@ -318,12 +318,12 @@ Adding a Command</h3>
 <li>Add a <span class="tt">case</span> in the <span class="tt">switch</span> in <span class="tt"><a class="el" href="gse_8c.html#a79370ce305f220181b760df66797c193">vDebugTask</a></span>, ending with <span class="tt">break;</span>.</li>
 <li>Add a row to the command table above.</li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 CAN (<span class="tt">can/</span>)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Purpose</h3>
 <p>The CAN task owns the MCP2515 CAN controller (SPI) and carries OBC ↔ EPS ↔ DANT traffic. Messages are <span class="tt">LinkMessage</span> protobufs (<span class="tt">link.proto</span>, encoded with nanopb) sent over ISO-TP (<span class="tt">lib/isotp-c</span>), so payloads longer than one 8-byte CAN frame are split and reassembled automatically. It is compatible with the EPS's Zephyr <span class="tt">can_link</span> library (<span class="tt">sdsl-can</span>).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 How It Works</h3>
 <ul>
 <li><b>Startup:</b> <span class="tt"><a class="el" href="can_8c.html#ac7781a37ca14c5bf42c4fe9de1f4daa8" title="Initializes the tx/rx buffer and confirms that the queues are operating properly.">can_init()</a></span> is called in <span class="tt"><a class="el" href="main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main()</a></span> before the scheduler starts. It creates four queues (raw frame TX/RX and ISO-TP message TX/RX) and initializes two ISO-TP links: <span class="tt">tx_link</span> for messages we send and <span class="tt">rx_link</span> for messages we receive.</li>
@@ -344,7 +344,7 @@ How It Works</h3>
 </li>
 <li><b>Bus settings:</b> 125 kbit/s with an MCP2515 16 MHz crystal (<span class="tt"><a class="el" href="mcp2515_8c.html#a216a9b75d5eb3568ff460ec9bf150082">CNF1</a> = 0x03</span>, <span class="tt"><a class="el" href="mcp2515_8c.html#a29a8420f0a45f54cc83117edc884cf89">CNF2</a> = 0xB5</span>, <span class="tt"><a class="el" href="mcp2515_8c.html#ab590f2b528f9a14639807321d15f8f66">CNF3</a> = 0x01</span>), matching the EPS overlay. SPI to the MCP2515 runs at 100 kHz on <span class="tt">spi1</span> (pins in <span class="tt"><a class="el" href="HardwareConfig_8h.html" title="Macro definition for all hardware configuration (pin and bus assignment, etc).">config/HardwareConfig.h</a></span>).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Addressing</h3>
 <p>All traffic uses 29-bit extended IDs: a traffic-class base, then the destination node in bits 15:8 and the source node in bits 7:0. With <span class="tt"><a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a> = 0x01</span> and <span class="tt"><a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a> = 0x02</span>:</p>
 <table class="markdownTable">
@@ -360,7 +360,7 @@ Addressing</h3>
 <td class="markdownTableBodyNone">Flow control OBC → EPS  </td><td class="markdownTableBodyNone"><span class="tt">0x18CF0201</span>  </td><td class="markdownTableBodyNone">sent by <span class="tt">rx_link</span>  </td></tr>
 </table>
 <p><span class="tt"><a class="el" href="can_8h.html#ae7435a1ddc755e30b67e55a7a99125c9">OBC_ADDR</a></span> and <span class="tt"><a class="el" href="can_8h.html#a8e3441b232ba1b94b78d84b04223bb4c">EPS_ADDR</a></span> live in <span class="tt"><a class="el" href="can_8h.html">can.h</a></span> and must match the EPS's <span class="tt">node_id</span> / <span class="tt">peer_id</span> build config.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Task State (<span class="tt">can_state</span>)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -374,7 +374,7 @@ Task State (<span class="tt">can_state</span>)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">4</span>  </td><td class="markdownTableBodyNone">Running  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Public API</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -392,7 +392,7 @@ Public API</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="can_8c.html#a2fc3694b850ff54ccf4116da497a72c5" title="Take the oldest received CAN frame out of the RX queue, if there is one. Non-blocking: returns immedi...">check_can_buff(can_message_t *msg)</a></span>  </td><td class="markdownTableBodyNone">Non-blocking read of the raw frame RX queue  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Configuration</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -410,7 +410,7 @@ Configuration</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">ISO_TP_DEFAULT_RESPONSE_TIMEOUT</span>  </td><td class="markdownTableBodyNone"><span class="tt">lib/isotp-c/isotp_config.h</span>  </td><td class="markdownTableBodyNone">100 ms flow-control / consecutive-frame timeout  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Sending a Message</h3>
 <ol type="1">
 <li>Fill a <span class="tt">LinkMessage</span> starting from <span class="tt">LinkMessage_init_zero</span>.</li>
